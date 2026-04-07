@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuminaBoard - Mobile Upload</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0; padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: #1e1e2f; color: white;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%; max-width: 400px;
+            background: rgba(43, 43, 64, 0.9);
+            padding: 30px; border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        h2 { margin-top: 0; }
+        input, button {
+            width: 100%; padding: 14px; margin-bottom: 12px;
+            border-radius: 8px; border: none; font-size: 16px;
+            box-sizing: border-box;
+        }
+        input { background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.1); }
+        button { background: #4c4cff; color: white; font-weight: 600; cursor: pointer; }
+        .hidden { display: none; }
+        .board-item {
+            background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .upload-btn { background: #6a6aff; width: auto; padding: 8px 16px; margin: 0; font-size: 14px; }
+        #status { color: #00ff00; margin-top: 10px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div id="authSection" class="container">
+        <h2>Teacher Login</h2>
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Sign In</button>
+        <p id="errorMsg" style="color:#ff6b6b; font-size:14px;"></p>
+    </div>
+
+    <div id="boardSection" class="container hidden">
+        <h2>Select Board</h2>
+        <p style="font-size: 14px; color: #aaa;">Choose a board to upload your PDF to.</p>
+        <div id="boardList"></div>
+        <input type="file" id="filePicker" accept="application/pdf" class="hidden">
+        <p id="status"></p>
+    </div>
+
+    <script>
+        let token = "";
+        let targetBoardId = null;
+
+        async function login() {
+            const el = document.getElementById('email').value;
+            const pw = document.getElementById('password').value;
+            const res = await fetch('/api/auth/login', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: el, password: pw })
+            });
+            const data = await res.json();
+            if (data.token) {
+                token = data.token;
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('boardSection').classList.remove('hidden');
+                loadBoards();
+            } else {
+                document.getElementById('errorMsg').innerText = "Invalid credentials";
+            }
+        }
+
+        async function loadBoards() {
+            const res = await fetch('/api/boards', { headers: { 'Authorization': `Bearer ${token}` } });
+            const boards = await res.json();
+            const list = document.getElementById('boardList');
+            list.innerHTML = "";
+            boards.forEach(b => {
+                const div = document.createElement('div');
+                div.className = "board-item";
+                div.innerHTML = `<span>${b.name}</span>`;
+                
+                const btn = document.createElement('button');
+                btn.className = "upload-btn";
+                btn.innerText = "Upload PDF";
+                btn.onclick = () => {
+                    targetBoardId = b.id;
+                    document.getElementById('filePicker').click();
+                };
+                div.appendChild(btn);
+                list.appendChild(div);
+            });
+        }
+
+        document.getElementById('filePicker').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !targetBoardId) return;
+            const status = document.getElementById('status');
+            status.innerText = "Uploading...";
+            status.style.color = "#ffff00";
+            
+            const formData = new FormData();
+            formData.append('pdf', file);
+            formData.append('board_id', targetBoardId);
+
+            try {
+                await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                status.innerText = "✅ PDF Uploaded Successfully!";
+                status.style.color = "#00ff00";
+            } catch (err) {
+                status.innerText = "❌ Upload Failed!";
+                status.style.color = "#ff4444";
+            }
+        });
+    </script>
+</body>
+</html>
