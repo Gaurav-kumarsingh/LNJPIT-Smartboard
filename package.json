@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "script.js",
   "scripts": {
-    "start": "node server.js",
-    "postinstall": "npm rebuild sqlite3"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +16,6 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
-    "sqlite3": "^6.0.1"
+    "better-sqlite3": "^11.0.0"
   }
 }

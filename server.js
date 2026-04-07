@@ -1,5 +1,5 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
+const Database = require('better-sqlite3');
 const multer = require('multer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -19,36 +19,37 @@ if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 // Serve uploaded PDFs
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const db = new sqlite3.Database('./database.sqlite');
+const db = new Database('./database.sqlite');
+// Enable WAL mode for better performance
+db.pragma('journal_mode = WAL');
+
 const SECRET_KEY = process.env.JWT_SECRET || 'super_secret_jwt_key_infi_pdf';
 
 // Initialize tables
-db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE,
-        password TEXT
-    )`);
+db.exec(`CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE,
+    password TEXT
+)`);
 
-    db.run(`CREATE TABLE IF NOT EXISTS boards (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        subject TEXT,
-        user_id INTEGER,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )`, (err) => {
-        // Safe addition if subject column wasn't there
-        db.run('ALTER TABLE boards ADD COLUMN subject TEXT', () => {});
-    });
+db.exec(`CREATE TABLE IF NOT EXISTS boards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    subject TEXT,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+)`);
 
-    db.run(`CREATE TABLE IF NOT EXISTS pdfs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        filename TEXT,
-        original_name TEXT,
-        board_id INTEGER,
-        FOREIGN KEY (board_id) REFERENCES boards(id)
-    )`);
-});
+// Safe addition if subject column wasn't there
+try { db.exec('ALTER TABLE boards ADD COLUMN subject TEXT'); } catch(e) { /* column already exists */ }
+
+db.exec(`CREATE TABLE IF NOT EXISTS pdfs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    filename TEXT,
+    original_name TEXT,
+    board_id INTEGER,
+    FOREIGN KEY (board_id) REFERENCES boards(id)
+)`);
 
 // Configure Multer for PDF upload
 const storage = multer.diskStorage({
@@ -73,88 +74,113 @@ const authenticate = (req, res, next) => {
     });
 };
 
-app.post('/api/register', (req, res) => {
-    const { email, password } = req.body;
-    bcrypt.hash(password, 10, (err, hash) => {
-        if (err) return res.status(500).json({ error: err.message });
-        db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, hash], function(err) {
-            if (err) return res.status(400).json({ error: 'Email already exists' });
-            res.json({ id: this.lastID, email });
-        });
-    });
+// Prepare statements for performance
+const insertUser = db.prepare('INSERT INTO users (email, password) VALUES (?, ?)');
+const getUserByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
+const getAllBoards = db.prepare('SELECT * FROM boards');
+const insertBoard = db.prepare('INSERT INTO boards (name, subject, user_id) VALUES (?, ?, ?)');
+const deleteBoard = db.prepare('DELETE FROM boards WHERE id = ?');
+const getPdfsByBoard = db.prepare('SELECT * FROM pdfs WHERE board_id = ?');
+const deletePdfsByBoard = db.prepare('DELETE FROM pdfs WHERE board_id = ?');
+const updateBoardName = db.prepare('UPDATE boards SET name = ? WHERE id = ?');
+const insertPdf = db.prepare('INSERT INTO pdfs (filename, original_name, board_id) VALUES (?, ?, ?)');
+
+app.post('/api/register', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const hash = await bcrypt.hash(password, 10);
+        const result = insertUser.run(email, hash);
+        res.json({ id: result.lastInsertRowid, email });
+    } catch (err) {
+        res.status(400).json({ error: 'Email already exists' });
+    }
 });
 
-app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
-    db.get('SELECT * FROM users WHERE email = ?', [email], (err, user) => {
-        if (err || !user) return res.status(400).json({ error: 'User not found' });
-        bcrypt.compare(password, user.password, (err, match) => {
-            if (!match) return res.status(401).json({ error: 'Incorrect password' });
-            const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY);
-            res.json({ token, email: user.email });
-        });
-    });
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = getUserByEmail.get(email);
+        if (!user) return res.status(400).json({ error: 'User not found' });
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) return res.status(401).json({ error: 'Incorrect password' });
+
+        const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY);
+        res.json({ token, email: user.email });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.get('/api/boards', (req, res) => {
-    db.all('SELECT * FROM boards', [], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+    try {
+        const rows = getAllBoards.all();
         res.json(rows || []);
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.post('/api/boards', authenticate, (req, res) => {
-    const { name, subject } = req.body;
-    db.run('INSERT INTO boards (name, subject, user_id) VALUES (?, ?, ?)', [name, subject || 'General', req.user.id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ id: this.lastID, name, subject: subject || 'General' });
-    });
+    try {
+        const { name, subject } = req.body;
+        const result = insertBoard.run(name, subject || 'General', req.user.id);
+        res.json({ id: result.lastInsertRowid, name, subject: subject || 'General' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.delete('/api/boards/:id', authenticate, (req, res) => {
-    db.run('DELETE FROM boards WHERE id = ?', [req.params.id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        if (this.changes === 0) return res.status(404).json({ error: 'Board not found or unauthorized' });
-        
+    try {
+        const result = deleteBoard.run(req.params.id);
+        if (result.changes === 0) return res.status(404).json({ error: 'Board not found or unauthorized' });
+
         // cascade delete pdfs locally
-        db.all('SELECT filename FROM pdfs WHERE board_id = ?', [req.params.id], (err, rows) => {
-            if (rows) {
-                rows.forEach(r => {
-                    const fp = path.join(__dirname, 'uploads', r.filename);
-                    if (fs.existsSync(fp)) fs.unlinkSync(fp);
-                });
-                db.run('DELETE FROM pdfs WHERE board_id = ?', [req.params.id]);
-            }
-        });
+        const rows = getPdfsByBoard.all(req.params.id);
+        if (rows) {
+            rows.forEach(r => {
+                const fp = path.join(__dirname, 'uploads', r.filename);
+                if (fs.existsSync(fp)) fs.unlinkSync(fp);
+            });
+            deletePdfsByBoard.run(req.params.id);
+        }
         res.json({ success: true });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.put('/api/boards/:id', authenticate, (req, res) => {
-    const { name } = req.body;
-    db.run('UPDATE boards SET name = ? WHERE id = ?', [name, req.params.id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        if (this.changes === 0) return res.status(404).json({ error: 'Board not found' });
+    try {
+        const { name } = req.body;
+        const result = updateBoardName.run(name, req.params.id);
+        if (result.changes === 0) return res.status(404).json({ error: 'Board not found' });
         res.json({ success: true });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.get('/api/boards/:id/pdfs', (req, res) => {
-    db.all('SELECT * FROM pdfs WHERE board_id = ?', [req.params.id], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+    try {
+        const rows = getPdfsByBoard.all(req.params.id);
         res.json(rows || []);
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.post('/api/upload', authenticate, upload.single('pdf'), (req, res) => {
-    const { board_id } = req.body;
-    if (!req.file || !board_id) return res.status(400).json({ error: 'File and board_id required' });
+    try {
+        const { board_id } = req.body;
+        if (!req.file || !board_id) return res.status(400).json({ error: 'File and board_id required' });
 
-    db.run('INSERT INTO pdfs (filename, original_name, board_id) VALUES (?, ?, ?)', 
-        [req.file.filename, req.file.originalname, board_id], function(err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ id: this.lastID, filename: req.file.filename, original_name: req.file.originalname });
-    });
+        const result = insertPdf.run(req.file.filename, req.file.originalname, board_id);
+        res.json({ id: result.lastInsertRowid, filename: req.file.filename, original_name: req.file.originalname });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
