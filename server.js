@@ -36,21 +36,29 @@ const DATA_DIR = fs.existsSync('/app/data') ? '/app/data' : path.join(__dirname,
 if (!fs.existsSync(DATA_DIR)) {
     try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch(e) {}
 }
-const uploadDir = path.join(DATA_DIR, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    try { fs.mkdirSync(uploadDir, { recursive: true }); } catch(e) {}
+
+let uploadDir = path.join(DATA_DIR, 'uploads');
+try {
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    // Verify writability
+    fs.accessSync(uploadDir, fs.constants.W_OK);
+} catch (e) {
+    console.warn("⚠️ Primary upload dir unusable, switching to /tmp/uploads");
+    uploadDir = path.join('/tmp', 'uploads');
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 }
+
 app.use('/uploads', express.static(uploadDir, {
   setHeaders: (res, path) => {
     res.set('Content-Disposition', 'inline'); 
   }
 }));
 
-// Rate Limiter for sensitive actions
+// Rate Limiter for sensitive actions (Relaxed for college projects and batch uploads)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: { error: "Too many login/upload attempts. Please try again later." }
+  max: 200, 
+  message: { error: "Security limit reached. Please wait a few minutes before trying again." }
 });
 
 
