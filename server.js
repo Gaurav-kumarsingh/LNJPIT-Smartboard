@@ -118,10 +118,11 @@ const migrateDb = () => {
     db.exec(`UPDATE files SET uploaded_at = datetime('now') WHERE uploaded_at IS NULL`);
   }
 
-  // Sync username/email logic
   try {
     db.exec(`UPDATE users SET username = email WHERE (username IS NULL OR username = '') AND email IS NOT NULL`);
     db.exec(`UPDATE users SET email = username WHERE (email IS NULL OR email = '') AND username IS NOT NULL`);
+    const cols = db.prepare(`PRAGMA table_info(admin_settings)`).all().map(c => c.name);
+    if (cols.includes('username_hash')) db.exec(`DROP TABLE admin_settings`);
   } catch(e) {}
 };
 migrateDb();
@@ -130,7 +131,7 @@ migrateDb();
 db.exec(`
   CREATE TABLE IF NOT EXISTS admin_settings (
     id            INTEGER PRIMARY KEY CHECK (id = 1),
-    username_hash TEXT NOT NULL,
+    username      TEXT NOT NULL,
     password_hash TEXT NOT NULL
   );
 `);
@@ -141,13 +142,12 @@ db.exec(`
 // Credentials are hashed — never stored as plain text
 // ══════════════════════════════════════════════════
 (async () => {
-  const existing = db.prepare('SELECT id FROM admin_settings WHERE id = 1').get();
-  if (!existing) {
-    const usernameHash = await bcrypt.hash('Gaurav', 12);
+  try {
     const passwordHash = await bcrypt.hash('gk07011019', 12);
-    db.prepare('INSERT INTO admin_settings (id, username_hash, password_hash) VALUES (1, ?, ?)').run(usernameHash, passwordHash);
-    console.log('✅ Admin credentials initialized (hashed)');
-  }
+    // Use REPLACE to ensure latest credentials are always active on deploy
+    db.prepare('REPLACE INTO admin_settings (id, username, password_hash) VALUES (1, ?, ?)').run('Gaurav', passwordHash);
+    console.log('✅ Admin credentials initialized/updated');
+  } catch(e) { console.error("Admin seed failed:", e.message); }
 })();
 
 // ══════════════════════════════════════════════════
@@ -342,13 +342,18 @@ app.post('/api/admin/login', authLimiter, async (req, res) => {
     if (!username || !password) return res.status(400).json({ error: 'Credentials required' });
     const creds = stmts.getAdminCreds.get();
     if (!creds) return res.status(500).json({ error: 'Admin not configured' });
-    const usernameMatch = await bcrypt.compare(username, creds.username_hash);
-    const passwordMatch = await bcrypt.compare(password, creds.password_hash);
-    if (!usernameMatch || !passwordMatch) {
+    
+    // Case-insensitive username check
+    if (username.toLowerCase() !== creds.username.toLowerCase()) {
       return res.status(401).json({ error: 'Invalid admin credentials' });
     }
-    const token = jwt.sign({ role: 'admin', username }, ADMIN_SECRET_KEY, { expiresIn: '4h' });
-    res.json({ token, username });
+    
+    const passwordMatch = await bcrypt.compare(password, creds.password_hash);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid admin credentials' });
+    }
+    const token = jwt.sign({ role: 'admin', username: creds.username }, ADMIN_SECRET_KEY, { expiresIn: '4h' });
+    res.json({ token, username: creds.username });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
