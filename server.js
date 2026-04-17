@@ -32,11 +32,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // ── Storage Configuration (Render Persistent Disk Support) ─────────
-const DATA_DIR = fs.existsSync('/app/data') ? '/app/data' : __dirname;
+const DATA_DIR = fs.existsSync('/app/data') ? '/app/data' : path.join(__dirname, 'data');
+if (!fs.existsSync(DATA_DIR)) {
+    try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch(e) {}
+}
 const uploadDir = path.join(DATA_DIR, 'uploads');
 if (!fs.existsSync(uploadDir)) {
-    try { fs.mkdirSync(uploadDir, { recursive: true }); } 
-    catch(e) { console.error("Upload dir creation failed:", e.message); }
+    try { fs.mkdirSync(uploadDir, { recursive: true }); } catch(e) {}
 }
 app.use('/uploads', express.static(uploadDir, {
   setHeaders: (res, path) => {
@@ -60,8 +62,9 @@ try {
     db.pragma('journal_mode = WAL');
 } catch (err) {
     console.error("📂 SQLite CantOpen at", dbPath, "-", err.message);
-    console.log("⚠️ Falling back to local directory...");
-    db = new Database(path.join(__dirname, 'database.sqlite'));
+    const fallbackPath = path.join('/tmp', 'database.sqlite');
+    console.log("⚠️ Emergency fallback to:", fallbackPath);
+    db = new Database(fallbackPath);
 }
 
 const SECRET_KEY       = process.env.JWT_SECRET       || 'sb_jwt_secret_2024_!@#xK9';
