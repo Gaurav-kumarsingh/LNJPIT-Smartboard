@@ -1,0 +1,22 @@
+# ═══════════════════════════════════════════════════════════════
+# SMARTBOARD — RENDER BLUEPRINT
+# ═══════════════════════════════════════════════════════════════
+
+services:
+  - type: web
+    name: smartboard-pro
+    env: node
+    plan: starter # Starter or higher is required for persistent disks
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_JWT_SECRET
+        generateValue: true
+    disk:
+      name: smartboard-data
+      mountPath: /app/data
+      sizeGB: 1

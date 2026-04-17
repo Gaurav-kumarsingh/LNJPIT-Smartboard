@@ -1,437 +1,587 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>LuminaBoard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        background: radial-gradient(circle at top left, #2b2b40, #1e1e2f);
-        font-family: 'Inter', sans-serif;
-      }
-      .toolbar-vertical {
-        position: fixed;
-        left: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(43, 43, 64, 0.85);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        padding: 10px;
-        border-radius: 12px;
-        z-index: 50;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      }
-      .toolbar-horizontal {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(43, 43, 64, 0.85);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 20px;
-        border-radius: 12px;
-        z-index: 50;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      }
-      button {
-        width: 40px;
-        height: 40px;
-        border: none;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 0.2s;
-      }
-      button:hover {
-        background: #6a6aff;
-        transform: scale(1.05);
-      }
-      .active-tool {
-        background: #4c4cff !important;
-        box-shadow: 0 0 10px rgba(76, 76, 255, 0.6);
-      }
-      .separator {
-        width: 100%;
-        height: 1px;
-        background: rgba(255,255,255,0.2);
-        margin: 4px 0;
-      }
-      .separator-v {
-        width: 1px;
-        height: 30px;
-        background: rgba(255,255,255,0.2);
-        margin: 0 4px;
-      }
-      input[type="color"] {
-        width: 30px;
-        height: 30px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        background: transparent;
-      }
-      input[type="range"] {
-        width: 100px;
-      }
-      #container {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-      }
-      #viewer {
-        position: relative;
-        transform-origin: center;
-        will-change: transform;
-      }
-      canvas {
-        display: block;
-        touch-action: none;
-      }
-      #drawCanvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 5;
-        touch-action: none;
-      }
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBoard — Intelligent Study Platform</title>
+  <meta name="description" content="A professional smartboard platform combining interactive whiteboard, visual collaboration and document workspace for smart learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style-home.css" />
+</head>
+<body>
 
-/* PDF Buttons inside menu */
-.pdfBtn{
-  width:220px;
-  padding:12px 16px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(135deg,#4c4cff,#6a6aff);
-  color:white;
-  font-size:16px;
-  font-weight:600;
-  text-align:left;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.3);
-  transition:0.2s;
-}
+<!-- ╔═══════════════════════════════════════════════════════╗ -->
+<!-- ║              ANIMATED BACKGROUND                     ║ -->
+<!-- ╚═══════════════════════════════════════════════════════╝ -->
+<div id="bg-layer">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+  <div class="bg-orb orb-4"></div>
+  <div class="bg-grid"></div>
+</div>
 
-.pdfBtn:hover{
-  background:linear-gradient(135deg,#6a6aff,#8a8aff);
-  transform:scale(1.05);
-}
-
-/*background color match*/
-body {
-  background: #1e1e2f;
-}
-
-/* Modal Base */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background: #1e1e2f; z-index: 1000;
-  display: flex; justify-content: center; align-items: center;
-}
-.modal-box {
-  background: rgba(43, 43, 64, 0.7); padding: 30px; border-radius: 16px; width: 450px;
-  color: white; display: flex; flex-direction: column; gap: 15px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.modal-box input, .modal-box select {
-  padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(30,30,47, 0.8); color: white;
-  font-family: 'Inter', sans-serif;
-  font-size: 15px;
-  width: 100%;
-  box-sizing: border-box;
-  transition: 0.2s;
-}
-.modal-box input:focus, .modal-box select:focus {
-  outline: none;
-  border-color: #6a6aff;
-  box-shadow: 0 0 0 3px rgba(106, 106, 255, 0.3);
-}
-.modal-box button {
-  width: 100%; height: 50px; background: linear-gradient(135deg, #4c4cff, #6a6aff);
-  margin-top: 10px; font-weight: 600; font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.modal-box button:hover {
-  transform: translateY(-2px); box-shadow: 0 6px 20px rgba(106, 106, 255, 0.5);
-}
-.hidden { display: none !important; }
-
-.modal-separator {
-  width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;
-}
-
-.btn-outline {
-  background: transparent !important;
-  border: 1px solid rgba(255,255,255,0.2) !important;
-}
-.btn-outline:hover {
-  background: rgba(255,255,255,0.1) !important;
-  box-shadow: none !important;
-}
-
-.btn-danger {
-  background: rgba(255, 68, 68, 0.1) !important;
-  color: #ff4444 !important;
-  border: 1px solid rgba(255, 68, 68, 0.3) !important;
-}
-.btn-danger:hover {
-  background: #ff4444 !important;
-  color: white !important;
-}
-
-.board-item {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  background: rgba(30, 30, 47, 0.9);
-  border-radius: 12px;
-  margin-top: 12px;
-  border: 1px solid rgba(255,255,255,0.05);
-  transition: 0.2s;
-}
-.board-item:hover {
-  border-color: rgba(106, 106, 255, 0.5);
-  background: rgba(40, 40, 60, 0.9);
-}
-.board-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.board-title {
-  font-size: 18px;
-  font-weight: 600;
-}
-.board-badge {
-  background: rgba(106, 106, 255, 0.2);
-  color: #a8a8ff;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.board-actions {
-  display: flex;
-  gap: 8px;
-}
-.board-actions button {
-  height: 40px;
-  flex: 1;
-  font-size: 14px;
-  width: auto;
-}
-
-.error-msg {
-  color: #ff6b6b;
-  font-size: 14px;
-  text-align: center;
-  margin-top: 10px;
-  min-height: 20px;
-}
-
-/* date and time */
-#timeDisplay,
-#dateDisplay {
-  text-shadow: 0 0 4px black;
-}
-
-    </style>
-  </head>
-  <body>
-
-    <!-- ========== AUTH MODAL ========== -->
-    <div id="authModal" class="modal-overlay">
-      <div class="modal-box">
-        <h1 style="margin:0; text-align:center; font-size:32px; background: linear-gradient(135deg, #a8a8ff, #ffffff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px;">LuminaBoard</h1>
-        <p style="text-align:center; color:#aaa; margin-top:-5px; margin-bottom: 15px;">Sign in to manage your boards and PDFs.</p>
-        
-        <input type="email" id="emailInput" placeholder="Email Address" />
-        <input type="password" id="passwordInput" placeholder="Password" />
-        
-        <button onclick="login()">Sign In</button>
-        <button onclick="register()" class="btn-outline">Create Account</button>
-        
-        <div class="modal-separator"></div>
-        
-        <button onclick="mockGoogleLogin()" style="background:white !important; color:#333 !important; display:flex; justify-content:center; align-items:center; gap:10px;">
-          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.565 24 12.255 24z"/><path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 000 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0 7.565 0 3.515 2.7 1.545 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-          Continue with Google
-        </button>
-
-        <div id="authError" class="error-msg"></div>
+<!-- ╔═══════════════════════════════════════════════════════╗ -->
+<!-- ║                  TOP NAVIGATION                      ║ -->
+<!-- ╚═══════════════════════════════════════════════════════╝ -->
+<header id="topnav">
+  <div class="nav-left">
+    <div class="brand">
+      <div class="brand-icon"><i class="fas fa-chalkboard"></i></div>
+      <div class="brand-text">
+        <span class="brand-name">SmartBoard</span>
+        <span class="brand-sub">Study Platform</span>
       </div>
     </div>
-
-    <!-- ========== DASHBOARD MODAL ========== -->
-    <div id="dashboardModal" class="modal-overlay hidden">
-      <div class="modal-box" style="width:650px; max-height:85vh; padding:40px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h1 style="margin:0; font-size:28px; background: linear-gradient(135deg, #a8a8ff, #ffffff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Dashboard</h1>
-          <button onclick="logout()" class="btn-outline" style="width:auto; padding:0 20px; height:38px; font-size:13px;">Log Out</button>
-        </div>
-        
-        <div style="margin-top:15px;">
-          <h3 style="margin:0 0 5px 0; font-size:18px; color:white;">Create New Board</h3>
-          <p style="color:#aaa; font-size:13px; margin:0 0 15px 0;">Setup a board for your class. Add a subject tag for easy sorting.</p>
-          
-          <div style="display:flex; gap:12px;">
-            <input type="text" id="boardNameInput" placeholder="Board Name (e.g. Physics 101)" style="flex:2;" />
-            <select id="boardSubjectInput" style="flex:1; cursor:pointer;">
-                <option value="Math">Math</option>
-                <option value="Science">Science</option>
-                <option value="English">English</option>
-                <option value="History">History</option>
-                <option value="General">General</option>
-            </select>
-          </div>
-          <button onclick="createBoard()" style="margin-top:12px;">Create Board</button>
-        </div>
-
-        <div class="modal-separator"></div>
-
-        <h3 style="margin:0 0 10px 0; font-size:20px; color:white;">My Active Boards</h3>
-        <div id="boardList" style="max-height:35vh; overflow-y:auto; padding-right:5px;"></div>
-      </div>
-    </div>
-
-    <!-- Hidden file input for PDF upload -->
-    <input type="file" id="fileInput" accept="application/pdf" style="display:none;" />
-
-    <!-- VERTICAL TOOLBAR (Left side) -->
-    <div class="toolbar-vertical">
-      <button onclick="togglePDFLibrary()" title="PDF Library">📚</button>
-      <div class="separator"></div>
-      <button onclick="setTool('draw')" title="Pen">✏</button>
-      <button onclick="setTool('highlight')" title="Highlighter">🖍</button>
-      <button onclick="setTool('erase')" title="Eraser">🧽</button>
-      <button class="smartboard-tool" onclick="setTool('laser')" title="Laser Pointer" style="color:#ff4444">☄</button>
-      <button onclick="setTool('pan')" title="Pan">✋</button>
-      <button class="smartboard-tool" onclick="toggleGrid()" title="Toggle Background Grid">▦</button>
-      <div class="separator"></div>
-      <button class="smartboard-tool" onclick="setTool('rect')" title="Rectangle">▭</button>
-      <button class="smartboard-tool" onclick="setTool('circle')" title="Circle">◯</button>
-      <button class="smartboard-tool" onclick="setTool('line')" title="Line">／</button>
-      <button class="smartboard-tool" onclick="setTool('arrow')" title="Arrow">→</button>
-      <div class="separator"></div>
-      <button onclick="toggleStylusMode()" id="stylusBtn" title="Stylus Mode: Finger Erase" style="background: rgba(255,255,255,0.3)">👆</button>
-    </div>
-
-    <!-- FLOATING PDF LIBRARY MENU -->
-    <div id="pdfLibrary" style="
-      position:fixed;
-      left:80px;
-      top:50%;
-      transform: translateY(-50%);
-      background:rgba(43,43,64,0.9);
-      backdrop-filter: blur(10px);
-      padding:15px;
-      border-radius:12px;
-      display:none;
-      flex-direction:column;
-      gap:12px;
-      z-index:100;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    ">
-      <div style="color:white;font-size:14px;font-weight:600;margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
-          <span style="letter-spacing: 0.5px;">MY PDFs</span>
-      </div>
-      <div id="dynamicPdfList"></div>
-    </div>
-
-    <!-- HORIZONTAL TOOLBAR (Bottom) -->
-    <div class="toolbar-horizontal">
-      <button onclick="prevPage()" title="Previous Page">◀</button>
-      <span id="pageInfo" style="color: white; font-size: 14px; font-weight:600; min-width:80px; text-align:center;">Page 0 / 0</span>
-      <button onclick="nextPage()" title="Next Page">▶</button>
-      <div class="separator-v"></div>
-      
-      <button onclick="addBlankPage()" title="Add Blank Page">➕</button>
-      <button onclick="removePage()" title="Delete Page" style="color:#ff6b6b">🗑</button>
-      <div class="separator-v"></div>
-
-      <!-- Color button -->
-      <div style="position: relative; display:flex; align-items:center;">
-        <button id="mainColorBtn" style="background: #ff0000" onclick="toggleColorPalette()"></button>
-        <div id="colorPalette" style="display: none; position: absolute; bottom: 50px; left: -10px; flex-direction: row; gap: 5px; background: rgba(43,43,64,0.9); padding: 5px; border-radius: 8px;">
-          <button style="background: #ff0000" onclick="selectColor('#ff0000')"></button>
-          <button style="background: #00ff00" onclick="selectColor('#00ff00')"></button>
-          <button style="background: #0000ff" onclick="selectColor('#0000ff')"></button>
-          <button style="background: #ffff00" onclick="selectColor('#ffff00')"></button>
-          <button style="background: #ff00ff" onclick="selectColor('#ff00ff')"></button>
-          <button style="background: #00ffff" onclick="selectColor('#00ffff')"></button>
-          <button style="background: #000000" onclick="selectColor('#000000')"></button>
-          <button style="background: #ffffff" onclick="selectColor('#ffffff')"></button>
-        </div>
-      </div>
-      <input type="color" id="colorPicker" value="#ff0000" style="display: none" />
-      <input type="range" id="brushSize" min="1" max="50" value="4" oninput="changeBrushSize(this.value)"/>
-      <div class="separator-v"></div>
-
-      <button onclick="undo()" title="Undo">↩</button>
-      <button onclick="redo()" title="Redo">↪</button>
-      <button onclick="clearCanvas()" title="Clear Canvas" style="color:#ff6b6b">❌</button>
-      <div class="separator-v"></div>
-
-      <button onclick="zoomOut()" title="Zoom Out">－</button>
-      <button onclick="zoomIn()" title="Zoom In">＋</button>
-      <button onclick="fit()" title="Reset Zoom">⤢</button>
-      <div class="separator-v"></div>
-
-      <button onclick="slideUp()" title="Scroll Canvas Up">⬆</button>
-      <button onclick="slideDown()" title="Scroll Canvas Down">⬇</button>
-      <div class="separator-v"></div>
-
-      <button onclick="toggleFullscreen()" id="fsBtn" title="Fullscreen">⛶</button>
-    </div>
-
-
-
-    <div id="container">
-      <div id="viewer">
-        <canvas id="pdfCanvas"></canvas>
-      </div>
-    </div>
-    <canvas id="drawCanvas"></canvas>
-
-   <!-- Top right time -->
-  <div style="position: fixed; top: 15px; right: 20px; text-align: right; z-index: 50; background: rgba(43,43,64,0.7); backdrop-filter: blur(5px); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-    <div id="timeDisplay" style="font-size: 20px; font-weight: 600; color: white;"></div>
-    <div id="dateDisplay" style="font-size: 12px; color: #bbb;"></div>
   </div>
 
-    <script src="script.js"></script>
-  </body>
+  <div class="nav-center">
+    <div class="search-wrap" id="search-wrap">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="global-search" placeholder="Search files, boards, resources..." autocomplete="off" />
+      <div class="search-actions">
+        <button class="search-pill" onclick="openSearch('chatgpt')" title="ChatGPT"><i class="fas fa-robot"></i> ChatGPT</button>
+        <button class="search-pill" onclick="openSearch('gemini')" title="Gemini"><i class="fas fa-gem"></i> Gemini</button>
+        <button class="search-pill" onclick="openSearch('google')" title="Google"><i class="fab fa-google"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <button class="nav-btn" id="btn-theme" title="Toggle Theme" onclick="toggleTheme()">
+      <i class="fas fa-moon"></i>
+    </button>
+    <button class="nav-btn" id="btn-settings" title="Admin Settings" onclick="openAdminSettings()">
+      <i class="fas fa-cog"></i>
+    </button>
+    <button class="nav-btn" id="btn-user" onclick="handleUserAction()">
+      <i class="fas fa-user-circle"></i>
+      <span id="nav-user-label">Sign In</span>
+    </button>
+    <a href="board.html" class="open-board-btn" id="btn-open-board">
+      <i class="fas fa-chalkboard-teacher"></i>
+      <span>Open Board</span>
+    </a>
+  </div>
+</header>
+
+<!-- ╔═══════════════════════════════════════════════════════╗ -->
+<!-- ║                  MAIN DASHBOARD                      ║ -->
+<!-- ╚═══════════════════════════════════════════════════════╝ -->
+<main id="dashboard">
+
+  <!-- ── BOARDS SECTION ── -->
+  <section class="dash-section" id="boards-section">
+    <div class="section-header">
+      <div class="section-title">
+        <i class="fas fa-th-large"></i>
+        <h2>My Boards</h2>
+      </div>
+    </div>
+    <div class="boards-grid" id="boards-grid">
+      <!-- Board 01 — Fixed subjects -->
+      <div class="board-card board-primary" data-board="1" onclick="openBoard(1)">
+        <div class="board-card-glow"></div>
+        <div class="board-num">01</div>
+        <div class="board-info">
+          <h3>Board 01</h3>
+          <p>Core Subjects</p>
+        </div>
+        <div class="board-subjects">
+          <span class="subject-chip chip-flat" onclick="openBoardSubject(event,1,'FLAT')">FLAT</span>
+          <span class="subject-chip chip-dbms" onclick="openBoardSubject(event,1,'DBMS')">DBMS</span>
+          <span class="subject-chip chip-ai" onclick="openBoardSubject(event,1,'AI')">AI</span>
+          <span class="subject-chip chip-se" onclick="openBoardSubject(event,1,'SE')">SE</span>
+          <span class="subject-chip chip-psd" onclick="openBoardSubject(event,1,'PSD')">PSD</span>
+        </div>
+        <div class="board-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+
+      <!-- Boards 02–05 -->
+      <div class="board-card board-secondary" data-board="2" id="board-card-2">
+        <div class="board-num">02</div>
+        <div class="board-info">
+          <h3 id="board-2-name">Board 02</h3>
+          <p id="board-2-sub">Not configured</p>
+        </div>
+        <button class="board-configure-btn" onclick="configureBoard(event,2)"><i class="fas fa-plus-circle"></i> Configure</button>
+        <div class="board-arrow" onclick="openBoard(2)"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="board-card board-secondary" data-board="3" id="board-card-3">
+        <div class="board-num">03</div>
+        <div class="board-info">
+          <h3 id="board-3-name">Board 03</h3>
+          <p id="board-3-sub">Not configured</p>
+        </div>
+        <button class="board-configure-btn" onclick="configureBoard(event,3)"><i class="fas fa-plus-circle"></i> Configure</button>
+        <div class="board-arrow" onclick="openBoard(3)"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="board-card board-secondary" data-board="4" id="board-card-4">
+        <div class="board-num">04</div>
+        <div class="board-info">
+          <h3 id="board-4-name">Board 04</h3>
+          <p id="board-4-sub">Not configured</p>
+        </div>
+        <button class="board-configure-btn" onclick="configureBoard(event,4)"><i class="fas fa-plus-circle"></i> Configure</button>
+        <div class="board-arrow" onclick="openBoard(4)"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="board-card board-secondary" data-board="5" id="board-card-5">
+        <div class="board-num">05</div>
+        <div class="board-info">
+          <h3 id="board-5-name">Board 05</h3>
+          <p id="board-5-sub">Not configured</p>
+        </div>
+        <button class="board-configure-btn" onclick="configureBoard(event,5)"><i class="fas fa-plus-circle"></i> Configure</button>
+        <div class="board-arrow" onclick="openBoard(5)"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MAIN CONTENT GRID ── -->
+  <div class="content-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="col-left">
+
+      <!-- File Hub -->
+      <section class="widget widget-files" id="widget-files">
+        <div class="widget-header">
+          <div class="widget-title"><i class="fas fa-folder-open"></i> File Hub</div>
+          <div class="widget-actions">
+            <button class="wbtn" id="btn-upload-file" onclick="triggerFileUpload()" title="Upload File">
+              <i class="fas fa-upload"></i>
+            </button>
+            <div class="file-filter-wrap">
+              <select id="file-filter" onchange="filterFiles(this.value)">
+                <option value="all">All Files</option>
+                <option value="pdf">PDFs</option>
+                <option value="image">Images</option>
+                <option value="video">Videos</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="file-search-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" id="file-search" placeholder="Search files..." oninput="searchFiles(this.value)" />
+        </div>
+        <div class="files-list" id="files-list">
+          <div class="empty-state"><i class="fas fa-folder-plus"></i><p>Upload files to get started</p></div>
+        </div>
+      </section>
+
+      <!-- Study Resources -->
+      <section class="widget widget-resources">
+        <div class="widget-header">
+          <div class="widget-title"><i class="fas fa-graduation-cap"></i> Study Resources</div>
+        </div>
+        <div class="resources-grid">
+          <a class="resource-card" href="https://www.pyqpaper.com" target="_blank">
+            <div class="resource-icon" style="background:linear-gradient(135deg,#f75050,#f7a050)"><i class="fas fa-file-alt"></i></div>
+            <span>Previous Year Papers</span>
+          </a>
+          <a class="resource-card" href="https://gate.iitb.ac.in" target="_blank">
+            <div class="resource-icon" style="background:linear-gradient(135deg,#4f8ef7,#a050f7)"><i class="fas fa-brain"></i></div>
+            <span>GATE Questions</span>
+          </a>
+          <a class="resource-card" href="https://www.aktu.ac.in" target="_blank">
+            <div class="resource-icon" style="background:linear-gradient(135deg,#50f784,#50c8f7)"><i class="fas fa-book-open"></i></div>
+            <span>B.Tech Syllabus</span>
+          </a>
+          <a class="resource-card" href="#" onclick="openRoutineModal()">
+            <div class="resource-icon" style="background:linear-gradient(135deg,#f7c050,#f75050)"><i class="fas fa-calendar-check"></i></div>
+            <span>Class Routine</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Web App Shortcuts -->
+      <section class="widget widget-shortcuts">
+        <div class="widget-header">
+          <div class="widget-title"><i class="fas fa-th"></i> Quick Access</div>
+        </div>
+        <div class="shortcuts-row">
+          <a class="shortcut-item" href="https://web.whatsapp.com" target="_blank" title="WhatsApp Web">
+            <div class="shortcut-icon" style="background:#25D366"><i class="fab fa-whatsapp"></i></div>
+            <span>WhatsApp</span>
+          </a>
+          <a class="shortcut-item" href="https://web.telegram.org" target="_blank" title="Telegram Web">
+            <div class="shortcut-icon" style="background:#2CA5E0"><i class="fab fa-telegram"></i></div>
+            <span>Telegram</span>
+          </a>
+          <a class="shortcut-item" href="https://youtube.com" target="_blank" title="YouTube">
+            <div class="shortcut-icon" style="background:#FF0000"><i class="fab fa-youtube"></i></div>
+            <span>YouTube</span>
+          </a>
+          <a class="shortcut-item" href="https://swayam.gov.in" target="_blank" title="SWAYAM">
+            <div class="shortcut-icon" style="background:linear-gradient(135deg,#f7a050,#f75050)"><i class="fas fa-university"></i></div>
+            <span>SWAYAM</span>
+          </a>
+          <a class="shortcut-item" href="https://chat.openai.com" target="_blank" title="ChatGPT">
+            <div class="shortcut-icon" style="background:#10a37f"><i class="fas fa-robot"></i></div>
+            <span>ChatGPT</span>
+          </a>
+          <a class="shortcut-item" href="https://gemini.google.com" target="_blank" title="Gemini">
+            <div class="shortcut-icon" style="background:linear-gradient(135deg,#4f8ef7,#a050f7)"><i class="fas fa-gem"></i></div>
+            <span>Gemini</span>
+          </a>
+        </div>
+      </section>
+
+    </div><!-- /col-left -->
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-right">
+
+      <!-- Smart Calendar -->
+      <section class="widget widget-calendar">
+        <div class="widget-header">
+          <div class="widget-title"><i class="fas fa-calendar-alt"></i> Smart Calendar</div>
+          <div class="cal-nav">
+            <button class="wbtn" onclick="calPrev()"><i class="fas fa-chevron-left"></i></button>
+            <span id="cal-month-label"></span>
+            <button class="wbtn" onclick="calNext()"><i class="fas fa-chevron-right"></i></button>
+            <button class="wbtn add-reminder-btn" onclick="openReminderModal()" title="Add Reminder"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+        <div class="cal-grid-header">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="reminders-list" id="reminders-list"></div>
+      </section>
+
+      <!-- Translate Widget -->
+      <section class="widget widget-translate">
+        <div class="widget-header">
+          <div class="widget-title"><i class="fas fa-language"></i> Quick Translate</div>
+        </div>
+        <div class="translate-body">
+          <div class="translate-row">
+            <select id="tr-from"><option value="auto">Auto Detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="ja">Japanese</option><option value="zh">Chinese</option></select>
+            <button class="wbtn" onclick="swapLangs()"><i class="fas fa-exchange-alt"></i></button>
+            <select id="tr-to"><option value="hi">Hindi</option><option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="ja">Japanese</option><option value="zh">Chinese</option></select>
+          </div>
+          <textarea id="tr-input" placeholder="Type text to translate..." rows="3"></textarea>
+          <button class="translate-btn" onclick="doTranslate()"><i class="fas fa-exchange-alt"></i> Translate</button>
+          <div id="tr-output" class="tr-output hidden"></div>
+        </div>
+      </section>
+
+    </div><!-- /col-right -->
+  </div><!-- /content-grid -->
+
+</main>
+
+<!-- ╔═══════════════════════════════════════════════════════╗ -->
+<!-- ║              MODALS & OVERLAYS                       ║ -->
+<!-- ╚═══════════════════════════════════════════════════════╝ -->
+
+<!-- LOGIN MODAL -->
+<div id="modal-login" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-logo"><i class="fas fa-chalkboard"></i></div>
+    <h2>Welcome Back</h2>
+    <p class="modal-sub">Sign in with your credentials</p>
+    <form id="login-form" onsubmit="doLogin(event)">
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Username</label>
+        <input type="text" id="login-username" placeholder="Enter username" required autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="login-password" placeholder="Enter password" required autocomplete="current-password" />
+          <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <div id="login-error" class="form-error hidden"></div>
+      <button type="submit" class="btn-primary w-full" id="login-submit">
+        <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Sign In</span>
+        <span class="btn-spinner hidden"><i class="fas fa-spinner fa-spin"></i></span>
+      </button>
+    </form>
+    <button class="modal-close" onclick="closeModal('modal-login')"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- ADMIN SETTINGS MODAL -->
+<div id="modal-admin" class="modal-overlay hidden">
+  <div class="modal-box wide admin-modal">
+    <div class="admin-header">
+      <div class="admin-logo"><i class="fas fa-shield-alt"></i></div>
+      <div>
+        <h2>Admin Panel</h2>
+        <p class="modal-sub">SmartBoard Control Center</p>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-admin')"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Admin Login Gate -->
+    <div id="admin-login-gate">
+      <form onsubmit="doAdminLogin(event)">
+        <div class="form-group">
+          <label><i class="fas fa-user-shield"></i> Admin Username</label>
+          <input type="text" id="admin-login-user" placeholder="Admin username" required autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-key"></i> Admin Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="admin-login-pw" placeholder="Admin password" required autocomplete="off" />
+            <button type="button" class="pw-toggle" onclick="togglePw('admin-login-pw',this)"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div id="admin-login-error" class="form-error hidden"></div>
+        <button type="submit" class="btn-primary w-full"><i class="fas fa-unlock"></i> Access Admin Panel</button>
+      </form>
+    </div>
+
+    <!-- Admin Panel Content -->
+    <div id="admin-panel-content" class="hidden">
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="users" onclick="switchAdminTab('users',this)"><i class="fas fa-users"></i> Users</button>
+        <button class="admin-tab" data-tab="files" onclick="switchAdminTab('files',this)"><i class="fas fa-folder"></i> Files</button>
+        <button class="admin-tab" data-tab="boards" onclick="switchAdminTab('boards',this)"><i class="fas fa-th-large"></i> Boards</button>
+        <button class="admin-tab" data-tab="analytics" onclick="switchAdminTab('analytics',this)"><i class="fas fa-chart-bar"></i> Analytics</button>
+        <button class="admin-tab" data-tab="settings" onclick="switchAdminTab('settings',this)"><i class="fas fa-cog"></i> Settings</button>
+      </div>
+
+      <!-- Users Tab -->
+      <div class="admin-tab-content active" id="tab-users">
+        <div class="tab-actions">
+          <button class="btn-primary" onclick="openCreateUser()"><i class="fas fa-user-plus"></i> Create User</button>
+        </div>
+        <div class="admin-list" id="users-list">Loading...</div>
+      </div>
+
+      <!-- Files Tab -->
+      <div class="admin-tab-content hidden" id="tab-files">
+        <div class="tab-actions">
+          <button class="btn-primary" onclick="triggerAdminUpload()"><i class="fas fa-upload"></i> Upload File</button>
+          <button class="btn-primary" onclick="triggerAdminRoutineUpload()" style="background: linear-gradient(135deg, #10b981, #34d399)"><i class="fas fa-calendar-alt"></i> Upload Routine</button>
+          <select id="admin-upload-board" class="form-select">
+            <option value="1" data-subject="FLAT">Board 01 – FLAT</option>
+            <option value="1" data-subject="DBMS">Board 01 – DBMS</option>
+            <option value="1" data-subject="AI">Board 01 – AI</option>
+            <option value="1" data-subject="SE">Board 01 – SE</option>
+            <option value="1" data-subject="PSD">Board 01 – PSD</option>
+            <option value="2">Board 02</option>
+            <option value="3">Board 03</option>
+            <option value="4">Board 04</option>
+            <option value="5">Board 05</option>
+            <option value="0" data-subject="ROUTINE">Routine / Time Table</option>
+          </select>
+          <input type="file" id="admin-file-input" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.ppt,.pptx" multiple class="hidden" onchange="doAdminUpload(this)" />
+          <input type="file" id="admin-routine-input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="doAdminRoutineUpload(this)" />
+        </div>
+        <div class="admin-list" id="admin-files-list">Loading...</div>
+      </div>
+
+      <!-- Boards Tab -->
+      <div class="admin-tab-content hidden" id="tab-boards">
+        <div class="admin-list" id="admin-boards-list">Loading...</div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div class="admin-tab-content hidden" id="tab-analytics">
+        <div class="analytics-grid">
+          <div class="stat-card"><div class="stat-num" id="stat-files">0</div><div class="stat-label">Total Files</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-users">0</div><div class="stat-label">Users</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-boards">5</div><div class="stat-label">Boards</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-active">0</div><div class="stat-label">Active Now</div></div>
+        </div>
+        <div id="recent-activity" class="recent-list"></div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div class="admin-tab-content hidden" id="tab-settings">
+        <div class="settings-list">
+          <div class="setting-row">
+            <div><strong>Live Board Preview</strong><p>Preview boards in admin panel</p></div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-live-preview" checked onchange="saveLivePreviewSetting(this.checked)"/>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div><strong>Dark Mode Default</strong><p>Set default theme for new visitors</p></div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-dark-default" checked onchange="saveDarkDefault(this.checked)"/>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div><strong>Wallpaper Style</strong><p>Home screen background</p></div>
+            <select id="wallpaper-select" class="form-select" onchange="changeWallpaper(this.value)">
+              <option value="aurora">Aurora</option>
+              <option value="mesh">Mesh Gradient</option>
+              <option value="dark-grid">Dark Grid</option>
+              <option value="minimal">Minimal</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <div><strong>Change Admin Password</strong><p>Update admin credentials</p></div>
+            <button class="btn-outline" onclick="openChangePassword()"><i class="fas fa-key"></i> Change</button>
+          </div>
+          <div class="setting-row">
+            <div><strong>Board Configuration</strong><p>Set subjects for boards 02–05</p></div>
+            <button class="btn-outline" onclick="switchAdminTab('boards',null)"><i class="fas fa-edit"></i> Manage</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- USER UPLOAD MODAL -->
+<div id="modal-upload" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-upload"></i> Upload File</h2>
+    <form onsubmit="doUserUpload(event)">
+      <div class="form-group">
+        <label>Select Board & Subject</label>
+        <select id="user-upload-board" class="form-select">
+            <option value="1" data-subject="FLAT">Board 01 – FLAT</option>
+            <option value="1" data-subject="DBMS">Board 01 – DBMS</option>
+            <option value="1" data-subject="AI">Board 01 – AI</option>
+            <option value="1" data-subject="SE">Board 01 – SE</option>
+            <option value="1" data-subject="PSD">Board 01 – PSD</option>
+            <option value="2">Board 02</option>
+            <option value="3">Board 03</option>
+            <option value="4">Board 04</option>
+            <option value="5">Board 05</option>
+            <option value="0" data-subject="ROUTINE">Routine / Time Table</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>File(s)</label>
+        <input type="file" id="user-file-input" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.ppt,.pptx" multiple required />
+      </div>
+      <div class="modal-footer-btns">
+        <button type="button" class="btn-outline" onclick="closeModal('modal-upload')">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-upload"></i> Upload</button>
+      </div>
+    </form>
+    <button class="modal-close" onclick="closeModal('modal-upload')"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- CREATE USER MODAL -->
+<div id="modal-create-user" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-user-plus"></i> Create User</h2>
+    <form onsubmit="doCreateUser(event)">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="new-user-name" placeholder="Enter username" required />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="new-user-pw" placeholder="Set password" required />
+          <button type="button" class="pw-toggle" onclick="togglePw('new-user-pw',this)"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <div id="create-user-error" class="form-error hidden"></div>
+      <div class="modal-footer-btns">
+        <button type="button" class="btn-outline" onclick="closeModal('modal-create-user')">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Create</button>
+      </div>
+    </form>
+    <button class="modal-close" onclick="closeModal('modal-create-user')"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- REMINDER MODAL -->
+<div id="modal-reminder" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-bell"></i> Add Reminder</h2>
+    <form onsubmit="addReminder(event)">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="rem-title" placeholder="e.g. FLAT Exam, Holiday..." required />
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="rem-date" required />
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="rem-type">
+          <option value="reminder">Reminder</option>
+          <option value="exam">Exam</option>
+          <option value="holiday">Holiday</option>
+          <option value="event">Event</option>
+        </select>
+      </div>
+      <div class="modal-footer-btns">
+        <button type="button" class="btn-outline" onclick="closeModal('modal-reminder')">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> Add</button>
+      </div>
+    </form>
+    <button class="modal-close" onclick="closeModal('modal-reminder')"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- CONFIGURE BOARD MODAL -->
+<div id="modal-configure-board" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-edit"></i> Configure Board</h2>
+    <p class="modal-sub">Set a subject name for this board</p>
+    <form onsubmit="doConfigureBoard(event)">
+      <div class="form-group">
+        <label>Subject / Board Name</label>
+        <input type="text" id="board-subject-input" placeholder="e.g. Mathematics, Physics..." required />
+      </div>
+      <input type="hidden" id="board-config-id" />
+      <div class="modal-footer-btns">
+        <button type="button" class="btn-outline" onclick="closeModal('modal-configure-board')">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save</button>
+      </div>
+    </form>
+    <button class="modal-close" onclick="closeModal('modal-configure-board')"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div id="modal-change-pw" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2><i class="fas fa-key"></i> Change Admin Password</h2>
+    <form onsubmit="doChangePassword(event)">
+      <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" id="cp-current" placeholder="Current password" required />
+      </div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="cp-new" placeholder="New password" required />
+      </div>
+      <div id="cp-error" class="form-error hidden"></div>
+      <div class="modal-footer-btns">
+        <button type="button" class="btn-outline" onclick="closeModal('modal-change-pw')">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Update</button>
+      </div>
+    </form>
+    <button class="modal-close" onclick="closeModal('modal-change-pw')"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden">
+  <i class="fas fa-check-circle"></i>
+  <span id="toast-msg"></span>
+</div>
+
+<!-- NOTIFICATION BADGE -->
+<div id="notif-badge" class="notif-badge hidden">
+  <i class="fas fa-bell"></i>
+  <span id="notif-msg"></span>
+  <button onclick="this.parentElement.classList.add('hidden')"><i class="fas fa-times"></i></button>
+</div>
+
+<script src="home.js"></script>
+</body>
 </html>
