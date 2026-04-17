@@ -34,7 +34,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ── Storage Configuration (Render Persistent Disk Support) ─────────
 const DATA_DIR = fs.existsSync('/app/data') ? '/app/data' : __dirname;
 const uploadDir = path.join(DATA_DIR, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+if (!fs.existsSync(uploadDir)) {
+    try { fs.mkdirSync(uploadDir, { recursive: true }); } 
+    catch(e) { console.error("Upload dir creation failed:", e.message); }
+}
 app.use('/uploads', express.static(uploadDir, {
   setHeaders: (res, path) => {
     res.set('Content-Disposition', 'inline'); 
@@ -51,8 +54,15 @@ const authLimiter = rateLimit({
 
 // ── Database ──────────────────────────────────────
 const dbPath = path.join(DATA_DIR, 'database.sqlite');
-const db = new Database(dbPath);
-db.pragma('journal_mode = WAL');
+let db;
+try {
+    db = new Database(dbPath);
+    db.pragma('journal_mode = WAL');
+} catch (err) {
+    console.error("📂 SQLite CantOpen at", dbPath, "-", err.message);
+    console.log("⚠️ Falling back to local directory...");
+    db = new Database(path.join(__dirname, 'database.sqlite'));
+}
 
 const SECRET_KEY       = process.env.JWT_SECRET       || 'sb_jwt_secret_2024_!@#xK9';
 const ADMIN_SECRET_KEY = process.env.ADMIN_JWT_SECRET || 'sb_admin_jwt_2024_$%^yL8';
@@ -157,7 +167,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 100 * 1024 * 1024 } // 100 MB
+  limits: { fileSize: 500 * 1024 * 1024 } // Increased to 500 MB for large college projects
 });
 
 // ══════════════════════════════════════════════════
