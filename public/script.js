@@ -58,56 +58,82 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadPDFsForBoard() {
     if (!currentBoardId) return;
-    const res = await fetch(`/api/board-files?board=${currentBoardId}&subject=${encodeURIComponent(currentSubject)}`);
-    const pdfs = await res.json();
+
     const list = document.getElementById('dynamicPdfList');
     if (!list) return;
-    list.innerHTML = "";
 
+    // Always add navigation buttons regardless of network state
+    list.innerHTML = '';
     const backBtn = document.createElement('button');
     backBtn.className = 'pdfBtn';
     backBtn.innerHTML = 'Home';
-    backBtn.onclick = () => {
-        window.location.href = 'index.html';
-    };
+    backBtn.onclick = () => { window.location.href = 'index.html'; };
     list.appendChild(backBtn);
 
     const blankBtn = document.createElement('button');
     blankBtn.className = 'pdfBtn';
     blankBtn.innerHTML = 'Fresh Session';
     blankBtn.onclick = () => {
-        pages = [{ type: "blank", gridType: 0 }];
+        pages = [{ type: 'blank', gridType: 0 }];
         currentIndex = 0;
         pageStrokes = { 0: [] };
         pageRedoStacks = { 0: [] };
         renderPage();
         loadCurrentPageState();
-        document.getElementById("pdfLibrary").style.display = "none";
+        document.getElementById('pdfLibrary').style.display = 'none';
     };
     list.appendChild(blankBtn);
+
+    // Fetch file list with retry + timeout to handle Render cold starts
+    let pdfs = [];
+    for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+            const controller = new AbortController();
+            const tid = setTimeout(() => controller.abort(), 20_000); // 20s timeout
+            const res = await fetch(
+                `/api/board-files?board=${encodeURIComponent(currentBoardId)}&subject=${encodeURIComponent(currentSubject)}`,
+                { signal: controller.signal }
+            );
+            clearTimeout(tid);
+            if (!res.ok) throw new Error(`Server error ${res.status}`);
+            pdfs = await res.json();
+            break; // success
+        } catch (err) {
+            console.warn(`[Board] File list fetch attempt ${attempt}/3 failed: ${err.message}`);
+            if (attempt < 3) await new Promise(r => setTimeout(r, 3000 * attempt));
+            else {
+                // Show a non-blocking error in the list (don't alert/crash)
+                const errBtn = document.createElement('button');
+                errBtn.className = 'pdfBtn';
+                errBtn.style.color = '#f87171';
+                errBtn.innerHTML = '⚠ Files unavailable — tap to retry';
+                errBtn.onclick = () => loadPDFsForBoard();
+                list.appendChild(errBtn);
+                return;
+            }
+        }
+    }
 
     pdfs.forEach(pdf => {
         const btn = document.createElement('button');
         btn.className = 'pdfBtn';
         const ext = pdf.filename.split('.').pop().toLowerCase();
-        
-        // Simplified UI: Plain text titles only
         btn.innerText = pdf.original_name;
-        
         btn.onclick = () => {
             if (['png','jpg','jpeg','gif','webp'].includes(ext)) {
                 loadWebsiteImage('/uploads/' + pdf.filename);
             } else if (['mp4','webm','mov'].includes(ext)) {
                 loadWebsiteVideo('/uploads/' + pdf.filename);
-            } else if (['pdf'].includes(ext)) {
+            } else if (ext === 'pdf') {
                 loadWebsitePDF('/uploads/' + pdf.filename);
             } else {
-                alert("This file (" + ext.toUpperCase() + ") is for reference.");
+                alert('This file (' + ext.toUpperCase() + ') is for reference.');
             }
         };
         list.appendChild(btn);
     });
 }
+
 
 function loadWebsiteImage(url) {
     let img = new Image();
@@ -1044,152 +1070,237 @@ function timerReset() {
     formatTimer();
 }
 
+    // ═══════════════════════════════════════════
+    // PDF EXPORT — FIXED VERSION
+    // Fixes: timing, fill colour, circle maths, multi-page slicing
+    // ═══════════════════════════════════════════
     function exportAsPDF() {
         const boardUrl = window.location.href;
-        alert("Generating Combined PDF... This merge ensures shapes, pens, and backgrounds are saved as one.");
-        let pdf = new jspdf.jsPDF('landscape');
+        const totalPages = pages.length;
         
-        // Convert all pages
-        addCanvasToPdfPage(pdf, 0, () => {
-            let currentIdx = 1;
-            function processNext() {
-                if (currentIdx >= pages.length) {
-                    document.getElementById('qrCodeContainer').innerHTML = "";
-                    // For QR, we use the Board Session URL so students can scan to join
-                    new QRCode(document.getElementById('qrCodeContainer'), {
-                        text: boardUrl,
-                        width: 200, height: 200,
-                        colorDark : "#2b2b40", colorLight : "#ffffff"
-                    });
-                    document.getElementById('dlPdfBtn').onclick = () => pdf.save(`smartboard_lesson_${Date.now()}.pdf`);
-                    document.getElementById('exportModal').classList.remove('hidden');
-                    return;
-                }
-                processNextSub(pdf, currentIdx, () => {
-                   currentIdx++;
-                   processNext();
-                });
+        // Show progress to the user
+        const exportBtn = document.querySelector('button[onclick="exportAsPDF()"]');
+        if (exportBtn) { exportBtn.disabled = true; exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+        
+        const pdf = new jspdf.jsPDF('landscape');
+
+        (async () => {
+          try {
+            for (let idx = 0; idx < totalPages; idx++) {
+                await addCanvasToPdfPage(pdf, idx, idx > 0);
             }
-            if (pages.length > 1) processNext();
-            else {
-                // Single page case
-                document.getElementById('qrCodeContainer').innerHTML = "";
-                new QRCode(document.getElementById('qrCodeContainer'), { text: boardUrl, width: 200, height: 200 });
-                document.getElementById('dlPdfBtn').onclick = () => pdf.save(`smartboard_lesson_${Date.now()}.pdf`);
-                document.getElementById('exportModal').classList.remove('hidden');
-            }
-        });
+
+            // QR + download
+            document.getElementById('qrCodeContainer').innerHTML = '';
+            new QRCode(document.getElementById('qrCodeContainer'), {
+                text: boardUrl, width: 200, height: 200,
+                colorDark: '#2b2b40', colorLight: '#ffffff'
+            });
+            document.getElementById('dlPdfBtn').onclick = () =>
+                pdf.save(`smartboard_lesson_${Date.now()}.pdf`);
+            document.getElementById('exportModal').classList.remove('hidden');
+          } catch(err) {
+            console.error('[PDF Export]', err);
+            alert('PDF export failed: ' + err.message);
+          } finally {
+            if (exportBtn) { exportBtn.disabled = false; exportBtn.innerHTML = '<i class="fas fa-file-export i-grey"></i><span class="lbl">Export</span>'; }
+          }
+        })();
     }
 
-    // Helper for sequential processing
-    function processNextSub(pdf, idx, done) {
-        addCanvasToPdfPage(pdf, idx, done);
-    }
+    /**
+     * Renders one board page and adds it (possibly as multiple PDF pages) to `pdf`.
+     *
+     * KEY FIX: For blank/blackboard pages the canvas is the full viewport
+     * (e.g. 1920 × 1080 px).  If content only occupies a 400 × 300 area in
+     * the top-left corner, the old code would fit that enormous blank canvas
+     * into one PDF page → tiny, unreadable output.
+     *
+     * Fix: compute the actual stroke bounding box, crop the canvas to that
+     * region (+ padding), then scale the crop to fill the entire PDF page.
+     */
+    async function addCanvasToPdfPage(pdf, pageIdx, addPage) {
+        const originalIdx = currentIndex;
+        currentIndex = pageIdx;
 
-  async function addCanvasToPdfPage(pdf, pageIdx, cb) {
-  let originalIdx = currentIndex;
-  currentIndex = pageIdx;
-  
-  await renderPage();
-  loadCurrentPageState();
-  
-  setTimeout(() => {
-    // Create base snapshot canvas
-    let mCanvas = document.createElement('canvas');
-    mCanvas.width = pdfCanvas.width;
-    mCanvas.height = pdfCanvas.height;
-    let mctx = mCanvas.getContext('2d');
-    
-    // Draw background
-    mctx.drawImage(pdfCanvas, 0, 0);
-    
-    // Draw all annotations
-    const strokes = pageStrokes[pageIdx] || [];
-    mctx.save();
-    mctx.lineCap = "round";
-    let maxY = 0; // Track content depth to know where to stop paginating
-    
-    for (let s of strokes) {
-        let strokeWidth = s.width;
-        mctx.strokeStyle = s.color || "#000000";
-        mctx.globalAlpha = 1;
-        mctx.globalCompositeOperation = "source-over";
+        await renderPage();
+        await new Promise(r => setTimeout(r, 700)); // let paint flush
+        loadCurrentPageState();
 
-        if (s.tool === "erase") {
-            mctx.globalCompositeOperation = "destination-out";
-            mctx.lineWidth = strokeWidth * 2;
-        } else if (s.tool === "highlight") {
-            mctx.lineWidth = Math.max(strokeWidth, 20);
-            mctx.globalAlpha = 0.4;
-        } else {
-            mctx.lineWidth = strokeWidth;
+        // ── Master canvas: background + all strokes ──────────────────────────
+        const mCanvas = document.createElement('canvas');
+        mCanvas.width  = pdfCanvas.width;
+        mCanvas.height = pdfCanvas.height;
+        const mctx = mCanvas.getContext('2d');
+        mctx.drawImage(pdfCanvas, 0, 0);
+
+        const strokes = pageStrokes[pageIdx] || [];
+
+        // Track full bounding box (X and Y) for crop calculation
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+        function expandBounds(x, y) {
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
         }
 
-        if (["draw", "erase", "highlight", "laser"].includes(s.tool)) {
-            if (!s.path || s.path.length === 0) continue;
-            mctx.beginPath();
-            mctx.moveTo(s.path[0].x, s.path[0].y);
-            for (let i = 1; i < s.path.length; i++) {
-                mctx.lineTo(s.path[i].x, s.path[i].y);
-                if (s.path[i].y > maxY) maxY = s.path[i].y;
-            }
-            mctx.stroke();
-        } else if (s.tool === "rect" || s.tool === "circle" || s.tool === "line") {
-            const x = Math.min(s.shape.x1, s.shape.x2);
-            const y = Math.min(s.shape.y1, s.shape.y2);
-            const w = Math.abs(s.shape.x2 - s.shape.x1);
-            const h = Math.abs(s.shape.y2 - s.shape.y1);
-            if (y + h > maxY) maxY = y + h;
+        mctx.save();
+        mctx.lineCap = 'round';
 
-            mctx.beginPath();
-            if (s.tool === "rect") mctx.strokeRect(x, y, w, h);
-            else if (s.tool === "circle") {
-                const r = Math.sqrt(Math.pow(s.shape.x2 - s.shape.x1, 2) + Math.pow(s.shape.y2 - s.shape.y1, 2));
-                mctx.arc(s.shape.x1, s.shape.y1, r, 0, Math.PI * 2);
-            } else if (s.tool === "line") {
+        for (const s of strokes) {
+            mctx.globalAlpha = 1;
+            mctx.globalCompositeOperation = 'source-over';
+            mctx.strokeStyle = s.color || '#ffffff';
+
+            if (s.tool === 'erase') {
+                mctx.globalCompositeOperation = 'destination-out';
+                mctx.lineWidth = s.width * 2;
+            } else if (s.tool === 'highlight') {
+                mctx.lineWidth = Math.max(s.width, 20);
+                mctx.globalAlpha = 0.4;
+            } else {
+                mctx.lineWidth = s.width;
+            }
+
+            if (['draw', 'erase', 'highlight', 'laser'].includes(s.tool)) {
+                if (!s.path || s.path.length === 0) continue;
+                mctx.beginPath();
+                mctx.moveTo(s.path[0].x, s.path[0].y);
+                for (let i = 1; i < s.path.length; i++) {
+                    mctx.lineTo(s.path[i].x, s.path[i].y);
+                    expandBounds(s.path[i].x, s.path[i].y);
+                }
+                expandBounds(s.path[0].x, s.path[0].y);
+                mctx.stroke();
+            } else if (s.tool === 'rect') {
+                const x = Math.min(s.shape.x1, s.shape.x2);
+                const y = Math.min(s.shape.y1, s.shape.y2);
+                const w = Math.abs(s.shape.x2 - s.shape.x1);
+                const h = Math.abs(s.shape.y2 - s.shape.y1);
+                expandBounds(x, y); expandBounds(x + w, y + h);
+                mctx.strokeRect(x, y, w, h);
+            } else if (s.tool === 'circle') {
+                const cx = s.shape.cx !== undefined ? s.shape.cx : (s.shape.x1 + s.shape.x2) / 2;
+                const cy = s.shape.cy !== undefined ? s.shape.cy : (s.shape.y1 + s.shape.y2) / 2;
+                const r  = s.shape.r  !== undefined ? s.shape.r  : Math.hypot(s.shape.x2 - s.shape.x1, s.shape.y2 - s.shape.y1) / 2;
+                expandBounds(cx - r, cy - r); expandBounds(cx + r, cy + r);
+                mctx.beginPath();
+                mctx.arc(cx, cy, r, 0, Math.PI * 2);
+                mctx.stroke();
+            } else if (s.tool === 'line') {
+                expandBounds(s.shape.x1, s.shape.y1);
+                expandBounds(s.shape.x2, s.shape.y2);
+                mctx.beginPath();
                 mctx.moveTo(s.shape.x1, s.shape.y1);
                 mctx.lineTo(s.shape.x2, s.shape.y2);
+                mctx.stroke();
+            } else if (s.tool === 'arrow') {
+                const headLen = 15;
+                const dx = s.shape.x2 - s.shape.x1;
+                const dy = s.shape.y2 - s.shape.y1;
+                const angle = Math.atan2(dy, dx);
+                expandBounds(s.shape.x1, s.shape.y1);
+                expandBounds(s.shape.x2, s.shape.y2);
+                mctx.beginPath();
+                mctx.moveTo(s.shape.x1, s.shape.y1);
+                mctx.lineTo(s.shape.x2, s.shape.y2);
+                mctx.moveTo(s.shape.x2 - headLen * Math.cos(angle - Math.PI/6), s.shape.y2 - headLen * Math.sin(angle - Math.PI/6));
+                mctx.lineTo(s.shape.x2, s.shape.y2);
+                mctx.lineTo(s.shape.x2 - headLen * Math.cos(angle + Math.PI/6), s.shape.y2 - headLen * Math.sin(angle + Math.PI/6));
+                mctx.stroke();
             }
-            mctx.stroke();
         }
-    }
-    mctx.restore();
+        mctx.restore();
 
-    // PAGINATION LOGIC
-    // Standard landscape ratio 297:210. 
-    // We slice by the relative height of the viewer at current page width.
-    const sliceHeight = mCanvas.width * (210 / 297); 
-    const isBlank = pages[pageIdx].type === 'blank' || pages[pageIdx].type === 'blackboard';
-    
-    // For PDFs/Images, we usually just want one page per slide.
-    // For Blank/Blackboard, we use content height (maxY) to decide how many pages to slice.
-    let totalHeight = isBlank ? Math.max(sliceHeight, maxY + 100) : mCanvas.height;
-    let numPagesNeeded = Math.ceil(totalHeight / sliceHeight);
-    
-    // Safety limit
-    if (numPagesNeeded > 50) numPagesNeeded = 50;
+        // ── PDF page dimensions ───────────────────────────────────────────────
+        const pdfPageW = pdf.internal.pageSize.getWidth();
+        const pdfPageH = pdf.internal.pageSize.getHeight();
+        const pdfAspect = pdfPageH / pdfPageW; // ~0.707 for A4 landscape
 
-    for (let p = 0; p < numPagesNeeded; p++) {
-        // Create a slice canvas for this specific PDF page
-        let sCanvas = document.createElement('canvas');
-        sCanvas.width = mCanvas.width;
-        sCanvas.height = sliceHeight;
-        let sctx = sCanvas.getContext('2d');
-        
-        // Background fill for blank slices (inherit blackboard color)
-        sctx.fillStyle = mctx.fillStyle || "#121212";
-        sctx.fillRect(0, 0, sCanvas.width, sCanvas.height);
-        
-        // Copy segment from master
-        sctx.drawImage(mCanvas, 0, p * sliceHeight, mCanvas.width, sliceHeight, 0, 0, sCanvas.width, sliceHeight);
-        
-        // Add to PDF
-        let imgData = sCanvas.toDataURL('image/jpeg', 0.85);
-        if (pdf.internal.pages.length > 1) pdf.addPage('landscape'); 
-        pdf.addImage(imgData, 'JPEG', 0, 0, 297, 210);
+        const page    = pages[pageIdx];
+        const isBlank = page.type === 'blank' || page.type === 'blackboard';
+        const bgColor = (page.gridType === 2 || page.gridType === 3) ? '#ffffff' : '#121212';
+
+        if (isBlank) {
+            // ── CROP to content region (the KEY readability fix) ─────────────
+            const PAD        = 60; // pixels padding around content
+            const hasContent = maxX > minX && maxY > minY && strokes.length > 0;
+
+            let cropX, cropY, cropW, cropH;
+            if (hasContent) {
+                cropX = Math.max(0, minX - PAD);
+                cropY = Math.max(0, minY - PAD);
+                cropW = Math.min(mCanvas.width,  maxX + PAD) - cropX;
+                cropH = Math.min(mCanvas.height, maxY + PAD) - cropY;
+            } else {
+                // Blank with no strokes → export the visible viewport
+                cropX = 0; cropY = 0;
+                cropW = mCanvas.width; cropH = mCanvas.height;
+            }
+
+            // Expand crop to match PDF aspect ratio (avoids squished content)
+            const cropAspect = cropH / cropW;
+            if (cropAspect > pdfAspect) {
+                // Content is taller → widen the crop
+                const newW  = cropH / pdfAspect;
+                const delta = newW - cropW;
+                cropX = Math.max(0, cropX - delta / 2);
+                cropW = Math.min(mCanvas.width - cropX, newW);
+            } else {
+                // Content is wider → heighten the crop
+                const newH  = cropW * pdfAspect;
+                const delta = newH - cropH;
+                cropY = Math.max(0, cropY - delta / 2);
+                cropH = Math.min(mCanvas.height - cropY, newH);
+            }
+
+            if (addPage) pdf.addPage('landscape');
+
+            // Draw just the cropped region into a correctly-sized canvas
+            const sCanvas = document.createElement('canvas');
+            sCanvas.width  = Math.max(1, Math.round(cropW));
+            sCanvas.height = Math.max(1, Math.round(cropH));
+            const sctx = sCanvas.getContext('2d');
+            sctx.fillStyle = bgColor;
+            sctx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+            sctx.drawImage(
+                mCanvas,
+                cropX, cropY, cropW, cropH,  // source region
+                0,     0,     sCanvas.width, sCanvas.height  // fill dest
+            );
+
+            const imgData = sCanvas.toDataURL('image/jpeg', 0.92);
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfPageW, pdfPageH);
+
+        } else {
+            // ── PDF / Image pages: slice vertically into multiple PDF pages ──
+            const sliceH    = Math.round(mCanvas.width * pdfAspect);
+            const numSlices = Math.min(Math.ceil(mCanvas.height / sliceH), 50);
+
+            for (let p = 0; p < numSlices; p++) {
+                if (addPage || p > 0) pdf.addPage('landscape');
+
+                const sCanvas = document.createElement('canvas');
+                sCanvas.width  = mCanvas.width;
+                sCanvas.height = sliceH;
+                const sctx = sCanvas.getContext('2d');
+                sctx.fillStyle = bgColor;
+                sctx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+                sctx.drawImage(
+                    mCanvas,
+                    0, p * sliceH, mCanvas.width, sliceH,
+                    0, 0,          sCanvas.width, sliceH
+                );
+
+                const imgData = sCanvas.toDataURL('image/jpeg', 0.92);
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfPageW, pdfPageH);
+            }
+        }
+
+        // Restore the board to where the user was
+        currentIndex = originalIdx;
+        await renderPage();
+        loadCurrentPageState();
     }
-    
-    currentIndex = originalIdx;
-    cb();
-  }, 600);
-}

@@ -4,13 +4,14 @@
    ═══════════════════════════════════════════════════════════════ */
 'use strict';
 
-const API = '';  // same-origin
+const API = '';  // same-origin (backend serves frontend on the same domain)
 
 // ═══════════════════════════════════════════════════
 // 1. STATE
 // ═══════════════════════════════════════════════════
 let authToken   = localStorage.getItem('sb_token') || null;
 let currentUser = JSON.parse(localStorage.getItem('sb_user') || 'null');
+let tokenExpiry = parseInt(localStorage.getItem('sb_token_expiry') || '0', 10);
 let adminAuthed = false;
 let allFiles    = [];
 let reminders   = JSON.parse(localStorage.getItem('sb_reminders') || '[]');
@@ -19,23 +20,91 @@ let calDate     = new Date();
 let toastTimer  = null;
 let livePreviewEnabled = localStorage.getItem('sb_live_preview') !== 'false';
 
+// ── Proactive token expiry check ────────────────────────────────────────────────────
+// If the stored token is already expired, clear it immediately on page load
+// to avoid confusing 401 errors on first API call.
+if (authToken && tokenExpiry && Date.now() > tokenExpiry) {
+  authToken = null; currentUser = null; tokenExpiry = 0;
+  localStorage.removeItem('sb_token');
+  localStorage.removeItem('sb_user');
+  localStorage.removeItem('sb_token_expiry');
+}
+
 // ═══════════════════════════════════════════════════
 // 2. INIT
 // ═══════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   applyTheme(localStorage.getItem('sb_theme') || 'dark');
   applyBoardConfigs();
   updateNavUser();
   renderClock();
   renderCalendar();
-  loadFiles();
   loadNotes();
   setupSearch();
   setupDragDrop();
   setupModalOverlayClose();
   setInterval(renderClock, 1000);
-  if (authToken) loadFiles();
+
+  // Render free-tier: backend may be sleeping (cold start ~15-30s).
+  // Ping /api/health first; show a friendly banner while waiting.
+  await wakeUpBackend();
+  loadFiles();
+
+  // ── Keep-alive: ping /api/health every 9 min to prevent Render sleep ────
+  // Render free-tier sleeps after 15 min of inactivity. This runs as long
+  // as any user has the dashboard open — effectively keeping the server warm.
+  setInterval(async () => {
+    try {
+      await fetch(`${API}/api/health`, { signal: AbortSignal.timeout(8_000) });
+    } catch (_) { /* silent — don't disturb the user */ }
+  }, 9 * 60 * 1000); // 9 minutes
 });
+
+// ═══════════════════════════════════════════════════
+// BACKEND WAKE-UP (Render cold-start handler)
+// Pings /api/health with retries. If backend is sleeping,
+// Render takes ~15-30s to wake it. We wait gracefully.
+// ═══════════════════════════════════════════════════
+async function wakeUpBackend() {
+  const MAX_WAIT_MS   = 45_000;  // give Render up to 45s to wake
+  const POLL_INTERVAL = 3_000;
+  const start         = Date.now();
+
+  // Show a subtle status bar at the top so users aren't confused
+  let banner = document.getElementById('backend-status-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'backend-status-banner';
+    Object.assign(banner.style, {
+      position: 'fixed', top: '0', left: '0', right: '0', zIndex: '9999',
+      background: '#f59e0b', color: '#1a1a1a', textAlign: 'center',
+      padding: '8px 16px', fontSize: '13px', fontWeight: '600',
+      display: 'none', transition: 'opacity 0.3s',
+    });
+    document.body.prepend(banner);
+  }
+
+  while (Date.now() - start < MAX_WAIT_MS) {
+    try {
+      const res = await fetch(`${API}/api/health`, { signal: AbortSignal.timeout(8_000) });
+      if (res.ok) {
+        banner.style.display = 'none';
+        return; // backend is alive and MongoDB is connected
+      }
+      // 503 = backend up but DB not connected yet — keep waiting
+    } catch (_) { /* network error / timeout — keep trying */ }
+
+    const elapsed = Math.floor((Date.now() - start) / 1000);
+    banner.textContent = `⏳ Connecting to server… (${elapsed}s) — Please wait`;
+    banner.style.display = 'block';
+    await new Promise(r => setTimeout(r, POLL_INTERVAL));
+  }
+
+  // Gave up — show a persistent error message
+  banner.style.background = '#ef4444';
+  banner.style.color = '#fff';
+  banner.textContent = '⚠️ Server is taking too long to respond. Try refreshing in 30 seconds.';
+}
 
 // ═══════════════════════════════════════════════════
 // 3. THEME
@@ -102,9 +171,12 @@ async function doLogin(e) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Login failed');
 
-    authToken = data.token; currentUser = data.user;
-    localStorage.setItem('sb_token', authToken);
-    localStorage.setItem('sb_user', JSON.stringify(currentUser));
+    authToken   = data.token;
+    currentUser = data.user;
+    tokenExpiry = data.expiresAt || (Date.now() + 7 * 24 * 60 * 60 * 1000);
+    localStorage.setItem('sb_token',        authToken);
+    localStorage.setItem('sb_user',         JSON.stringify(currentUser));
+    localStorage.setItem('sb_token_expiry', String(tokenExpiry));
     closeModal('modal-login');
     updateNavUser();
     loadFiles();
@@ -117,6 +189,27 @@ async function doLogin(e) {
     submitBtn.disabled = false;
   }
 }
+
+// ═══════════════════════════════════════════════════
+// handleAuthError — called by any fetch wrapper when it gets a 401/403
+// Clears the session and prompts the user to log in again.
+// ═══════════════════════════════════════════════════
+function handleAuthError(data, res) {
+  const code = data?.code;
+  if (res.status === 401 && (code === 'TOKEN_EXPIRED' || code === 'NO_TOKEN')) {
+    // Clear stale session silently and open login modal
+    authToken = null; currentUser = null; tokenExpiry = 0;
+    localStorage.removeItem('sb_token');
+    localStorage.removeItem('sb_user');
+    localStorage.removeItem('sb_token_expiry');
+    updateNavUser();
+    showToast('Your session expired. Please sign in again.', true);
+    setTimeout(() => openModal('modal-login'), 500);
+    return true; // handled
+  }
+  return false; // not an auth error
+}
+
 
 // ═══════════════════════════════════════════════════
 // 5. ADMIN AUTH
@@ -390,17 +483,26 @@ async function doAdminRoutineUpload(input) {
   fd.append('board_id', boardId);
   fd.append('subject', 'ROUTINE');
 
+  // Admin uses admin token, but /api/upload validates the user JWT.
+  // Use admin token which is also accepted by the authenticate middleware.
+  const token = window._adminToken;
+  if (!token) { showToast('Admin session expired. Please log in again.', true); input.value = ''; return; }
+
   try {
-    const res = await fetch(`${API}/api/upload`, {
+    const res = await fetchWithRetry(`${API}/api/upload`, {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + window._adminToken },
+      headers: { 'Authorization': 'Bearer ' + token },
       body: fd
     });
-    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Upload failed (HTTP ${res.status})`);
     loadAdminFiles();
     loadFiles();
     showToast('Routine for Board ' + (boardId === 0 ? 'Global' : '0'+boardId) + ' updated!');
-  } catch (err) { showToast('Routine upload failed: ' + err.message, true); }
+  } catch (err) {
+    showToast('Routine upload failed: ' + err.message, true);
+    console.error('[RoutineUpload]', err);
+  }
   input.value = '';
 }
 
@@ -411,25 +513,79 @@ async function doAdminUpload(input) {
   const boardId = selectEl.value;
   const subject = selectEl.options[selectEl.selectedIndex].dataset.subject || '';
 
+  const token = window._adminToken;
+  if (!token) { showToast('Admin session expired. Please log in again.', true); input.value = ''; return; }
+
   const fd = new FormData();
   for (const f of files) fd.append('file', f);
   fd.append('board_id', boardId);
   fd.append('subject', subject);
 
   try {
-    const res = await fetch(`${API}/api/upload`, {
+    const res = await fetchWithRetry(`${API}/api/upload`, {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + window._adminToken },
+      headers: { 'Authorization': 'Bearer ' + token },
       body: fd
     });
-    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Upload failed (HTTP ${res.status})`);
     loadAdminFiles();
     loadFiles();
     showNotif('New file uploaded by admin!');
-    showToast('File(s) uploaded successfully');
-  } catch (err) { showToast('Upload failed: ' + err.message, true); }
+    showToast(`File(s) uploaded successfully`);
+  } catch (err) {
+    showToast('Upload failed: ' + err.message, true);
+    console.error('[AdminUpload]', err);
+  }
   input.value = '';
 }
+
+// ═══════════════════════════════════════════════════════════
+// UTILITY: fetchWithRetry — retries on network errors & 5xx
+// Does NOT retry on 4xx (client error) — that would be wasteful.
+// Automatically handles 401 TOKEN_EXPIRED → logs user out.
+// ═══════════════════════════════════════════════════════════
+async function fetchWithRetry(url, options = {}, retries = 3, delayMs = 1500) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const controller = new AbortController();
+      // 2-minute abort for uploads; 30s for normal requests
+      const timeoutMs = options.body instanceof FormData ? 120_000 : 30_000;
+      const tid = setTimeout(() => controller.abort(), timeoutMs);
+      const res  = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(tid);
+
+      // ── 4xx errors: don't retry, return immediately so callers can handle ──
+      if (res.status >= 400 && res.status < 500) {
+        // Special case: auto-handle expired session
+        if (res.status === 401) {
+          try {
+            const clone = res.clone();
+            const data  = await clone.json();
+            handleAuthError(data, res);
+          } catch(_) {}
+        }
+        return res;
+      }
+
+      // ── 5xx: server error — worth retrying ───────────────────────────────
+      if (res.status >= 500 && attempt < retries) {
+        console.warn(`[fetchWithRetry] Server error ${res.status} on attempt ${attempt}/${retries} — retrying…`);
+        await new Promise(r => setTimeout(r, delayMs * attempt));
+        continue;
+      }
+
+      return res; // 2xx / 3xx or final 5xx attempt
+    } catch (err) {
+      const isLast  = attempt === retries;
+      const isAbort = err.name === 'AbortError';
+      console.warn(`[fetchWithRetry] Attempt ${attempt}/${retries} failed${isAbort ? ' (timeout)' : ''}: ${err.message}`);
+      if (isLast) throw new Error(isAbort ? 'Request timed out. Check your connection and try again.' : err.message);
+      await new Promise(r => setTimeout(r, delayMs * attempt));
+    }
+  }
+}
+
 
 // ═══════════════════════════════════════════════════
 // 6. FILE HUB
@@ -542,18 +698,27 @@ async function doUserUpload(e) {
   fd.append('board_id', boardId);
   fd.append('subject', subject);
   
+  const submitBtn = e.submitter || document.querySelector('#modal-upload button[type="submit"]');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Uploading…'; }
+  
   try {
-    const res = await fetch(`${API}/api/upload`, {
+    const res = await fetchWithRetry(`${API}/api/upload`, {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + token },
       body: fd
     });
-    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Upload failed (HTTP ${res.status})`);
     loadFiles();
     closeModal('modal-upload');
-    showToast('File(s) uploaded!');
-  } catch (err) { showToast(err.message, true); }
-  input.value = '';
+    showToast(`${data.files?.length || 1} file(s) uploaded!`);
+  } catch (err) {
+    showToast('Upload failed: ' + err.message, true);
+    console.error('[Upload]', err);
+  } finally {
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Upload'; }
+    input.value = '';
+  }
 }
 
 // ═══════════════════════════════════════════════════
