@@ -1,0 +1,13 @@
+node_modules/
+.env
+.vscode/
+*.log
+
+# SQLite database files (auto-created at runtime)
+database.sqlite
+database.sqlite-shm
+database.sqlite-wal
+data/
+
+# User uploads (stored on server disk, not in repo)
+uploads/
