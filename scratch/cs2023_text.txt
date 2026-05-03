@@ -1,0 +1,114 @@
+             Computer Science and Information Technology (CS)  
+Page 1 of 7 
+Organizing Institute: IIT Kanpur 
+General Aptitude (GA) 
+ – Q.5 Carry ONE mark Each 
+Q.1 We reached the station late, and _______ missed the train. 
+  
+(A) near 
+(B) nearly 
+(C) utterly  
+(D) mostly  
+  
+Q.2 Kind : _______ : : Often : Frequently 
+(By word meaning) 
+  
+(A) Mean  
+(B) Type 
+(C) Cruel 
+(D) Kindly 
+  
+ 
+ 
+Q.1
+---PAGE BREAK---
+             Computer Science and Information Technology (CS)  
+Page 2 of 7 
+Organizing Institute: IIT Kanpur 
+Q.3 A series of natural numbers 𝐹1, 𝐹2, 𝐹3, 𝐹4, 𝐹5, 𝐹6, 𝐹7, … obeys 𝐹𝑛+1 = 𝐹𝑛 + 𝐹𝑛−1 
+for all integers 𝑛 ≥ 2 .  
+If 𝐹6 = 37, and 𝐹7 = 60, then what is 𝐹1 ? 
+  
+(A) 4 
+(B) 5 
+(C) 8 
+(D) 9 
+  
+ 
+  
+---PAGE BREAK---
+             Computer Science and Information Technology (CS)  
+Page 3 of 7 
+Organizing Institute: IIT Kanpur 
+Q.4 A survey for a certain year found that 90% of pregnant women received medical 
+care at least once before giving birth. Of these women, 60% received medical care 
+from doctors, while 40% received medical care from other healthcare providers. 
+Given this information, which one of the following statements can be inferred with 
+certainty?  
+  
+(A) More than half of the pregnant women received medical care at least once from a 
+doctor. 
+(B) Less than half of the pregnant women received medical care at least once from a 
+doctor. 
+(C) More than half of the pregnant women received medical care at most once from a 
+doctor. 
+(D) Less than half of the pregnant women received medical care at most once from a 
+doctor. 
+  
+Q.5 Looking at the surface of a smooth 3 -dimensional object from the outside, which 
+one of the following options is TRUE? 
+  
+(A) The surface of the object must be concave everywhere. 
+(B) The surface of the object must be convex everywhere. 
+(C) The surface of the object may be concave in some places and convex in other places. 
+(D) The object can have edges, but no corners. 
+  
+ 
+---PAGE BREAK---
+             Computer Science and Information Technology (CS)  
+Page 4 of 7 
+Organizing Institute: IIT Kanpur 
+Q.6 – Q.10 Carry TWO marks Each 
+Q.6 
+ 
+The country of Zombieland is in distress since more than 75% of its working 
+population is suffering from serious health issues. Studies conducted by competent 
+health experts concluded that a complete lack of physical exercise among its 
+working population was one of the leading causes of their health issues. As one of 
+the measures to address the problem, the Government of Zombieland has decided 
+to provide monetary incentives to those who ride bicycles to work.  
+ 
+Based only on the information provided  above, which one of the following 
+statements can be logically inferred with certainty? 
+ 
+  
+(A) All the working population of Zombieland will henceforth ride bicycles to work. 
+(B) Riding bicycles will ensure that all of the working population of Zombieland is free 
+of health issues. 
+(C) The health experts suggested to the Government of Zombieland to declare riding 
+bicycles as mandatory. 
+(D) The Government of Zombieland believes that riding bicycl es is a form of physical 
+exercise. 
+  
+  
+---PAGE BREAK---
+             Computer Science and Information Technology (CS)  
+Page 5 of 7 
+Organizing Institute: IIT Kanpur 
+Q.7 Consider two functions of time (𝑡), 
+𝑓(𝑡)  = 0.01 𝑡2 
+𝑔(𝑡) = 4 𝑡 
+where 0 < 𝑡 < ∞. 
+Now consider the following two statements: 
+(i) For some 𝑡 > 0,  𝑔(𝑡) > 𝑓(𝑡). 
+(ii) There exists a 𝑇, such that 𝑓(𝑡) > 𝑔(𝑡) for all 𝑡 > 𝑇. 
+Which one of the following options is TRUE? 
+  
+(A) only (i) is correct 
+(B) only (ii) is correct 
+(C) both (i) and (ii) are correct 
+(D) neither (i) nor (ii) is correct 
+  
+ 
+  
+---PAGE BREAK---
