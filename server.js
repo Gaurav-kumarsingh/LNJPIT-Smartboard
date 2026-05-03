@@ -43,19 +43,29 @@ app.use(express.json({ limit: '50kb' }));
 
 // ── CORS — allow both Vercel frontend and local dev ───────────────────────────
 const ALLOWED_ORIGINS = [
-  // Add your Vercel URL here (no trailing slash)
   process.env.FRONTEND_URL,
+  'https://lnjpit-smartboard.onrender.com',
   'http://localhost:3000',
   'http://localhost:5173',
+  'http://localhost:4173',
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow requests with no origin (Render health pings, Postman, etc.)
+    // 1. Allow same-origin requests (origin is undefined)
     if (!origin) return cb(null, true);
-    // Allow if in whitelist OR if no whitelist configured (dev mode)
-    if (!ALLOWED_ORIGINS.length || ALLOWED_ORIGINS.includes(origin))
+
+    // 2. Allow if origin matches our whitelist
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+
+    // 3. Allow if origin ends with onrender.com (for safety with subdomains)
+    if (origin.endsWith('.onrender.com')) return cb(null, true);
+
+    // 4. In development, allow localhost/127.0.0.1
+    if (process.env.NODE_ENV !== 'production' && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
       return cb(null, true);
+    }
+
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
