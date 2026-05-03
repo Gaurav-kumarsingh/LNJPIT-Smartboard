@@ -31,6 +31,9 @@ const io         = require('socket.io')(httpServer, {
   cors: { origin: '*', methods: ['GET', 'POST'] },
 });
 
+// ── Trust Proxy — required for correct rate limiting on Render/Vercel ─────────
+app.set('trust proxy', 1);
+
 // ── Security headers ──────────────────────────────────────────────────────────
 app.use(helmet({
   contentSecurityPolicy:     false, // allow CDNs for PDF.js / FontAwesome
@@ -217,7 +220,22 @@ const ADMIN_PASSWORD   = process.env.ADMIN_PASSWORD   || 'gk07011019';
     const hash = await bcrypt.hash(ADMIN_PASSWORD, 12);
     db.prepare('REPLACE INTO admin_settings (id, username, password_hash) VALUES (1, ?, ?)').run(ADMIN_USERNAME, hash);
     console.log(`✅  Admin account ready: ${ADMIN_USERNAME}`);
-  } catch (e) { console.error('Admin seed failed:', e.message); }
+    
+    // ── Seed Default User into MongoDB ─────────────────────────────────────────
+    // This ensures the student/teacher account from .env exists in Atlas.
+    if (process.env.DEFAULT_USER_USERNAME && process.env.DEFAULT_USER_PASSWORD) {
+      const User = require('./models/User');
+      const existing = await User.findOne({ username: process.env.DEFAULT_USER_USERNAME });
+      if (!existing) {
+        const newUser = new User({
+          username: process.env.DEFAULT_USER_USERNAME,
+          password: process.env.DEFAULT_USER_PASSWORD
+        });
+        await newUser.save();
+        console.log(`✅  Default user created: ${process.env.DEFAULT_USER_USERNAME}`);
+      }
+    }
+  } catch (e) { console.error('Seeding failed:', e.message); }
 })();
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -647,6 +665,20 @@ app.get('/api/health', (_req, res) => {
     timestamp: new Date().toISOString(),
     env:       process.env.NODE_ENV || 'development',
   });
+});
+
+// ── JSON Error Handler: prevent HTML responses for API errors ─────────────────
+app.use('/api', (err, req, res, next) => {
+  console.error(`[API Error] ${req.method} ${req.url}:`, err.message);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error',
+    code:  err.code || 'SERVER_ERROR'
+  });
+});
+
+// ── JSON 404 Handler for /api: ensure unmatched API routes return JSON ────────
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'API endpoint not found', code: 'NOT_FOUND' });
 });
 
 // ── Catch-all: serve frontend ─────────────────────────────────────────────────

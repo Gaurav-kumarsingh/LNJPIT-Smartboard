@@ -224,7 +224,19 @@ async function doLogin(e) {
       body: JSON.stringify({ username, password }),
       signal: AbortSignal.timeout(10000)  // ✅ 10 second timeout
     });
-    const data = await res.json();
+
+    // ── Graceful JSON parsing ──────────────────────────────────────────────────────
+    const contentType = res.headers.get('content-type');
+    let data;
+    if (contentType && contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      // Received HTML or plain text (likely a 404/500/Timeout page)
+      const text = await res.text();
+      console.error('[Login] Non-JSON response received:', text.slice(0, 200));
+      throw new Error(`Server returned an invalid response (HTTP ${res.status}). Please try again later.`);
+    }
+
     if (!res.ok) throw new Error(data.error || 'Login failed');
 
     authToken   = data.token;
@@ -291,7 +303,18 @@ async function doAdminLogin(e) {
       body: JSON.stringify({ username, password }),
       signal: AbortSignal.timeout(10000)
     });
-    const data = await res.json();
+
+    // ── Graceful JSON parsing ──────────────────────────────────────────────────────
+    const contentType = res.headers.get('content-type');
+    let data;
+    if (contentType && contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      console.error('[AdminLogin] Non-JSON response received:', text.slice(0, 200));
+      throw new Error(`Server returned an invalid response (HTTP ${res.status}).`);
+    }
+
     if (!res.ok) throw new Error(data.error || 'Invalid credentials');
 
     adminAuthed = true;
