@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>GATE Question Explorer — LNJPIT SmartBoard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --bg:#0d0f1a;--surface:#161929;--surface2:#1e2235;--border:#2a2f4a;
+  --accent:#6c63ff;--accent2:#4facfe;--text:#e8eaf6;--text2:#9ba3c7;
+  --easy:#22c55e;--medium:#f59e0b;--hard:#ef4444;
+  --radius:14px;--shadow:0 8px 32px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+.topnav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;
+  background:rgba(22,25,41,.9);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text)}
+.brand i{color:var(--accent)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);color:var(--text2);
+  text-decoration:none;font-size:.85rem;transition:all .2s}
+.back-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* HERO */
+.hero{text-align:center;padding:40px 24px 24px;background:linear-gradient(135deg,rgba(108,99,255,.12),rgba(79,172,254,.08))}
+.hero h1{font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,#a78bfa,#4facfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);margin-top:8px;font-size:.95rem}
+.stats-row{display:flex;justify-content:center;gap:20px;margin-top:16px;flex-wrap:wrap}
+.stat-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;
+  padding:6px 16px;font-size:.82rem;color:var(--text2)}
+.stat-pill span{color:var(--accent);font-weight:600}
+
+/* FILTERS */
+.filters-bar{display:flex;flex-wrap:wrap;gap:12px;padding:20px 24px;
+  background:var(--surface);border-bottom:1px solid var(--border);align-items:flex-end}
+.filter-group{display:flex;flex-direction:column;gap:5px;min-width:150px}
+.filter-group label{font-size:.75rem;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.filter-group select,.filter-group input{background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);border-radius:8px;padding:8px 12px;font-size:.85rem;outline:none;width:100%}
+.filter-group select:focus,.filter-group input:focus{border-color:var(--accent)}
+.btn-filter{padding:8px 20px;border-radius:8px;border:none;background:var(--accent);
+  color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;align-self:flex-end}
+.btn-filter:hover{background:#5a52e0;transform:translateY(-1px)}
+.btn-reset{padding:8px 16px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--text2);font-size:.85rem;cursor:pointer;transition:all .2s;align-self:flex-end}
+.btn-reset:hover{border-color:var(--accent);color:var(--accent)}
+
+/* CONTENT */
+.content{display:flex;gap:0;height:calc(100vh - 220px);overflow:hidden}
+
+/* QUESTION LIST */
+.q-list-panel{flex:1;overflow-y:auto;padding:20px 16px}
+.q-list-panel::-webkit-scrollbar{width:6px}
+.q-list-panel::-webkit-scrollbar-track{background:transparent}
+.q-list-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:0 4px}
+.results-count{font-size:.85rem;color:var(--text2)}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:12px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.q-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  opacity:0;transition:opacity .25s}
+.q-card:hover{border-color:var(--accent);transform:translateX(3px);box-shadow:var(--shadow)}
+.q-card:hover::before{opacity:.04}
+.q-card.active{border-color:var(--accent);background:rgba(108,99,255,.08)}
+.q-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;
+  font-size:.72rem;font-weight:600}
+.badge-year{background:rgba(108,99,255,.2);color:#a78bfa}
+.badge-subj{background:rgba(79,172,254,.15);color:#4facfe}
+.badge-topic{background:rgba(168,85,247,.15);color:#c084fc}
+.badge-easy{background:rgba(34,197,94,.15);color:var(--easy)}
+.badge-medium{background:rgba(245,158,11,.15);color:var(--medium)}
+.badge-hard{background:rgba(239,68,68,.15);color:var(--hard)}
+.q-card-text{font-size:.88rem;color:var(--text);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.q-num{font-size:.72rem;color:var(--text2);margin-top:6px}
+
+/* PREVIEW PANEL */
+.preview-panel{width:480px;background:var(--surface);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;transition:all .3s}
+.preview-panel.empty .preview-body{display:flex;align-items:center;justify-content:center;flex:1}
+.preview-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.preview-header h3{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700}
+.preview-close{background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer}
+.preview-close:hover{color:var(--text)}
+.preview-body{flex:1;overflow-y:auto;padding:24px}
+.preview-empty-state{text-align:center;color:var(--text2)}
+.preview-empty-state i{font-size:3rem;opacity:.3;margin-bottom:12px}
+.preview-empty-state p{font-size:.9rem}
+.preview-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.meta-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.meta-item .meta-label{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.meta-item .meta-value{font-size:.9rem;font-weight:600;color:var(--text)}
+.preview-q-text{background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:16px;font-size:.9rem;line-height:1.7;color:var(--text);white-space:pre-wrap}
+.preview-actions{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px}
+.btn-canvas{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);
+  color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-canvas:hover{background:#5a52e0}
+.btn-copy{padding:10px 16px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--text2);font-size:.85rem;cursor:pointer;transition:all .2s}
+.btn-copy:hover{border-color:var(--accent);color:var(--accent)}
+
+/* CANVAS VIEW */
+.canvas-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.canvas-overlay.hidden{display:none}
+.canvas-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  width:100%;max-width:800px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.canvas-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.canvas-header h3{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700}
+.canvas-content{flex:1;overflow-y:auto;padding:32px}
+.canvas-content .c-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.canvas-content .c-question{font-size:1.05rem;line-height:1.8;color:var(--text);white-space:pre-wrap;
+  background:var(--surface2);border-left:3px solid var(--accent);padding:20px;border-radius:0 10px 10px 0}
+.canvas-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+
+/* EMPTY/LOADING */
+.full-center{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 24px;color:var(--text2);gap:12px}
+.full-center i{font-size:3rem;opacity:.3}
+.full-center p{font-size:.9rem}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .content{flex-direction:column;height:auto}
+  .preview-panel{width:100%;border-left:none;border-top:1px solid var(--border)}
+  .filters-bar{flex-direction:column}
+  .filter-group{width:100%}
+  .q-card.selected { border-color: var(--easy); background: rgba(34, 197, 148, 0.05); }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand"><i class="fas fa-brain"></i> GATE Question Explorer</div>
+  <a class="back-btn" href="index.html"><i class="fas fa-arrow-left"></i> Back to SmartBoard</a>
+</nav>
+
+<div class="hero">
+  <h1>LNJPIT SmartBoard — GATE PYQ Explorer</h1>
+  <p>Filter, explore, and study Computer Science GATE Previous Year Questions</p>
+  <div class="stats-row">
+    <div class="stat-pill">Total: <span id="stat-total">—</span> questions</div>
+    <div class="stat-pill">Years: <span id="stat-years">—</span></div>
+    <div class="stat-pill">Subjects: <span id="stat-subjects">—</span></div>
+    <div class="stat-pill" id="selection-pill" style="display:none;background:rgba(108,99,255,.2);border-color:var(--accent)">
+      Selected: <span id="stat-selected">0</span>
+    </div>
+  </div>
+</div>
+
+<div class="filters-bar">
+  <div class="filter-group">
+    <label>Year</label>
+    <select id="f-year"><option value="">All Years</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Subject</label>
+    <select id="f-subject"><option value="">All Subjects</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Topic</label>
+    <select id="f-topic"><option value="">All Topics</option></select>
+  </div>
+  <div class="filter-group">
+    <label>Difficulty</label>
+    <select id="f-difficulty">
+      <option value="">All Levels</option>
+      <option value="Easy">Easy</option>
+      <option value="Medium">Medium</option>
+      <option value="Hard">Hard</option>
+    </select>
+  </div>
+  <div class="filter-group" style="flex:1;min-width:180px">
+    <label>Search</label>
+    <input type="text" id="f-search" placeholder="Search question text..."/>
+  </div>
+  <button class="btn-filter" id="btn-apply"><i class="fas fa-filter"></i> Apply</button>
+  <button class="btn-reset" id="id-reset"><i class="fas fa-undo"></i> Reset</button>
+  <button class="btn-filter" id="btn-send-board" style="display:none;background:linear-gradient(135deg,#22c55e,#10b981)">
+    <i class="fas fa-chalkboard-teacher"></i> Send to Board (<span id="btn-send-count">0</span>)
+  </button>
+</div>
+
+<div class="content">
+  <div class="q-list-panel" id="q-list-panel">
+    <div class="full-center"><div class="spinner"></div><p>Loading questions...</p></div>
+  </div>
+
+  <div class="preview-panel empty" id="preview-panel">
+    <div class="preview-header">
+      <h3><i class="fas fa-eye"></i> Question Preview</h3>
+      <button class="preview-close" id="btn-close-preview"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="preview-body">
+      <div class="preview-empty-state">
+        <i class="fas fa-mouse-pointer"></i>
+        <p>Click any question<br>to preview it here</p>
+      </div>
+    </div>
+    <div class="preview-actions" id="preview-actions" style="display:none">
+      <button class="btn-canvas" id="btn-add-session" style="background:#22c55e"><i class="fas fa-plus-circle"></i> Add to Session</button>
+      <button class="btn-canvas" id="btn-canvas-view"><i class="fas fa-expand-alt"></i> Full View</button>
+      <button class="btn-copy" id="btn-copy-q"><i class="fas fa-copy"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- CANVAS OVERLAY -->
+<div class="canvas-overlay hidden" id="canvas-overlay">
+  <div class="canvas-box">
+    <div class="canvas-header">
+      <h3><i class="fas fa-chalkboard"></i> GATE Question — Canvas View</h3>
+      <button class="btn-copy" id="btn-close-canvas" style="border-color:transparent">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+    <div class="canvas-content" id="canvas-content"></div>
+    <div class="canvas-footer">
+      <button class="btn-copy" id="btn-copy-canvas"><i class="fas fa-copy"></i> Copy</button>
+      <button class="btn-canvas" id="btn-done-canvas" style="width:auto;padding:10px 20px">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let allQuestions = [];
+let filtered = [];
+let selectedIds = new Set();
+let activeId = null;
+let activeQ = null;
+
+// ── Load data ──────────────────────────────────────────────────────────────────
+async function loadQuestions() {
+  try {
+    const res = await fetch('/api/gate-questions');
+    if (!res.ok) throw new Error('API error ' + res.status);
+    allQuestions = await res.json();
+    buildFilterOptions();
+    applyFilters();
+  } catch(e) {
+    document.getElementById('q-list-panel').innerHTML =
+      `<div class="full-center"><i class="fas fa-exclamation-triangle"></i><p>Failed to load questions.<br><small>${e.message}</small></p></div>`;
+  }
+}
+
+// ── Build filter dropdowns ─────────────────────────────────────────────────────
+function buildFilterOptions() {
+  const years    = [...new Set(allQuestions.map(q=>q.year))].sort((a,b)=>b-a);
+  const subjects = [...new Set(allQuestions.map(q=>q.subject))].sort();
+
+  const yEl = document.getElementById('f-year');
+  years.forEach(y => { const o=document.createElement('option'); o.value=y; o.text=y; yEl.appendChild(o); });
+
+  const sEl = document.getElementById('f-subject');
+  subjects.forEach(s => { const o=document.createElement('option'); o.value=s; o.text=s; sEl.appendChild(o); });
+
+  document.getElementById('f-subject').addEventListener('change', rebuildTopics);
+
+  // Stats
+  document.getElementById('stat-total').textContent = allQuestions.length;
+  document.getElementById('stat-years').textContent  = years.length;
+  document.getElementById('stat-subjects').textContent = subjects.length;
+}
+
+function rebuildTopics() {
+  const subj = document.getElementById('f-subject').value;
+  const pool = subj ? allQuestions.filter(q=>q.subject===subj) : allQuestions;
+  const topics = [...new Set(pool.map(q=>q.topic))].sort();
+  const tEl = document.getElementById('f-topic');
+  tEl.innerHTML = '<option value="">All Topics</option>';
+  topics.forEach(t => { const o=document.createElement('option'); o.value=t; o.text=t; tEl.appendChild(o); });
+}
+
+// ── Filter logic ───────────────────────────────────────────────────────────────
+function applyFilters() {
+  const year   = document.getElementById('f-year').value;
+  const subj   = document.getElementById('f-subject').value;
+  const topic  = document.getElementById('f-topic').value;
+  const diff   = document.getElementById('f-difficulty').value;
+  const search = document.getElementById('f-search').value.toLowerCase().trim();
+
+  filtered = allQuestions.filter(q => {
+    if (year  && q.year    != year)  return false;
+    if (subj  && q.subject !== subj) return false;
+    if (topic && q.topic   !== topic)return false;
+    if (diff  && q.difficulty !== diff) return false;
+    if (search && !q.question.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  renderList();
+}
+
+function resetFilters() {
+  ['f-year','f-subject','f-topic','f-difficulty'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('f-search').value = '';
+  rebuildTopics();
+  applyFilters();
+  closePreview();
+}
+
+// ── Render question list ───────────────────────────────────────────────────────
+function renderList() {
+  const panel = document.getElementById('q-list-panel');
+  if (!filtered.length) {
+    panel.innerHTML = `<div class="full-center"><i class="fas fa-search"></i><p>No questions match the selected filters.</p></div>`;
+    return;
+  }
+
+  const diffBadge = d => `badge-${d.toLowerCase()}`;
+
+  const header = `<div class="results-header">
+    <span class="results-count">${filtered.length} question${filtered.length!==1?'s':''} found</span>
+  </div>`;
+
+  const cards = filtered.map(q => `
+    <div class="q-card${q.id===activeId?' active':''}${selectedIds.has(q.id)?' selected':''}" data-id="${q.id}" id="qc-${q.id}">
+      ${selectedIds.has(q.id) ? '<div style="position:absolute;top:10px;right:10px;color:#22c55e"><i class="fas fa-check-circle"></i></div>' : ''}
+      <div class="q-card-meta">
+        <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> ${q.year}</span>
+        <span class="badge badge-subj">${q.subject}</span>
+        <span class="badge badge-topic">${q.topic}</span>
+        <span class="badge ${diffBadge(q.difficulty)}">${q.difficulty}</span>
+      </div>
+      <div class="q-card-text">${escHtml(q.question)}</div>
+      <div class="q-num">#${q.id}</div>
+    </div>`).join('');
+
+  panel.innerHTML = header + cards;
+}
+
+// ── Preview panel ──────────────────────────────────────────────────────────────
+function showPreview(id) {
+  activeId = id;
+  activeQ  = allQuestions.find(q=>q.id===id);
+  if (!activeQ) return;
+
+  // highlight active card
+  document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('active'));
+  const card = document.getElementById('qc-'+id);
+  if (card) { card.classList.add('active'); card.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+
+  const panel = document.getElementById('preview-panel');
+  panel.classList.remove('empty');
+
+  const diffColor = {Easy:'var(--easy)',Medium:'var(--medium)',Hard:'var(--hard)'};
+
+  panel.querySelector('.preview-body').innerHTML = `
+    <div class="preview-meta-grid">
+      <div class="meta-item"><div class="meta-label">Year</div><div class="meta-value">${activeQ.year}</div></div>
+      <div class="meta-item"><div class="meta-label">Difficulty</div>
+        <div class="meta-value" style="color:${diffColor[activeQ.difficulty]}">${activeQ.difficulty}</div></div>
+      <div class="meta-item"><div class="meta-label">Subject</div><div class="meta-value">${activeQ.subject}</div></div>
+      <div class="meta-item"><div class="meta-label">Topic</div><div class="meta-value">${activeQ.topic}</div></div>
+    </div>
+    <div class="preview-q-text">${escHtml(activeQ.question)}</div>`;
+
+  const isSel = selectedIds.has(activeQ.id);
+  const addBtn = document.getElementById('btn-add-session');
+  addBtn.innerHTML = isSel ? '<i class="fas fa-minus-circle"></i> Remove' : '<i class="fas fa-plus-circle"></i> Add to Session';
+  addBtn.style.background = isSel ? 'var(--hard)' : '#22c55e';
+
+  document.getElementById('preview-actions').style.display='flex';
+}
+
+function toggleSelection(id) {
+  const qId = id || activeId;
+  if (!qId) return;
+  if (selectedIds.has(qId)) selectedIds.delete(qId);
+  else selectedIds.add(qId);
+  
+  updateSelectionUI();
+  renderList();
+  if (activeId === qId) showPreview(qId);
+}
+
+function updateSelectionUI() {
+  const count = selectedIds.size;
+  const pill = document.getElementById('selection-pill');
+  const sendBtn = document.getElementById('btn-send-board');
+  
+  if (count > 0) {
+    pill.style.display = 'block';
+    sendBtn.style.display = 'block';
+    document.getElementById('stat-selected').textContent = count;
+    document.getElementById('btn-send-count').textContent = count;
+  } else {
+    pill.style.display = 'none';
+    sendBtn.style.display = 'none';
+  }
+}
+
+function sendToBoard() {
+  if (selectedIds.size === 0) return;
+  const selectedQuestions = Array.from(selectedIds).map(id => allQuestions.find(q => q.id === id));
+  localStorage.setItem('pendingQuestions', JSON.stringify(selectedQuestions));
+  window.location.href = 'board.html';
+}
+
+function closePreview() {
+  activeId=null; activeQ=null;
+  document.querySelectorAll('.q-card').forEach(c=>c.classList.remove('active'));
+  const panel = document.getElementById('preview-panel');
+  panel.classList.add('empty');
+  panel.querySelector('.preview-body').innerHTML=`<div class="preview-empty-state"><i class="fas fa-mouse-pointer"></i><p>Click any question<br>to preview it here</p></div>`;
+  document.getElementById('preview-actions').style.display='none';
+}
+
+// ── Canvas view ────────────────────────────────────────────────────────────────
+function openCanvasView() {
+  if (!activeQ) return;
+  const diffColor = {Easy:'var(--easy)',Medium:'var(--medium)',Hard:'var(--hard)'};
+  document.getElementById('canvas-content').innerHTML = `
+    <div class="c-meta">
+      <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> GATE ${activeQ.year}</span>
+      <span class="badge badge-subj">${activeQ.subject}</span>
+      <span class="badge badge-topic">${activeQ.topic}</span>
+      <span class="badge" style="background:rgba(0,0,0,.2);color:${diffColor[activeQ.difficulty]}">${activeQ.difficulty}</span>
+    </div>
+    <div class="c-question">${escHtml(activeQ.question)}</div>`;
+  document.getElementById('canvas-overlay').classList.remove('hidden');
+  document.body.style.overflow='hidden';
+}
+
+function closeCanvas() {
+  document.getElementById('canvas-overlay').classList.add('hidden');
+  document.body.style.overflow='';
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function copyQuestion() {
+  if (!activeQ) return;
+  const text = `GATE ${activeQ.year} | ${activeQ.subject} | ${activeQ.topic} | ${activeQ.difficulty}\n\n${activeQ.question}`;
+  navigator.clipboard.writeText(text).then(()=>alert('Question copied!'));
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Close canvas on overlay click
+document.getElementById('canvas-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeCanvas();
+});
+
+// Event Listeners
+document.getElementById('btn-apply').addEventListener('click', applyFilters);
+document.getElementById('id-reset').addEventListener('click', resetFilters);
+document.getElementById('btn-close-preview').addEventListener('click', closePreview);
+document.getElementById('btn-canvas-view').addEventListener('click', openCanvasView);
+document.getElementById('btn-copy-q').addEventListener('click', copyQuestion);
+document.getElementById('btn-copy-canvas').addEventListener('click', copyQuestion);
+document.getElementById('btn-done-canvas').addEventListener('click', closeCanvas);
+document.getElementById('btn-close-canvas').addEventListener('click', closeCanvas);
+document.getElementById('btn-add-session').addEventListener('click', () => toggleSelection());
+document.getElementById('btn-send-board').addEventListener('click', sendToBoard);
+
+// Live filters
+['f-year', 'f-subject', 'f-topic', 'f-difficulty'].forEach(id => {
+  document.getElementById(id).addEventListener('change', applyFilters);
+});
+document.getElementById('f-search').addEventListener('input', applyFilters);
+
+// Event delegation for q-cards
+document.getElementById('q-list-panel').addEventListener('click', e => {
+  const card = e.target.closest('.q-card');
+  if (card) {
+    const id = parseInt(card.dataset.id);
+    showPreview(id);
+  }
+});
+
+// Init
+loadQuestions();
+</script>
+</body>
+</html>

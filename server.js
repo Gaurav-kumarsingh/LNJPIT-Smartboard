@@ -10,6 +10,7 @@ require('dotenv').config();
 
 // ── Core dependencies ────────────────────────────────────────────────────────
 const express   = require('express');
+const mongoose  = require('mongoose');
 const Database  = require('better-sqlite3');
 const multer    = require('multer');
 const bcrypt    = require('bcrypt');
@@ -19,112 +20,89 @@ const path      = require('path');
 const fs        = require('fs');
 const helmet    = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { PDFDocument, rgb } = require('pdf-lib');
-const QRCode    = require('qrcode');
 
-
-// ──STRICT ENV VARIABLE VALIDATION ─────────────────────────────────────────────
-const requiredEnvVars = ['JWT_SECRET', 'ADMIN_JWT_SECRET', 'ADMIN_USERNAME', 'ADMIN_PASSWORD', 'FRONTEND_URL'];
-requiredEnvVars.forEach(v => {
-  if (!process.env[v]) {
-    console.error(`❌ FATAL: Missing required environment variable: ${v}`);
-    console.error('Please set all variables in Render environment or .env file');
-    process.exit(1);
-  }
-});
-
-// Validate secret strength in production
-if (process.env.NODE_ENV === 'production') {
-  if (process.env.JWT_SECRET.length < 32) {
-    console.error('❌ JWT_SECRET must be at least 32 characters in production');
-    process.exit(1);
-  }
-  if (process.env.ADMIN_JWT_SECRET.length < 32) {
-    console.error('❌ ADMIN_JWT_SECRET must be at least 32 characters in production');
-    process.exit(1);
-  }
-  if (process.env.ADMIN_PASSWORD.length < 12) {
-    console.error('❌ ADMIN_PASSWORD must be at least 12 characters in production');
-    process.exit(1);
-  }
-}
+// ── MongoDB User model (username + hashed password only) ─────────────────────
+const User = require('./models/User');
 
 // ── App & HTTP server ─────────────────────────────────────────────────────────
 const app        = express();
 const httpServer = require('http').createServer(app);
-let io;
+const io         = require('socket.io')(httpServer, {
+  cors: { origin: '*', methods: ['GET', 'POST'] },
+});
 
 // ── Security headers ──────────────────────────────────────────────────────────
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://fonts.googleapis.com'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdnjs.cloudflare.com'],
-      imgSrc: ["'self'", 'data:', 'https:'],
-      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
-      connectSrc: ["'self'"],
-      mediaSrc: ["'self'"],
-      objectSrc: ["'none'"],
-    }
-  },
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
-  frameOptions: { action: 'SAMEORIGIN' },
-  xssFilter: true,
-  noSniff: true,
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  }
+  contentSecurityPolicy:     false, // allow CDNs for PDF.js / FontAwesome
+  crossOriginResourcePolicy: false,
 }));
+app.use(express.json({ limit: '50kb' }));
 
-// Force HTTPS in production
-app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'production' && req.header('x-forwarded-proto') !== 'https') {
-    return res.redirect(301, `https://${req.header('host')}${req.url}`);
-  }
-  next();
-});
-
-app.use(express.json({ limit: '100mb' }));
-
-// ── CORS — strict whitelist for production ────────────────────────────────────
+// ── CORS — allow both Vercel frontend and local dev ───────────────────────────
 const ALLOWED_ORIGINS = [
+  // Add your Vercel URL here (no trailing slash)
   process.env.FRONTEND_URL,
-  process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null,
-  process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : null,
+  'http://localhost:3000',
+  'http://localhost:5173',
 ].filter(Boolean);
-
-io = require('socket.io')(httpServer, {
-  cors: { origin: ALLOWED_ORIGINS, methods: ['GET', 'POST'], credentials: true },
-});
 
 app.use(cors({
   origin: (origin, cb) => {
-    // In production, NEVER allow missing origin
-    if (!origin) {
-      if (process.env.NODE_ENV === 'production') {
-        return cb(new Error('Request origin not specified'), false);
-      }
-      // Allow health checks in dev
+    // Allow requests with no origin (Render health pings, Postman, etc.)
+    if (!origin) return cb(null, true);
+    // Allow if in whitelist OR if no whitelist configured (dev mode)
+    if (!ALLOWED_ORIGINS.length || ALLOWED_ORIGINS.includes(origin))
       return cb(null, true);
-    }
-    
-    if (ALLOWED_ORIGINS.includes(origin)) {
-      return cb(null, true);
-    }
-    
-    cb(new Error(`CORS: origin ${origin} not allowed`), false);
+    cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 86400
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ══════════════════════════════════════════════════════════════════════════════
+// MONGODB ATLAS — connection helper with retry logic
+// ══════════════════════════════════════════════════════════════════════════════
+const MONGO_URI = process.env.MONGODB_URI;
+if (!MONGO_URI) {
+  console.error('❌  MONGODB_URI is not set in .env or Render environment variables.');
+  process.exit(1);
+}
+
+// Mongoose global settings
+mongoose.set('strictQuery', true);
+
+// Connection event logging (never logs the URI itself — no credential leak)
+mongoose.connection.on('connected',     () => console.log('✅  MongoDB Atlas connected'));
+mongoose.connection.on('disconnected',  () => console.warn('⚠️  MongoDB disconnected'));
+mongoose.connection.on('reconnected',   () => console.log('✅  MongoDB reconnected'));
+mongoose.connection.on('error',   err  => console.error('❌  MongoDB error:', err.message));
+
+/**
+ * connectWithRetry — attempts to connect to Atlas up to `maxRetries` times
+ * with exponential back-off. Render cold starts can take 15-30 s, so we
+ * give the network time to settle before giving up.
+ */
+async function connectWithRetry(maxRetries = 5) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await mongoose.connect(MONGO_URI, {
+        serverSelectionTimeoutMS: 15_000,
+        socketTimeoutMS:          45_000,
+        // Mongoose handles reconnect via useNewUrlParser default in v7
+      });
+      return; // success
+    } catch (err) {
+      const isLast = attempt === maxRetries;
+      // Log error message only — never the URI (contains password)
+      console.error(`❌  MongoDB connect attempt ${attempt}/${maxRetries} failed: ${err.message}`);
+      if (isLast) throw err;
+      const wait = 2_000 * attempt; // 2s, 4s, 6s, 8s, 10s
+      console.log(`⏳  Retrying in ${wait / 1000}s…`);
+      await new Promise(r => setTimeout(r, wait));
+    }
+  }
+}
 
 // ══════════════════════════════════════════════════════════════════════════════
 // DISK STORAGE (files — PDF, images, video — NEVER stored in MongoDB)
@@ -155,35 +133,11 @@ const storage = multer.diskStorage({
   },
 });
 
-// ✅ Enhanced file validation with MIME type checking
-const ALLOWED_MIMES = {
-  'application/pdf': 'pdf',
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-  'image/gif': 'gif',
-  'image/webp': 'webp',
-  'video/mp4': 'mp4',
-  'video/webm': 'webm',
-  'application/vnd.ms-powerpoint': 'ppt',
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx'
-};
-
 const fileFilter = (_req, file, cb) => {
-  const ext = path.extname(file.originalname).toLowerCase();
-  const mime = file.mimetype || '';
-  
-  // Validate MIME type
-  if (!ALLOWED_MIMES[mime]) {
-    return cb(Object.assign(new Error(`Invalid MIME type: ${mime}`), { code: 'BAD_TYPE' }), false);
-  }
-  
-  // Verify extension matches MIME
-  const expectedExt = ALLOWED_MIMES[mime];
-  if (ext !== `.${expectedExt}`) {
-    return cb(Object.assign(new Error('File extension does not match content type'), { code: 'BAD_TYPE' }), false);
-  }
-  
-  cb(null, true);
+  if (/\.(pdf|jpg|jpeg|png|gif|webp|mp4|webm|ppt|pptx)$/i.test(file.originalname))
+    cb(null, true);
+  else
+    cb(Object.assign(new Error('File type not allowed'), { code: 'BAD_TYPE' }));
 };
 
 const upload = multer({
@@ -249,10 +203,13 @@ const stmts = {
 // ══════════════════════════════════════════════════════════════════════════════
 // JWT SECRETS & ADMIN CREDENTIALS — from environment variables only
 // ══════════════════════════════════════════════════════════════════════════════
-const SECRET_KEY       = process.env.JWT_SECRET;
-const ADMIN_SECRET_KEY = process.env.ADMIN_JWT_SECRET;
-const ADMIN_USERNAME   = process.env.ADMIN_USERNAME;
-const ADMIN_PASSWORD   = process.env.ADMIN_PASSWORD;
+if (!process.env.JWT_SECRET || !process.env.ADMIN_JWT_SECRET) {
+  console.warn('⚠️   JWT_SECRET / ADMIN_JWT_SECRET not set — using insecure dev defaults!');
+}
+const SECRET_KEY       = process.env.JWT_SECRET       || 'sb_jwt_secret_dev_CHANGE_ME';
+const ADMIN_SECRET_KEY = process.env.ADMIN_JWT_SECRET || 'sb_admin_jwt_dev_CHANGE_ME';
+const ADMIN_USERNAME   = process.env.ADMIN_USERNAME   || 'Gaurav';
+const ADMIN_PASSWORD   = process.env.ADMIN_PASSWORD   || 'gk07011019';
 
 // Seed / refresh admin credentials into SQLite on every start
 (async () => {
@@ -270,32 +227,12 @@ const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
   message: { error: 'Too many requests. Please wait a few minutes.' },
-  standardHeaders: true,
-  legacyHeaders: false,
 });
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,   // stricter for login attempts
   message: { error: 'Too many login attempts. Please try again later.' },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: { error: 'Too many requests from this IP' },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const sensitiveApiLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 30,
-  message: { error: 'Too many requests. Please try again later.' },
-  standardHeaders: true,
-  legacyHeaders: false,
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -303,29 +240,9 @@ const sensitiveApiLimiter = rateLimit({
 // ══════════════════════════════════════════════════════════════════════════════
 
 /** Validates the user JWT (issued on login). Attaches req.user. */
-const tokenBlacklist = new Map();
-
-function pruneTokenBlacklist() {
-  const now = Date.now();
-  for (const [token, expiresAt] of tokenBlacklist.entries()) {
-    if (expiresAt <= now) tokenBlacklist.delete(token);
-  }
-}
-
-function isTokenBlacklisted(token) {
-  pruneTokenBlacklist();
-  return tokenBlacklist.has(token);
-}
-
-function blacklistToken(token, expiresAt) {
-  if (!token) return;
-  tokenBlacklist.set(token, expiresAt || Date.now() + 10 * 60 * 1000);
-}
-
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized — login required', code: 'NO_TOKEN' });
-  if (isTokenBlacklisted(token)) return res.status(401).json({ error: 'Token revoked. Please log in again.', code: 'TOKEN_REVOKED' });
   try {
     req.user = jwt.verify(token, SECRET_KEY);
     next();
@@ -342,7 +259,6 @@ const authenticate = (req, res, next) => {
 const authenticateAdmin = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Admin access required', code: 'NO_TOKEN' });
-  if (isTokenBlacklisted(token)) return res.status(401).json({ error: 'Token revoked. Please log in again.', code: 'TOKEN_REVOKED' });
   try {
     const payload = jwt.verify(token, ADMIN_SECRET_KEY);
     if (payload.role !== 'admin') throw new Error('Not admin');
@@ -364,7 +280,6 @@ const authenticateAdmin = (req, res, next) => {
 const authenticateAny = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Login required to upload files.', code: 'NO_TOKEN' });
-  if (isTokenBlacklisted(token)) return res.status(401).json({ error: 'Token revoked. Please log in again.', code: 'TOKEN_REVOKED' });
 
   // Try user token first
   try {
@@ -406,22 +321,23 @@ app.post('/api/login', loginLimiter, async (req, res) => {
     if (!password || typeof password !== 'string')
       return res.status(400).json({ error: 'Password is required' });
 
-    // ── Lookup in .env ───────────────────────────────────────────────────────
-    if (
-      username.trim() !== process.env.DEFAULT_USER_USERNAME ||
-      password !== process.env.DEFAULT_USER_PASSWORD
-    ) {
+    // ── Lookup in MongoDB (also selects +password field) ─────────────────────
+    const user = await User.findByLogin(username.trim());
+    if (!user)
       return res.status(401).json({ error: 'Invalid username or password' });
-    }
+
+    // ── Compare password ──────────────────────────────────────────────────────
+    const match = await user.comparePassword(password);
+    if (!match)
+      return res.status(401).json({ error: 'Invalid username or password' });
 
     // ── Issue JWT ────────────────────────────────────────────────────────────────────
     const expiresIn = '7d';
     const token = jwt.sign(
-      { id: 'env_user_1', username: process.env.DEFAULT_USER_USERNAME, iat: Math.floor(Date.now() / 1000) },
+      { id: user._id.toHexString(), username: user.username, iat: Math.floor(Date.now() / 1000) },
       SECRET_KEY,
       { expiresIn }
     );
-    const user = { _id: { toHexString: () => 'env_user_1' }, username: process.env.DEFAULT_USER_USERNAME };
     // Tell the client when the token expires so it can proactively re-login
     const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
 
@@ -437,70 +353,62 @@ app.post('/api/login', loginLimiter, async (req, res) => {
   }
 });
 
-app.post('/api/logout', authenticateAny, (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  const decoded = jwt.decode(token);
-  const expireAt = decoded?.exp ? decoded.exp * 1000 : Date.now() + 10 * 60 * 1000;
-  blacklistToken(token, expireAt);
-  console.log('[Logout] Token revoked');
-  res.json({ success: true });
-});
-
 // ══════════════════════════════════════════════════════════════════════════════
 // FILE ROUTES  (file metadata in SQLite; actual bytes on disk)
 // ══════════════════════════════════════════════════════════════════════════════
 
 /** GET /api/files — public file listing */
-app.get('/api/files', apiLimiter, (_req, res) => {
+app.get('/api/files', (_req, res) => {
   try {
     res.json(stmts.getAllFiles.all() || []);
   } catch (err) {
-    console.error('[Files]', err);
-    res.status(500).json({ error: 'Failed to retrieve files' });
+    res.status(500).json({ error: err.message });
   }
 });
 
-/** GET /api/board-files — filtered file listing (SQL Injection protected) */
+/** GET /api/board-files — filtered file listing */
 app.get('/api/board-files', (req, res) => {
   try {
     let { board = '1', subject = '' } = req.query;
-    
-    // ✅ Strict input validation
-    const boardId = parseInt(board, 10);
-    if (isNaN(boardId) || boardId < 0 || boardId > 5) {
-      return res.status(400).json({ error: 'Invalid board ID. Must be between 0 and 5.' });
-    }
-    
-    // Sanitize subject (max 50 chars, safe characters only)
-    const safeSub = String(subject).slice(0, 50).trim();
-    if (!/^[a-zA-Z0-9_\-\s]*$/.test(safeSub)) {
-      return res.status(400).json({ error: 'Invalid subject format' });
-    }
-    
+    board   = parseInt(board);
+    if (isNaN(board)) board = 1;
+    subject = String(subject).slice(0, 50);
+
     let query, params;
-    if (safeSub) {
-      // ✅ Using prepared statements (safe from SQL injection)
+    if (subject) {
       query = `
         SELECT * FROM files
         WHERE (board_id = ? AND (LOWER(subject) = LOWER(?) OR LOWER(subject) = 'routine'))
            OR (board_id = 0 AND LOWER(subject) = 'routine')
-        ORDER BY uploaded_at DESC
-        LIMIT 1000`;
-      params = [boardId, safeSub];
+        ORDER BY uploaded_at DESC`;
+      params = [+board, subject];
     } else {
       query = `
         SELECT * FROM files
-        WHERE board_id = ? OR (board_id = 0 AND LOWER(subject) = 'routine')
-        ORDER BY uploaded_at DESC
-        LIMIT 1000`;
-      params = [boardId];
+        WHERE board_id = ?
+           OR (board_id = 0 AND LOWER(subject) = 'routine')
+        ORDER BY uploaded_at DESC`;
+      params = [+board];
     }
-    
-    const result = db.prepare(query).all(...params);
-    res.json(result || []);
+
+    res.json(db.prepare(query).all(...params) || []);
   } catch (err) {
-    console.error('[BoardFiles]', err);
-    res.status(500).json({ error: 'Database query failed' });
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/** GET /api/gate-questions — Load GATE PYQ dataset */
+app.get('/api/gate-questions', (_req, res) => {
+  try {
+    const dataPath = path.join(__dirname, 'data', 'gate_questions.json');
+    if (fs.existsSync(dataPath)) {
+      const questions = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+      res.json(questions);
+    } else {
+      res.status(404).json({ error: 'GATE questions dataset not found' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Error loading GATE questions: ' + err.message });
   }
 });
 
@@ -576,10 +484,9 @@ app.post('/api/admin/login', loginLimiter, async (req, res) => {
       return res.status(400).json({ error: 'Username and password are required' });
 
     const creds = stmts.getAdminCreds.get();
-    if (!creds || !creds.username || !creds.password_hash)
-      return res.status(500).json({ error: 'Admin credentials are not configured' });
+    if (!creds) return res.status(500).json({ error: 'Admin account not configured' });
 
-    if (creds.username.toLowerCase() !== username.trim().toLowerCase())
+    if (username.toLowerCase() !== creds.username.toLowerCase())
       return res.status(401).json({ error: 'Invalid admin credentials' });
 
     const ok = await bcrypt.compare(password, creds.password_hash);
@@ -596,16 +503,15 @@ app.post('/api/admin/login', loginLimiter, async (req, res) => {
 });
 
 /** GET /api/admin/users — list all users from MongoDB */
-app.get('/api/admin/users', authenticateAdmin, sensitiveApiLimiter, async (req, res) => {
+app.get('/api/admin/users', authenticateAdmin, async (req, res) => {
   try {
-    const users = [];
-    if (process.env.DEFAULT_USER_USERNAME) {
-      users.push({ id: 'env_user_1', username: process.env.DEFAULT_USER_USERNAME, created_at: new Date() });
-    }
-    res.json(users);
+    // Exclude password hash; return id, username, created_at
+    const users = await User.find({}, 'username created_at').lean();
+    // Normalise _id → id for frontend compatibility
+    res.json(users.map(u => ({ id: u._id.toHexString(), username: u.username, created_at: u.created_at })));
   } catch (err) {
     console.error('[AdminUsers]', err.message);
-    res.status(500).json({ error: 'Failed to retrieve users' });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -625,7 +531,12 @@ app.post('/api/admin/users', authenticateAdmin, async (req, res) => {
     if (!/^[a-zA-Z0-9_-]+$/.test(username))
       return res.status(400).json({ error: 'Username may only contain letters, digits, _ or -' });
 
-    return res.status(400).json({ error: 'MongoDB has been removed. Please add users via the .env file.' });
+    // The pre-save hook in User.js automatically bcrypt-hashes the password before saving
+    const newUser = new User({ username: username.trim(), password });
+    await newUser.save();
+
+    console.log(`[Admin] ✅ Created user: ${newUser.username}`);
+    res.json({ id: newUser._id.toHexString(), username: newUser.username });
   } catch (err) {
     if (err.code === 11000 || err.message?.includes('duplicate'))
       return res.status(400).json({ error: 'Username already exists' });
@@ -638,7 +549,14 @@ app.post('/api/admin/users', authenticateAdmin, async (req, res) => {
 app.delete('/api/admin/users/:id', authenticateAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    return res.status(400).json({ error: 'MongoDB has been removed. Please manage users via the .env file.' });
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({ error: 'Invalid user ID' });
+
+    const deleted = await User.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ error: 'User not found' });
+
+    console.log(`[Admin] 🗑 Deleted user: ${deleted.username}`);
+    res.json({ success: true });
   } catch (err) {
     console.error('[DeleteUser]', err.message);
     res.status(500).json({ error: err.message });
@@ -646,12 +564,9 @@ app.delete('/api/admin/users/:id', authenticateAdmin, async (req, res) => {
 });
 
 /** GET /api/admin/files — list all uploaded files */
-app.get('/api/admin/files', authenticateAdmin, sensitiveApiLimiter, (_req, res) => {
+app.get('/api/admin/files', authenticateAdmin, (_req, res) => {
   try { res.json(stmts.getAllFiles.all() || []); }
-  catch (err) { 
-    console.error('[AdminFiles]', err);
-    res.status(500).json({ error: 'Failed to retrieve files' });
-  }
+  catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 /** GET /api/admin/board-status — real-time board activity */
@@ -697,13 +612,37 @@ app.post('/api/register', (_req, res) => {
   res.status(403).json({ error: 'Self-registration is disabled. Contact the admin.' });
 });
 
+/** 
+ * GET /api/admin/export-board-pdf/:id
+ * Returns a URL that triggers client-side PDF export for a specific board.
+ */
+app.get('/api/admin/export-board-pdf/:id', authenticateAdmin, (req, res) => {
+  const boardId = req.params.id;
+  
+  // Find the latest non-routine file for this board to use as background
+  const latestFile = db.prepare('SELECT filename FROM files WHERE board_id = ? AND LOWER(subject) != "routine" ORDER BY uploaded_at DESC LIMIT 1').get(boardId);
+  
+  let downloadUrl = `/board.html?board=${boardId}&export=true`;
+  if (latestFile) {
+    downloadUrl += `&fileUrl=${encodeURIComponent('/uploads/' + latestFile.filename)}`;
+  }
+
+  res.json({
+    success: true,
+    downloadUrl: downloadUrl
+  });
+});
+
 // ── Health check — use this to verify DB connection from browser/Postman ────────
 // GET /api/health  →  { status, db, uptime, timestamp }
 app.get('/api/health', (_req, res) => {
-  const isOk = true;
+  const dbState = mongoose.connection.readyState;
+  // 0=disconnected, 1=connected, 2=connecting, 3=disconnecting
+  const stateMap = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+  const isOk     = dbState === 1;
   res.status(isOk ? 200 : 503).json({
     status:    isOk ? 'ok' : 'degraded',
-    db: 'removed',
+    db:        stateMap[dbState] || 'unknown',
     uptime_s:  Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
     env:       process.env.NODE_ENV || 'development',
@@ -711,277 +650,56 @@ app.get('/api/health', (_req, res) => {
 });
 
 // ── Catch-all: serve frontend ─────────────────────────────────────────────────
-  try {
-    const boardId = parseInt(req.params.id);
-    if (isNaN(boardId) || boardId < 1 || boardId > 5) return res.status(400).json({ error: 'Invalid board ID' });
-
-    // Get board state from Socket.io (assuming boardStates is available)
-    const boardState = boardStates[boardId] || [];
-    // For simplicity, create a basic PDF with strokes (this is a placeholder; full implementation would need canvas rendering)
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([1920, 1080]);
-    page.drawText(`Board ${boardId} Export`, { x: 100, y: 1000, size: 24 });
-
-    // Add strokes as text for demo (in real implementation, render canvas)
-    boardState.forEach((stroke, idx) => {
-      page.drawText(`Stroke ${idx}: ${JSON.stringify(stroke)}`, { x: 100, y: 950 - idx * 20, size: 12 });
-    });
-
-    // Add Thank You page
-    const finalPage = pdfDoc.addPage([1920, 1080]);
-    finalPage.drawRectangle({
-      x: 0, y: 0, width: 1920, height: 1080,
-      color: rgb(0.95, 0.95, 0.95),
-    });
-    finalPage.drawText('Thank You for Using SmartBoard', { 
-      x: 1920 / 2 - 400, y: 1080 / 2 + 100, size: 48, color: rgb(0.2, 0.2, 0.2),
-    });
-    finalPage.drawText('Developed with guidance from Shambhu Shankar Bharti', { 
-      x: 1920 / 2 - 350, y: 1080 / 2 + 20, size: 24, color: rgb(0.4, 0.4, 0.4),
-    });
-    finalPage.drawText('Developed by Gaurav Kumar', { 
-      x: 1920 / 2 - 250, y: 1080 / 2 - 20, size: 24, color: rgb(0.4, 0.4, 0.4),
-    });
-    finalPage.drawText('Supported by students of LNJPIT', { 
-      x: 1920 / 2 - 250, y: 1080 / 2 - 60, size: 24, color: rgb(0.4, 0.4, 0.4),
-    });
-
-    const exportFilename = `Board_${boardId}_${Date.now()}.pdf`;
-    const exportPath = path.join(DATA_DIR, exportFilename);
-    fs.writeFileSync(exportPath, await pdfDoc.save());
-
-    const downloadUrl = `/api/download/${exportFilename}`;
-    res.json({ success: true, downloadUrl });
-  } catch (err) {
-    console.error('[Export Board PDF]', err);
-    res.status(500).json({ error: 'Failed to export PDF' });
-  }
-});
-
-app.post('/api/export-hd', authenticateAny, async (req, res) => {
-  try {
-    const { boardId, snapshots } = req.body;
-    console.log(`[Export HD] Received request for board: ${boardId}`);
-    console.log(`[Export HD] Received ${snapshots ? snapshots.length : 0} snapshots`);
-    
-    // Attempt to load the active background PDF (if uploaded)
-    const fileRecord = stmts.getAllFiles.all().find(f => f.board_id === boardId && f.file_type === 'pdf');
-    let pdfDoc;
-
-    if (fileRecord) {
-      const pdfBytes = fs.readFileSync(path.join(uploadDir, fileRecord.filename));
-      pdfDoc = await PDFDocument.load(pdfBytes);
-      const pdfPages = pdfDoc.getPages();
-      
-      if (snapshots && snapshots.length > 0) {
-        for (let i = 0; i < snapshots.length; i++) {
-          let page;
-          if (i < pdfPages.length) {
-            page = pdfPages[i];
-          } else {
-            // Add a new page if snapshots exceed background pages
-            page = pdfDoc.addPage([1920, 1080]);
-          }
-
-          const snapshot = snapshots[i];
-          const pngImage = await pdfDoc.embedPng(Buffer.from(snapshot.split(',')[1], 'base64'));
-          
-          // Scale to fit the existing background PDF without distortion
-          const imgDims = pngImage.scaleToFit(page.getWidth(), page.getHeight());
-          page.drawImage(pngImage, {
-            x: (page.getWidth() - imgDims.width) / 2,
-            y: (page.getHeight() - imgDims.height) / 2,
-            width: imgDims.width,
-            height: imgDims.height
-          });
-        }
-      }
-    } else {
-      // Create a blank PDF
-      pdfDoc = await PDFDocument.create();
-      
-      if (snapshots && snapshots.length > 0) {
-        for (let i = 0; i < snapshots.length; i++) {
-          const snapshot = snapshots[i];
-          const pngImage = await pdfDoc.embedPng(Buffer.from(snapshot.split(',')[1], 'base64'));
-          const page = pdfDoc.addPage([pngImage.width, pngImage.height]); 
-          page.drawImage(pngImage, {
-            x: 0,
-            y: 0,
-            width: pngImage.width,
-            height: pngImage.height
-          });
-        }
-      } else {
-        pdfDoc.addPage([1920, 1080]);
-      }
-    }
-
-    // Add Thank You Page (Always added at the very end)
-    const finalPage = pdfDoc.addPage([1920, 1080]);
-    // Soft gradient background (simulate with light color)
-    finalPage.drawRectangle({
-      x: 0,
-      y: 0,
-      width: 1920,
-      height: 1080,
-      color: rgb(0.95, 0.95, 0.95), // Light gray
-    });
-    finalPage.drawText('Thank You for Using SmartBoard', { 
-      x: 1920 / 2 - 400, // Centered
-      y: 1080 / 2 + 100,
-      size: 48,
-      color: rgb(0.2, 0.2, 0.2), // Dark text
-    });
-    finalPage.drawText('Developed with guidance from Shambhu Shankar Bharti', { 
-      x: 1920 / 2 - 350,
-      y: 1080 / 2 + 20,
-      size: 24,
-      color: rgb(0.4, 0.4, 0.4),
-    });
-    finalPage.drawText('Developed by Gaurav Kumar', { 
-      x: 1920 / 2 - 250,
-      y: 1080 / 2 - 20,
-      size: 24,
-      color: rgb(0.4, 0.4, 0.4),
-    });
-    finalPage.drawText('Supported by students of LNJPIT', { 
-      x: 1920 / 2 - 250,
-      y: 1080 / 2 - 60,
-      size: 24,
-      color: rgb(0.4, 0.4, 0.4),
-    });
-
-    // Save and send back
-    const exportFilename = `Final_Board_${boardId}_${Date.now()}.pdf`;
-    const exportPath = path.join(DATA_DIR, exportFilename);
-    fs.writeFileSync(exportPath, await pdfDoc.save());
-
-    // Generate QR Code linking to the download URL
-    const downloadUrl = `${process.env.FRONTEND_URL || 'http://localhost:'+PORT}/api/download/${exportFilename}`;
-    const qrCodeDataUrl = await QRCode.toDataURL(downloadUrl);
-
-    res.json({ success: true, downloadUrl: `/api/download/${exportFilename}`, qrCode: qrCodeDataUrl });
-  } catch (err) {
-    console.error('[Export HD] Error:', err);
-    res.status(500).json({ error: 'Failed to export PDF' });
-  }
-});
-
-// Force direct download with path traversal protection
-app.get('/api/download/:filename', (req, res) => {
-  try {
-    const filePath = path.join(DATA_DIR, req.params.filename);
-    
-    // ✅ Prevent directory traversal attacks
-    if (!path.resolve(filePath).startsWith(path.resolve(DATA_DIR))) {
-      return res.status(400).json({ error: 'Invalid filename' });
-    }
-    
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: 'File not found' });
-    }
-    
-    const stat = fs.statSync(filePath);
-    
-    // ✅ Stream large files instead of loading into memory
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Length', stat.size);
-    res.setHeader('Content-Disposition', 'attachment; filename="SmartBoard-Session.pdf"');
-    
-    const stream = fs.createReadStream(filePath);
-    stream.pipe(res);
-    
-    stream.on('error', (err) => {
-      console.error('[Download]', err);
-      res.status(500).json({ error: 'Download failed' });
-    });
-  } catch (err) {
-    console.error('[Download]', err);
-    res.status(500).json({ error: 'Download failed' });
-  }
-});
-
 app.use((_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SOCKET.IO — real-time board sync with memory management
+// SOCKET.IO — real-time board sync
 // ══════════════════════════════════════════════════════════════════════════════
-const boardStates   = {};
+const boardStates   = {}; // Structure: { [boardId]: { [pageIdx]: [strokes] } }
 const boardActivity = {};
-const STROKE_LIMIT = 1000;  // ✅ Reduced from 5000 to prevent memory bloat
-const BOARD_STATE_TTL = 24 * 60 * 60 * 1000;  // 24 hours
-
-// ✅ Auto-cleanup every hour
-setInterval(() => {
-  for (const boardId in boardStates) {
-    if (boardStates[boardId].length > STROKE_LIMIT) {
-      console.log(`[Socket] Trimming board ${boardId}: ${boardStates[boardId].length} → ${STROKE_LIMIT}`);
-      boardStates[boardId] = boardStates[boardId].slice(-STROKE_LIMIT);
-    }
-  }
-}, 60 * 60 * 1000);  // Every hour
-
-// ✅ Clear inactive boards every 6 hours
-setInterval(() => {
-  const now = Date.now();
-  for (const boardId in boardStates) {
-    const lastActivity = boardActivity[boardId] || 0;
-    if (lastActivity && now - lastActivity > BOARD_STATE_TTL) {
-      console.log(`[Socket] Clearing inactive board ${boardId}`);
-      delete boardStates[boardId];
-      delete boardActivity[boardId];
-    }
-  }
-}, 6 * 60 * 60 * 1000);  // Every 6 hours
 
 io.on('connection', socket => {
   socket.on('join-board', boardId => {
-    const safeBoardId = parseInt(boardId, 10);
-    if (safeBoardId >= 1 && safeBoardId <= 5) {
-      socket.join(`board-${safeBoardId}`);
-    }
+    socket.join(`board-${boardId}`);
+    if (boardStates[boardId]) socket.emit('init-strokes', boardStates[boardId]);
   });
 
   socket.on('join-admin', boardId => {
-    const safeBoardId = parseInt(boardId, 10);
-    if (safeBoardId >= 1 && safeBoardId <= 5) {
-      socket.join(`admin-board-${safeBoardId}`);
-      if (boardStates[safeBoardId]) socket.emit('init-strokes', boardStates[safeBoardId]);
-    }
+    socket.join(`admin-board-${boardId}`);
+    if (boardStates[boardId]) socket.emit('init-strokes', boardStates[boardId]);
   });
 
-  socket.on('draw-stroke', ({ boardId, stroke }) => {
-    const safeBoardId = parseInt(boardId, 10);
-    if (!(safeBoardId >= 1 && safeBoardId <= 5)) return;
+  socket.on('draw-stroke', ({ boardId, pageIdx = 0, stroke }) => {
+    if (!boardStates[boardId]) boardStates[boardId] = {};
+    if (!boardStates[boardId][pageIdx]) boardStates[boardId][pageIdx] = [];
     
-    if (!boardStates[safeBoardId]) boardStates[safeBoardId] = [];
-    boardStates[safeBoardId].push(stroke);
-    boardActivity[safeBoardId] = Date.now();
+    boardStates[boardId][pageIdx].push(stroke);
+    boardActivity[boardId] = Date.now();
     
-    // ✅ Aggressive memory management
-    if (boardStates[safeBoardId].length > STROKE_LIMIT) {
-      boardStates[safeBoardId] = boardStates[safeBoardId].slice(-STROKE_LIMIT);
-    }
-    
-    socket.to(`admin-board-${safeBoardId}`).emit('draw-stroke', stroke);
+    socket.to(`admin-board-${boardId}`).emit('draw-stroke', { pageIdx, stroke });
+    socket.to(`board-${boardId}`).emit('draw-stroke', { pageIdx, stroke });
   });
 
   socket.on('sync-background', data => {
-    const safeBoardId = parseInt(data.board, 10);
-    if (!(safeBoardId >= 0 && safeBoardId <= 5)) return;
-    boardActivity[safeBoardId] = Date.now();
-    socket.to(`admin-board-${safeBoardId}`).emit('sync-background', data);
+    boardActivity[data.board] = Date.now();
+    // Update server's state for this page if strokes are provided
+    if (data.pageIndex !== undefined && data.strokes) {
+      if (!boardStates[data.board]) boardStates[data.board] = {};
+      boardStates[data.board][data.pageIndex] = data.strokes;
+    }
+    socket.to(`admin-board-${data.board}`).emit('sync-background', data);
+    socket.to(`board-${data.board}`).emit('sync-background', data);
   });
 
-  socket.on('clear-board', boardId => {
-    const safeBoardId = parseInt(boardId, 10);
-    if (!(safeBoardId >= 1 && safeBoardId <= 5)) return;
-    boardStates[safeBoardId] = [];
-    boardActivity[safeBoardId] = Date.now();
-    socket.to(`admin-board-${safeBoardId}`).emit('clear-board');
+  socket.on('clear-board', ({ boardId, pageIdx = 0 }) => {
+    if (boardStates[boardId]) {
+      boardStates[boardId][pageIdx] = [];
+    }
+    boardActivity[boardId] = Date.now();
+    socket.to(`admin-board-${boardId}`).emit('clear-board', { pageIdx });
+    socket.to(`board-${boardId}`).emit('clear-board', { pageIdx });
   });
 
   socket.on('disconnect', () => {});
@@ -994,7 +712,8 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
   try {
-
+    console.log('⏳  Connecting to MongoDB Atlas…');
+    await connectWithRetry(5);
     // DB is confirmed ready — now open the HTTP port
     httpServer.listen(PORT, () => {
       console.log(`\n🚀  SmartBoard running at http://localhost:${PORT}`);
@@ -1003,7 +722,8 @@ async function startServer() {
       console.log(`    Health → http://localhost:${PORT}/api/health\n`);
     });
   } catch (err) {
-    console.error('❌  Cannot start server:', err.message);
+    console.error('❌  Cannot start server: MongoDB unreachable after retries.');
+    console.error('    Check MONGODB_URI, Atlas Network Access, and cluster status.');
     process.exit(1);
   }
 }

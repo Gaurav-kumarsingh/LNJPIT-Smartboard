@@ -42,18 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function resize() {
-  const dpr = window.devicePixelRatio || 1;
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-
-  drawCanvas.style.width = w + 'px';
-  drawCanvas.style.height = h + 'px';
-  drawCanvas.width = w * dpr;
-  drawCanvas.height = h * dpr;
-  
-  // Apply scaling transform so coordinates match CSS pixels
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
+  drawCanvas.width = window.innerWidth;
+  drawCanvas.height = window.innerHeight;
   // If we have a blank page, make it larger for panning
   if (pages[currentIndex].type === "blank") {
     pdfCanvas.width = window.innerWidth;
@@ -400,25 +390,12 @@ function togglePanel(id) {
 }
 
 // Calculator Logic
-function safeMathEval(expression) {
-  if (!expression || typeof expression !== 'string') return null;
-  const expr = expression.replace(/×/g, '*').replace(/÷/g, '/').trim();
-  if (!/^[0-9+\-*/().\s]+$/.test(expr)) return null;
-  try {
-    const result = Function('"use strict"; return (' + expr + ')')();
-    return typeof result === 'number' && Number.isFinite(result) ? result : null;
-  } catch {
-    return null;
-  }
-}
-
 function calcInput(key) {
   const display = document.getElementById("calc-display");
   if (key === 'C') display.value = "0";
   else if (key === 'DEL') display.value = display.value.slice(0, -1) || "0";
   else if (key === '=') {
-    const result = safeMathEval(display.value);
-    display.value = result === null ? "Error" : String(result);
+    try { display.value = eval(display.value); } catch { display.value = "Error"; }
   } else {
     if (display.value === "0" && key !== '.') display.value = key;
     else display.value += key;
@@ -472,70 +449,15 @@ function addShapeToPage(type, x1, y1, x2, y2) {
 }
 
 // ── QR EXPORT ──
-async function generateQR() {
+function generateQR() {
   const qrEl = document.getElementById("qrCode");
-  qrEl.innerHTML = "Generating PDF...";
-  
-  try {
-    // 1. Capture ALL pages' strokes
-    const snapshots = [];
-    const originalIndex = currentIndex;
-    
-    for (let i = 0; i < pages.length; i++) {
-      currentIndex = i;
-      redraw(); // render this page's strokes to the canvas
-      // Wait for rendering to complete to ensure last strokes are included
-      await new Promise(resolve => setTimeout(resolve, 100));
-      snapshots.push(drawCanvas.toDataURL('image/png', 1.0));
-    }
-    
-    // Restore UI to the page the user was on
-    currentIndex = originalIndex;
-    redraw();
-    
-    // 2. Send to Backend
-    const token = localStorage.getItem('sb_token') || localStorage.getItem('token') || '';
-    // Use 1 as default board if not set in this context
-    const boardId = window.CURRENT_BOARD || 1; 
-
-    const res = await fetch('/api/export-hd', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ boardId, snapshots })
-    });
-
-    const data = await res.json();
-    if (data.success && data.qrCode) {
-      qrEl.innerHTML = '';
-      const img = document.createElement('img');
-      img.src = data.qrCode;
-      img.alt = 'QR Code';
-      img.style.maxWidth = '240px';
-      img.style.maxHeight = '240px';
-      img.style.display = 'block';
-      img.style.margin = '0 auto';
-
-      const link = document.createElement('a');
-      link.href = data.downloadUrl;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.style.color = '#4f8ef7';
-      link.style.textDecoration = 'none';
-      link.style.fontWeight = 'bold';
-      link.style.display = 'inline-block';
-      link.style.marginTop = '10px';
-      link.textContent = 'Click here to Download';
-
-      qrEl.appendChild(img);
-      qrEl.appendChild(document.createElement('br'));
-      qrEl.appendChild(link);
-    } else {
-      qrEl.textContent = "Error generating PDF.";
-    }
-  } catch (err) {
-    console.error(err);
-    qrEl.textContent = "Failed to export board.";
-  }
+  qrEl.innerHTML = "";
+  const url = window.location.href; // In real use case, this would be a link to the Exported PDF
+  new QRCode(qrEl, {
+    text: url,
+    width: 150,
+    height: 150
+  });
 }
 
 // ── UTILITIES ──

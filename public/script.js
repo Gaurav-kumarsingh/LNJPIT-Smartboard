@@ -30,8 +30,22 @@ document.addEventListener("DOMContentLoaded", () => {
     pages = [{ type: "blank", gridType: 0 }];
     pageStrokes = { 0: [] };
     pageRedoStacks = { 0: [] };
-    currentIndex = 0;
 
+    // Restore session if returning from GATE explorer
+    const savedPages = localStorage.getItem(`sb_pages_${currentBoardId}`);
+    const savedStrokes = localStorage.getItem(`sb_strokes_${currentBoardId}`);
+    if (savedPages && savedStrokes) {
+        try {
+            pages = JSON.parse(savedPages);
+            pageStrokes = JSON.parse(savedStrokes);
+            // Clear them so they don't persist forever
+            localStorage.removeItem(`sb_pages_${currentBoardId}`);
+            localStorage.removeItem(`sb_strokes_${currentBoardId}`);
+        } catch(e) { console.error('Failed to restore session', e); }
+    }
+    currentIndex = 0;
+    renderPage(); //page rendering for start
+    // Live preview restriction removed as requested by user
     loadPDFsForBoard();
 
     if (autoOpenFileUrl) {
@@ -50,11 +64,49 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
         runLoad();
-    } else {
-        renderPage();
-        loadCurrentPageState();
+    }
+
+    // Handle questions sent from GATE Explorer
+    const pending = localStorage.getItem('pendingQuestions');
+    if (pending) {
+        try {
+            const questions = JSON.parse(pending);
+            
+            // If the board is fresh (1 blank page with no drawings), replace it.
+            // Otherwise, append the questions to the end.
+            const isFresh = (pages.length === 1 && pages[0].type === 'blank' && (!pageStrokes[0] || pageStrokes[0].length === 0));
+            if (isFresh) {
+                pages = [];
+                pageStrokes = {};
+                pageRedoStacks = {};
+            }
+
+            const startIndex = pages.length;
+            questions.forEach(q => {
+                pages.push({ 
+                    type: 'question', 
+                    gridType: 0, 
+                    question: `GATE ${q.year} | ${q.subject}\n\n${q.question}` 
+                });
+                const newIdx = pages.length - 1;
+                pageStrokes[newIdx] = [];
+                pageRedoStacks[newIdx] = [];
+            });
+            localStorage.removeItem('pendingQuestions');
+            currentIndex = startIndex;
+            renderPage();
+            loadCurrentPageState();
+        } catch(e) { console.error('[Board] Error loading pending questions:', e); }
     }
 });
+
+    // Auto-trigger export if requested by Admin Panel
+    if (urlParams.get('export') === 'true') {
+        setTimeout(() => {
+            exportAsPDF();
+        }, 3000); // Wait 3 seconds for PDFs/Images to load before exporting
+    }
+
 
 async function loadPDFsForBoard() {
     if (!currentBoardId) return;
@@ -83,6 +135,17 @@ async function loadPDFsForBoard() {
         document.getElementById('pdfLibrary').style.display = 'none';
     };
     list.appendChild(blankBtn);
+
+    const gateBtn = document.createElement('button');
+    gateBtn.className = 'pdfBtn';
+    gateBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> GATE Explorer';
+    gateBtn.onclick = () => { 
+        saveCurrentPageState();
+        localStorage.setItem(`sb_pages_${currentBoardId}`, JSON.stringify(pages));
+        localStorage.setItem(`sb_strokes_${currentBoardId}`, JSON.stringify(pageStrokes));
+        window.location.href = 'gate.html'; 
+    };
+    list.appendChild(gateBtn);
 
     // Fetch file list with retry + timeout to handle Render cold starts
     let pdfs = [];
@@ -472,9 +535,9 @@ const onPointerEnd = (e) => {
         redoStack.push([]); // Reset redo on new action
         redoStack.length = 0;
 
-        // SYNC TO SERVER (ONLY IF NOT IN PREVIEW MODE)
-        if (socket && !isLivePreview) {
-            socket.emit('draw-stroke', { boardId: currentBoardId, stroke: stroke });
+        // SYNC TO SERVER
+        if (socket) {
+            socket.emit('draw-stroke', { boardId: currentBoardId, pageIdx: currentIndex, stroke: stroke });
         }
     }
     activeTouches.delete(e.pointerId);
@@ -524,7 +587,10 @@ function setTool(t) {
 
   document.querySelectorAll(".smartboard-tool, .toolbar-vertical button, .toolbar-horizontal button").forEach(b => b.classList.remove("active-tool"));
   try {
-     event.currentTarget.classList.add("active-tool");
+     const target = (typeof event !== 'undefined' && event && event.currentTarget) ? event.currentTarget : null;
+     if (target) {
+         target.classList.add("active-tool");
+     }
   } catch(e) {}
 }
 
@@ -545,7 +611,7 @@ function clearCanvas() {
   pageStrokes[currentIndex] = [];
   
   if (socket) {
-    socket.emit('clear-board', currentBoardId);
+    socket.emit('clear-board', { boardId: currentBoardId, pageIdx: currentIndex });
   }
 }
 
@@ -562,6 +628,9 @@ function loadCurrentPageState() {
     pageStrokes[currentIndex].forEach(s => undoStack.push(cloneStroke(s)));
     pageRedoStacks[currentIndex].forEach(s => redoStack.push(cloneStroke(s)));
     redraw(undoStack);
+    
+    // Sync after loading state to ensure the correct strokes are sent for this page
+    syncBoardBackground();
 }
 
 function zoomIn() {
@@ -597,6 +666,7 @@ function toggleGrid() {
    page.gridType = (page.gridType + 1) % 4;
    currentGridType = page.gridType;
    renderPage();
+   syncBoardBackground();
 }
 
       async function renderPage() {
@@ -628,6 +698,46 @@ function toggleGrid() {
                  pdfCtx.beginPath(); pdfCtx.moveTo(0, y); pdfCtx.lineTo(pdfCanvas.width, y); pdfCtx.stroke();
               }
           }
+
+        } else if (page.type === "question") {
+            // Set background size to fit screen perfectly
+            pdfCanvas.width = window.innerWidth;
+            pdfCanvas.height = window.innerHeight;
+            
+            // Fill background color
+            pdfCtx.fillStyle = "#121212";
+            pdfCtx.fillRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+            
+            // Draw the Question Text
+            pdfCtx.font = "bold 34px 'Inter', sans-serif";
+            pdfCtx.fillStyle = "#ffffff";
+            
+            const margin = 100;
+            const maxWidth = pdfCanvas.width - (margin * 2);
+            let currentY = 150;
+
+            const wrapText = (context, text, x, y, maxWidth, lineHeight) => {
+                const words = text.split(' ');
+                let line = '';
+                for (let n = 0; n < words.length; n++) {
+                    let testLine = line + words[n] + ' ';
+                    let metrics = context.measureText(testLine);
+                    if (metrics.width > maxWidth && n > 0) {
+                        context.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    } else { line = testLine; }
+                }
+                context.fillText(line, x, y);
+                return y + lineHeight;
+            };
+
+            const blocks = page.question.split('\n');
+            blocks.forEach(block => {
+                if (block.trim() === '') { currentY += 20; }
+                else { currentY = wrapText(pdfCtx, block, margin, currentY, maxWidth, 55); }
+            });
+
         } else if (page.type === "image") {
           pdfCanvas.width = page.width;
           pdfCanvas.height = page.height;
@@ -638,8 +748,12 @@ function toggleGrid() {
           img.src = page.src;
         } else if (page.type === "video") {
            // Clear background
-           pdfCanvas.width = window.innerWidth;
-           pdfCanvas.height = window.innerHeight;
+           const vw = window.innerWidth;
+           const vh = window.innerHeight;
+           pdfCanvas.width = vw;
+           pdfCanvas.height = vh;
+           drawCanvas.width = vw;
+           drawCanvas.height = vh;
            pdfCtx.fillStyle = "#000";
            pdfCtx.fillRect(0,0,pdfCanvas.width, pdfCanvas.height);
            // Show video overlay? Or just draw one frame?
@@ -661,16 +775,16 @@ function toggleGrid() {
            vid.play();
         } else {
           const p = await pdfDoc.getPage(page.num);
-          let viewport = p.getViewport({ scale: 1 });
+          let viewport = p.getViewport({ scale: 1.5 }); // Higher scale for better clarity
           pdfCanvas.width = viewport.width;
           pdfCanvas.height = viewport.height;
+          drawCanvas.width = viewport.width;
+          drawCanvas.height = viewport.height;
           await p.render({ canvasContext: pdfCtx, viewport: viewport }).promise;
         }
         
         document.getElementById("pageInfo").textContent =
           `Page ${currentIndex + 1} / ${pages.length}`;
-          
-        syncBoardBackground();
       }
 
       function toggleHub() {
@@ -704,64 +818,110 @@ function toggleGrid() {
             fileUrl: currentPage?.src || null,
             bgType: currentPage?.type || 'blank',
             pageIndex: currentIndex,
+            gridType: currentPage?.gridType !== undefined ? currentPage.gridType : currentGridType,
+            question: currentPage?.question || null,
             panX: panX,
             panY: panY,
-            zoom: zoom
+            zoom: zoom,
+            strokes: undoStack
           });
         }
       }
 
       // ========== SOCKET LISTENERS ==========
       if (socket) {
-          socket.on('draw-stroke', (stroke) => {
+          socket.on('draw-stroke', (data) => {
+              if (!isLivePreview) return; 
+              
+              const { pageIdx, stroke } = data;
+              
+              // If the stroke is for a different page, just store it
+              if (pageIdx !== currentIndex) {
+                  if (!pageStrokes[pageIdx]) pageStrokes[pageIdx] = [];
+                  pageStrokes[pageIdx].push(stroke);
+                  return;
+              }
+
               if (undoStack.some(s => s.id === stroke.id)) return;
               undoStack.push(stroke);
               redraw(undoStack);
           });
 
           socket.on('sync-background', async (data) => {
-              if (!isLivePreview) return;
-              // Sync transform and view
+              if (!isLivePreview) return; 
+
+              // Save current page state before switching
+              saveCurrentPageState();
+
+              // 1. Sync the view position
               panX = data.panX || 0;
               panY = data.panY || 0;
               zoom = data.zoom || 1;
               applyTransform();
 
-              // Check if we need to load a new background
-              const currentBg = pages[currentIndex];
-              if (data.fileUrl && (!currentBg || currentBg.src !== data.fileUrl)) {
-                  if (data.bgType === 'pdf') await loadWebsitePDF(data.fileUrl, true);
-                  else if (data.bgType === 'image') await loadWebsiteImage(data.fileUrl, true);
-                  else if (data.bgType === 'video') await loadWebsiteVideo(data.fileUrl);
+              // 2. Sync the current page index and ensure pages array is large enough
+              const newIdx = data.pageIndex;
+              while (pages.length <= newIdx) {
+                  pages.push({ type: 'blank', gridType: currentGridType });
               }
-              
-              if (currentIndex !== data.pageIndex) {
-                  currentIndex = data.pageIndex;
+              currentIndex = newIdx;
+
+              // 3. Sync the drawings for the NEW current page
+              if (data.strokes) {
+                  undoStack.length = 0; 
+                  data.strokes.forEach(s => undoStack.push(s));
+                  pageStrokes[currentIndex] = [...undoStack];
+              }
+
+              // 4. Sync the background content
+              const targetBg = data.bgType || 'blank';
+              if (!pages[currentIndex] || pages[currentIndex].type !== targetBg || pages[currentIndex].src !== data.fileUrl) {
+                  pages[currentIndex] = { 
+                      type: targetBg, 
+                      src: data.fileUrl, 
+                      question: data.question,
+                      gridType: data.gridType !== undefined ? data.gridType : currentGridType
+                  };
+                  
+                  if (data.fileUrl) {
+                      if (targetBg === 'pdf') await loadWebsitePDF(data.fileUrl, true);
+                      else if (targetBg === 'image') await loadWebsiteImage(data.fileUrl, true);
+                  } else {
+                      renderPage();
+                  }
+              } else {
                   renderPage();
               }
-              redraw(undoStack);
+              
+              // 5. Redraw everything so the pen marks appear on the new background
+              redraw(undoStack); 
           });
 
-          socket.on('init-strokes', (strokes) => {
-              undoStack.length = 0;
-              strokes.forEach(s => undoStack.push(s));
-              redraw(undoStack);
+
+          socket.on('init-strokes', (pagesObj) => {
+              if (!isLivePreview) return; 
+              
+              // pagesObj is { 0: [strokes], 1: [strokes], ... }
+              Object.keys(pagesObj).forEach(idx => {
+                  pageStrokes[idx] = pagesObj[idx];
+              });
+              
+              // Load the strokes for current page
+              loadCurrentPageState();
           });
 
-          socket.on('clear-board', () => {
-              undoStack.length = 0;
-              redraw(undoStack);
+          socket.on('clear-board', (data) => {
+              if (!isLivePreview) return;
+              const { pageIdx } = data;
+              
+              if (pageIdx === currentIndex) {
+                  undoStack.length = 0;
+                  redraw(undoStack);
+              }
+              pageStrokes[pageIdx] = [];
           });
       }
 
-      function togglePDFLibrary() {
-        const menu = document.getElementById("pdfLibrary");
-        if (menu.style.display === "flex") {
-          menu.style.display = "none";
-        } else {
-          menu.style.display = "flex";
-        }
-      }
 
       function loadWebsitePDF(url) {
         if (!pdfjsLib) { alert("PDF Library not loaded yet. Retrying..."); return; }
@@ -1075,7 +1235,10 @@ function timerReset() {
     // Fixes: timing, fill colour, circle maths, multi-page slicing
     // ═══════════════════════════════════════════
     function exportAsPDF() {
-        const boardUrl = window.location.href;
+      saveCurrentPageState();
+        const url = new URL(window.location.href);
+        url.searchParams.set('export', 'true');
+        const boardUrl = url.toString();
         const totalPages = pages.length;
         
         // Show progress to the user
@@ -1089,6 +1252,7 @@ function timerReset() {
             for (let idx = 0; idx < totalPages; idx++) {
                 await addCanvasToPdfPage(pdf, idx, idx > 0);
             }
+            await addThankYouPage(pdf);
 
             // QR + download
             document.getElementById('qrCodeContainer').innerHTML = '';
@@ -1096,9 +1260,18 @@ function timerReset() {
                 text: boardUrl, width: 200, height: 200,
                 colorDark: '#2b2b40', colorLight: '#ffffff'
             });
-            document.getElementById('dlPdfBtn').onclick = () =>
-                pdf.save(`smartboard_lesson_${Date.now()}.pdf`);
-            document.getElementById('exportModal').classList.remove('hidden');
+            // document.getElementById('dlPdfBtn').onclick = () =>
+            //     pdf.save(`smartboard_lesson_${Date.now()}.pdf`);
+            // document.getElementById('exportModal').classList.remove('hidden');
+                        const fileName = `smartboard_lesson_${Date.now()}.pdf`;
+            if (urlParams.get('export') === 'true') {
+                pdf.save(fileName);
+                setTimeout(() => window.close(), 2000);
+            } else {
+                document.getElementById('dlPdfBtn').onclick = () => pdf.save(fileName);
+                document.getElementById('exportModal').classList.remove('hidden');
+            }
+
           } catch(err) {
             console.error('[PDF Export]', err);
             alert('PDF export failed: ' + err.message);
@@ -1304,3 +1477,160 @@ function timerReset() {
         await renderPage();
         loadCurrentPageState();
     }
+
+    // Ensure globals for inline onclick handlers
+    window.setTool = setTool;
+    window.undo = undo;
+    window.redo = redo;
+    window.clearCanvas = clearCanvas;
+    window.zoomIn = zoomIn;
+    window.zoomOut = zoomOut;
+    window.fit = fit;
+    window.slideUp = slideUp;
+    window.slideDown = slideDown;
+    window.toggleFullscreen = toggleFullscreen;
+    window.exportAsPDF = exportAsPDF;
+    window.toggleStylusMode = toggleStylusMode;
+    window.togglePDFLibrary = togglePDFLibrary;
+    window.changeBrushSize = changeBrushSize;
+    window.selectColor = selectColor;
+    window.toggleColorPalette = toggleColorPalette;
+    window.timerStart = timerStart;
+    window.timerStop = timerStop;
+    window.timerReset = timerReset;
+    window.setTimerMode = setTimerMode;
+    window.adjTimer = adjTimer;
+
+    // ═══════════════════════════════════════════
+    // DRAG AND DROP FILE UPLOAD
+    // ═══════════════════════════════════════════
+    const dropZone = document.createElement('div');
+    dropZone.id = 'dropZoneOverlay';
+    dropZone.style = `
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(106, 106, 255, 0.2);
+        backdrop-filter: blur(4px);
+        border: 4px dashed #6a6aff;
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        pointer-events: none;
+        transition: 0.3s;
+    `;
+    dropZone.innerHTML = '<div style="text-align:center;"><i class="fas fa-cloud-upload-alt" style="font-size:60px;margin-bottom:20px;"></i><br>Drop PDF or Image here</div>';
+    document.body.appendChild(dropZone);
+
+    window.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.display = 'flex';
+    });
+
+    window.addEventListener('dragleave', (e) => {
+        if (e.relatedTarget === null || e.clientX <= 0 || e.clientY <= 0) {
+            dropZone.style.display = 'none';
+        }
+    });
+
+    window.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        dropZone.style.display = 'none';
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            const ext = file.name.split('.').pop().toLowerCase();
+            const isImg = ['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext);
+            const isPdf = (ext === 'pdf');
+
+            if (!isImg && !isPdf) {
+                alert('Only PDF and Image files are supported for drag-and-drop.');
+                return;
+            }
+
+            // Upload the file to the server
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('board_id', currentBoardId);
+            formData.append('subject', currentSubject || 'Dropped File');
+
+            const token = localStorage.getItem('sb_token') || sessionStorage.getItem('sb_admin_token');
+
+            try {
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok && data.files && data.files.length > 0) {
+                    const uploadedFile = data.files[0];
+                    const url = '/uploads/' + uploadedFile.filename;
+                    if (isPdf) {
+                        loadWebsitePDF(url);
+                    } else {
+                        loadWebsiteImage(url);
+                    }
+                } else {
+                    throw new Error(data.error || 'Upload failed');
+                }
+            } catch (err) {
+                console.error('[Drop Upload]', err);
+                alert('Failed to upload dropped file: ' + err.message);
+            }
+        }
+    });
+
+async function addThankYouPage(pdf) {
+    pdf.addPage('portrait');
+    const w = pdf.internal.pageSize.getWidth();
+    const h = pdf.internal.pageSize.getHeight();
+
+    // 1. Title - centered and bold
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(26);
+    pdf.setTextColor(44, 62, 80);
+    pdf.text("Thank You for Using SmartBoard", w/2, 45, { align: "center" });
+
+    // 2. Elegant Divider Line
+    pdf.setDrawColor(200, 200, 200);
+    pdf.setLineWidth(0.5);
+    pdf.line(w*0.25, 55, w*0.75, 55);
+
+    // 3. Main Content - Grouped by spacing
+    pdf.setTextColor(51, 51, 51);
+    
+    // Group A: Developer Info
+    let y = 85;
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(16);
+    pdf.text("Developed by", w/2, y, { align: "center" });
+    
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(20);
+    pdf.text("Gaurav Kumar", w/2, y + 10, { align: "center" });
+    
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(14);
+    pdf.text("Computer Science & Engineering (CSE)", w/2, y + 20, { align: "center" });
+    pdf.text("Lok Nayak Jai Prakash Institute of Technology, Chhapra", w/2, y + 28, { align: "center" });
+
+    // Group B: Mentor Info
+    y += 55;
+    pdf.setFontSize(16);
+    pdf.text("Guided by", w/2, y, { align: "center" });
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18);
+    pdf.text("Prof. Shambhu Shankar Bharti", w/2, y + 10, { align: "center" });
+
+    // 4. Footer Quote - Pushed further down to prevent overlap
+    pdf.setFont("helvetica", "italic");
+    pdf.setFontSize(15);
+    pdf.setTextColor(120, 120, 120);
+    pdf.text("“Keep learning, keep building, and keep growing.”", w/2, h - 35, { align: "center" });
+}
