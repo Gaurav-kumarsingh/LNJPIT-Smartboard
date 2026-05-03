@@ -2,6 +2,7 @@ node_modules/
 .env
 .vscode/
 *.log
+.env.example
 
 # SQLite database files (auto-created at runtime)
 database.sqlite
