@@ -8,7 +8,7 @@ node_modules/
 database.sqlite
 database.sqlite-shm
 database.sqlite-wal
-data/
+# data/
 
 # User uploads (stored on server disk, not in repo)
 uploads/
