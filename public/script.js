@@ -96,16 +96,32 @@ document.addEventListener("DOMContentLoaded", () => {
             currentIndex = startIndex;
             renderPage();
             loadCurrentPageState();
+            syncBoardBackground(); // Sync initial state from localStorage/GATE
         } catch(e) { console.error('[Board] Error loading pending questions:', e); }
     }
+
+    // Initial sync for fresh board
+    setTimeout(syncBoardBackground, 1000);
 });
 
-    // Auto-trigger export if requested by Admin Panel
+    // Auto-trigger export if requested by Admin Panel or QR Scan
     if (urlParams.get('export') === 'true') {
-        setTimeout(() => {
-            exportAsPDF();
-        }, 3000); // Wait 3 seconds for PDFs/Images to load before exporting
+        document.body.classList.add('export-mode');
+        
+        let attempts = 0;
+        const waitForData = setInterval(() => {
+            attempts++;
+            // Wait for data to be loaded from socket (window.boardDataLoaded)
+            // or timeout after 10 seconds just in case
+            if (window.boardDataLoaded || attempts > 50) {
+                clearInterval(waitForData);
+                setTimeout(() => {
+                    exportAsPDF();
+                }, 1000); // Small extra buffer for rendering
+            }
+        }, 200); 
     }
+
 
 
 async function loadPDFsForBoard() {
@@ -138,7 +154,7 @@ async function loadPDFsForBoard() {
 
     const gateBtn = document.createElement('button');
     gateBtn.className = 'pdfBtn';
-    gateBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> GATE Explorer';
+    gateBtn.innerHTML = 'GATE Explorer';
     gateBtn.onclick = () => { 
         saveCurrentPageState();
         localStorage.setItem(`sb_pages_${currentBoardId}`, JSON.stringify(pages));
@@ -560,6 +576,7 @@ function undo() {
   const lastStroke = undoStack.pop();
   redoStack.push(lastStroke);
   redraw(undoStack);
+  syncBoardBackground();
 }
 
 // --- REDO ---
@@ -568,6 +585,7 @@ function redo() {
   const stroke = redoStack.pop();
   undoStack.push(stroke);
   redraw(undoStack);
+  syncBoardBackground();
 }
 
 // --- TOOL SELECTION ---
@@ -811,7 +829,8 @@ function toggleGrid() {
       }
 
       function syncBoardBackground() {
-        if (socket && !isLivePreview) {
+        const isExportMode = urlParams.get('export') === 'true';
+        if (socket && !isLivePreview && !isExportMode) {
           const currentPage = pages[currentIndex];
           socket.emit('sync-background', {
             board: currentBoardId,
@@ -823,7 +842,8 @@ function toggleGrid() {
             panX: panX,
             panY: panY,
             zoom: zoom,
-            strokes: undoStack
+            strokes: undoStack,
+            fullPages: pages // Send the full backgrounds array to server
           });
         }
       }
@@ -898,15 +918,40 @@ function toggleGrid() {
           });
 
 
-          socket.on('init-strokes', (pagesObj) => {
-              if (!isLivePreview) return; 
+          socket.on('init-board', (data) => {
+              // Only load if we don't have local data OR if we are in export mode
+              const isExportMode = urlParams.get('export') === 'true';
+              if (!isLivePreview && !isExportMode) return; 
               
-              // pagesObj is { 0: [strokes], 1: [strokes], ... }
+              if (data.pages && data.pages.length > 0) {
+                  pages = data.pages;
+              }
+              
+              if (data.strokes) {
+                  Object.keys(data.strokes).forEach(idx => {
+                      pageStrokes[idx] = data.strokes[idx];
+                  });
+              }
+              
+              // If we are in export mode, we might be on a different page than 0
+              // But usually we want to start at 0 or whatever was synced
+              renderPage();
+              loadCurrentPageState();
+              
+              if (isExportMode) {
+                  console.log('[Export] Board data initialized, ready for PDF generation.');
+                  // We can now trigger the export if we were waiting
+                  window.boardDataLoaded = true;
+              }
+          });
+
+          // Keep old init-strokes for compatibility if needed
+          socket.on('init-strokes', (pagesObj) => {
+              if (!isLivePreview && urlParams.get('export') !== 'true') return; 
+              
               Object.keys(pagesObj).forEach(idx => {
                   pageStrokes[idx] = pagesObj[idx];
               });
-              
-              // Load the strokes for current page
               loadCurrentPageState();
           });
 

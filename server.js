@@ -211,6 +211,7 @@ const stmts = {
   deleteFile:   db.prepare('DELETE FROM files WHERE id = ?'),
   getAdminCreds:db.prepare('SELECT * FROM admin_settings WHERE id = 1'),
   updateAdminPw:db.prepare('UPDATE admin_settings SET password_hash = ? WHERE id = 1'),
+  getLatestBoardFile: db.prepare("SELECT filename FROM files WHERE board_id = ? AND (subject IS NULL OR LOWER(subject) != 'routine') ORDER BY uploaded_at DESC LIMIT 1"),
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -632,7 +633,9 @@ app.put('/api/admin/password', authenticateAdmin, async (req, res) => {
 
 /** GET /api/admin/active-users */
 app.get('/api/admin/active-users', authenticateAdmin, (_req, res) => {
-  res.json({ count: Math.floor(Math.random() * 5) + 1 });
+  // Count unique socket connections
+  const count = io.sockets.sockets.size;
+  res.json({ count: count || 0 });
 });
 
 // ── Legacy self-registration route (disabled) ─────────────────────────────────
@@ -645,20 +648,35 @@ app.post('/api/register', (_req, res) => {
  * Returns a URL that triggers client-side PDF export for a specific board.
  */
 app.get('/api/admin/export-board-pdf/:id', authenticateAdmin, (req, res) => {
-  const boardId = req.params.id;
-  
-  // Find the latest non-routine file for this board to use as background
-  const latestFile = db.prepare('SELECT filename FROM files WHERE board_id = ? AND LOWER(subject) != "routine" ORDER BY uploaded_at DESC LIMIT 1').get(boardId);
-  
-  let downloadUrl = `/board.html?board=${boardId}&export=true`;
-  if (latestFile) {
-    downloadUrl += `&fileUrl=${encodeURIComponent('/uploads/' + latestFile.filename)}`;
-  }
+  try {
+    const boardId = parseInt(req.params.id, 10);
+    if (isNaN(boardId)) {
+        return res.status(400).json({ error: 'Invalid board ID' });
+    }
+    
+    // Find the latest non-routine file for this board to use as background
+    let latestFile;
+    try {
+      latestFile = stmts.getLatestBoardFile.get(boardId);
+    } catch (dbErr) {
+      console.error('[AdminExportPDF] SQL Error:', dbErr.message);
+      // Fallback to simpler query if complex one fails
+      latestFile = db.prepare('SELECT filename FROM files WHERE board_id = ? ORDER BY uploaded_at DESC LIMIT 1').get(boardId);
+    }
+    
+    let downloadUrl = `/board.html?board=${boardId}&export=true`;
+    if (latestFile) {
+      downloadUrl += `&fileUrl=${encodeURIComponent('/uploads/' + latestFile.filename)}`;
+    }
 
-  res.json({
-    success: true,
-    downloadUrl: downloadUrl
-  });
+    res.json({
+      success: true,
+      downloadUrl: downloadUrl
+    });
+  } catch (err) {
+    console.error('[AdminExportPDF] General Error:', err);
+    res.status(500).json({ success: false, error: 'Internal server error while generating export URL: ' + err.message });
+  }
 });
 
 // ── Health check — use this to verify DB connection from browser/Postman ────────
@@ -699,25 +717,29 @@ app.use((_req, res) => {
 // ══════════════════════════════════════════════════════════════════════════════
 // SOCKET.IO — real-time board sync
 // ══════════════════════════════════════════════════════════════════════════════
-const boardStates   = {}; // Structure: { [boardId]: { [pageIdx]: [strokes] } }
+const boardStates   = {}; // Structure: { [boardId]: { pages: [], strokes: {} } }
 const boardActivity = {};
 
 io.on('connection', socket => {
   socket.on('join-board', boardId => {
     socket.join(`board-${boardId}`);
-    if (boardStates[boardId]) socket.emit('init-strokes', boardStates[boardId]);
+    if (boardStates[boardId]) {
+      socket.emit('init-board', boardStates[boardId]);
+    }
   });
 
   socket.on('join-admin', boardId => {
     socket.join(`admin-board-${boardId}`);
-    if (boardStates[boardId]) socket.emit('init-strokes', boardStates[boardId]);
+    if (boardStates[boardId]) {
+      socket.emit('init-board', boardStates[boardId]);
+    }
   });
 
   socket.on('draw-stroke', ({ boardId, pageIdx = 0, stroke }) => {
-    if (!boardStates[boardId]) boardStates[boardId] = {};
-    if (!boardStates[boardId][pageIdx]) boardStates[boardId][pageIdx] = [];
+    if (!boardStates[boardId]) boardStates[boardId] = { pages: [], strokes: {} };
+    if (!boardStates[boardId].strokes[pageIdx]) boardStates[boardId].strokes[pageIdx] = [];
     
-    boardStates[boardId][pageIdx].push(stroke);
+    boardStates[boardId].strokes[pageIdx].push(stroke);
     boardActivity[boardId] = Date.now();
     
     socket.to(`admin-board-${boardId}`).emit('draw-stroke', { pageIdx, stroke });
@@ -726,18 +748,26 @@ io.on('connection', socket => {
 
   socket.on('sync-background', data => {
     boardActivity[data.board] = Date.now();
+    
+    if (!boardStates[data.board]) boardStates[data.board] = { pages: [], strokes: {} };
+    
+    // Update the pages array if provided (teacher emits this)
+    if (data.fullPages) {
+        boardStates[data.board].pages = data.fullPages;
+    }
+    
     // Update server's state for this page if strokes are provided
     if (data.pageIndex !== undefined && data.strokes) {
-      if (!boardStates[data.board]) boardStates[data.board] = {};
-      boardStates[data.board][data.pageIndex] = data.strokes;
+      boardStates[data.board].strokes[data.pageIndex] = data.strokes;
     }
+    
     socket.to(`admin-board-${data.board}`).emit('sync-background', data);
     socket.to(`board-${data.board}`).emit('sync-background', data);
   });
 
   socket.on('clear-board', ({ boardId, pageIdx = 0 }) => {
-    if (boardStates[boardId]) {
-      boardStates[boardId][pageIdx] = [];
+    if (boardStates[boardId] && boardStates[boardId].strokes) {
+      boardStates[boardId].strokes[pageIdx] = [];
     }
     boardActivity[boardId] = Date.now();
     socket.to(`admin-board-${boardId}`).emit('clear-board', { pageIdx });

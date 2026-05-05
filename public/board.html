@@ -381,9 +381,60 @@ body {
   text-shadow: 0 0 4px black;
 }
 
+      /* Clean Export Mode for QR Scanners */
+      body.export-mode .toolbar-vertical,
+      body.export-mode .toolbar-horizontal,
+      body.export-mode #pdfLibrary,
+      body.export-mode #floating-calc,
+      body.export-mode #floating-timer,
+      body.export-mode .next-page-hint,
+      body.export-mode .top-right-info {
+
+        display: none !important;
+      }
+      
+      #exportLoadingOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at top left, #2b2b40, #1e1e2f);
+        z-index: 10000;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+      }
+      
+      body.export-mode #exportLoadingOverlay {
+        display: flex;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255,255,255,0.1);
+        border-top-color: #6a6aff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
     </style>
+
   </head>
   <body>
+    <!-- Export Loading Overlay -->
+    <div id="exportLoadingOverlay">
+        <div class="spinner"></div>
+        <h1 style="margin:0; font-size: 24px;">Preparing Board Export</h1>
+        <p style="color: #aaa; margin-top: 10px;">Scanning and processing board strokes...</p>
+    </div>
+
 
 
 
@@ -491,7 +542,8 @@ body {
     </div>
 
     <!-- Next Page Hint -->
-    <div id="nextPageHint" onclick="addBlankPage()" style="display:none; position:fixed; bottom:100px; right:30px; background:rgba(16,185,129,0.9); color:white; padding:10px 20px; border-radius:30px; font-weight:600; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.3); z-index:100; animation: bounce 2s infinite;">
+    <div id="nextPageHintRight" class="next-page-hint" onclick="addBlankPage()" style="display:none; position:fixed; bottom:100px; right:30px; background:rgba(16,185,129,0.9); color:white; padding:10px 20px; border-radius:30px; font-weight:600; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.3); z-index:100; animation: bounce 2s infinite;">
+
       <i class="fas fa-plus"></i> New Page
     </div>
 
@@ -583,13 +635,15 @@ body {
     </div>
 
    <!-- Top right time -->
-  <div style="position: fixed; top: 15px; right: 20px; text-align: right; z-index: 50; background: rgba(43,43,64,0.7); backdrop-filter: blur(5px); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+  <div class="top-right-info" style="position: fixed; top: 15px; right: 20px; text-align: right; z-index: 50; background: rgba(43,43,64,0.7); backdrop-filter: blur(5px); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+
     <div id="timeDisplay" style="font-size: 20px; font-weight: 600; color: white;"></div>
     <div id="dateDisplay" style="font-size: 12px; color: #bbb;"></div>
     <!-- last changes -->
   </div>
 
-    <div id="nextPageHint" style="display:none; position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 20px; border-radius:20px; pointer-events:none; font-size:14px; z-index:100; border: 1px solid rgba(255,255,255,0.2); backdrop-filter:blur(5px);">
+    <div id="nextPageHintBottom" class="next-page-hint" style="display:none; position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 20px; border-radius:20px; pointer-events:none; font-size:14px; z-index:100; border: 1px solid rgba(255,255,255,0.2); backdrop-filter:blur(5px);">
+
         ↓ Slide Down for Next Page
     </div>
 

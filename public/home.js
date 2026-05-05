@@ -554,7 +554,7 @@ async function loadAdminBoards() {
     pdfBtn.style.border = 'none';
     pdfBtn.title = 'Download PDF';
     pdfBtn.innerHTML = '<i class="fas fa-download"></i> Download PDF';
-    pdfBtn.onclick = () => downloadBoardPDF(id);
+    pdfBtn.onclick = (e) => downloadBoardPDF(id, e);
 
     const routineBtn = document.createElement('button');
     routineBtn.className = 'alist-btn';
@@ -597,20 +597,36 @@ function openBoardLive(id) {
   window.open('board.html?' + params.toString(), '_blank');
 }
 
-async function downloadBoardPDF(id) {
+async function downloadBoardPDF(id, event) {
+  const btn = event?.currentTarget || (event ? event.target : null);
+  const originalHtml = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...'; }
+
   try {
     const res = await fetchWithRetry(`${API}/api/admin/export-board-pdf/${id}`, {
       headers: { 'Authorization': 'Bearer ' + window._adminToken }
     });
+    
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Server returned invalid response format');
+    }
+
     const data = await res.json();
     if (res.ok && data.success && data.downloadUrl) {
       window.open(data.downloadUrl, '_blank');
+      showToast('PDF export link opened in new tab');
     } else {
       throw new Error(data.error || 'Failed to generate PDF');
     }
   } catch (err) {
     console.error('[DownloadBoardPDF]', err);
-    showToast('Error downloading PDF', true);
+    // Only show toast if it's not a session expiry (handled by fetchWithRetry)
+    if (!err.message.includes('expired') && !err.message.includes('Unauthorized')) {
+        showToast(err.message || 'Error downloading PDF', true);
+    }
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = originalHtml; }
   }
 }
 
@@ -1289,6 +1305,10 @@ function openSearch(engine, q) {
 function swapLangs() {
   const from = document.getElementById('tr-from');
   const to   = document.getElementById('tr-to');
+  if (from.value === 'auto') {
+      showToast('Cannot swap: Auto-detect must be the source', true);
+      return;
+  }
   const tmp = from.value; from.value = to.value; to.value = tmp;
 }
 
@@ -1301,11 +1321,19 @@ async function doTranslate() {
   outEl.textContent = 'Translating...';
   outEl.classList.remove('hidden');
   try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+    const src = from === 'auto' ? 'Autodetect' : from;
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${src}|${to}`;
     const res = await fetch(url);
     const data = await res.json();
-    outEl.textContent = data.responseData?.translatedText || 'Translation failed';
-  } catch { outEl.textContent = 'Translation failed. Check connection.'; }
+    if (res.ok && data.responseData) {
+      outEl.textContent = data.responseData.translatedText;
+    } else {
+      outEl.textContent = data.responseDetails || 'Translation failed';
+    }
+  } catch (err) { 
+    console.error('[Translate]', err);
+    outEl.textContent = 'Translation failed. Check connection.'; 
+  }
 }
 
 // ═══════════════════════════════════════════════════
