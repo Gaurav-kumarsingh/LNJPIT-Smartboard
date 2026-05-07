@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>GATE Question Explorer — LNJPIT SmartBoard</title>
+<title>BEU PYQ Explorer — LNJPIT SmartBoard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -76,9 +76,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .badge-year{background:rgba(108,99,255,.2);color:#a78bfa}
 .badge-subj{background:rgba(79,172,254,.15);color:#4facfe}
 .badge-topic{background:rgba(168,85,247,.15);color:#c084fc}
-.badge-easy{background:rgba(34,197,94,.15);color:var(--easy)}
-.badge-medium{background:rgba(245,158,11,.15);color:var(--medium)}
-.badge-hard{background:rgba(239,68,68,.15);color:var(--hard)}
+.badge-qtype{background:rgba(34,197,94,.15);color:var(--easy)}
 .q-card-text{font-size:.88rem;color:var(--text);line-height:1.5;
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .q-num{font-size:.72rem;color:var(--text2);margin-top:6px}
@@ -101,6 +99,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .meta-item .meta-value{font-size:.9rem;font-weight:600;color:var(--text)}
 .preview-q-text{background:var(--surface2);border:1px solid var(--border);border-radius:10px;
   padding:16px;font-size:.9rem;line-height:1.7;color:var(--text);white-space:pre-wrap}
+.preview-options {margin-top: 15px; display: flex; flex-direction: column; gap: 8px;}
+.preview-option {background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem;}
 .preview-actions{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px}
 .btn-canvas{flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);
   color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
@@ -171,13 +171,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 <body>
 
 <nav class="topnav">
-  <div class="brand"><i class="fas fa-brain"></i> GATE Question Explorer</div>
+  <div class="brand"><i class="fas fa-file-alt"></i> BEU PYQ Explorer</div>
   <a class="back-btn" href="index.html"><i class="fas fa-arrow-left"></i> Back to SmartBoard</a>
 </nav>
 
 <div class="hero">
-  <h1>LNJPIT SmartBoard — GATE PYQ Explorer</h1>
-  <p>Filter, explore, and study Computer Science GATE Previous Year Questions</p>
+  <h1>LNJPIT SmartBoard — BEU PYQ Explorer</h1>
+  <p>Filter, explore, and study Bihar Engineering University Previous Year Questions</p>
   <div class="stats-row">
     <div class="stat-pill">Total: <span id="stat-total">—</span> questions</div>
     <div class="stat-pill">Years: <span id="stat-years">—</span></div>
@@ -202,12 +202,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
     <select id="f-topic"><option value="">All Topics</option></select>
   </div>
   <div class="filter-group">
-    <label>Difficulty</label>
-    <select id="f-difficulty">
-      <option value="">All Levels</option>
-      <option value="Easy">Easy</option>
-      <option value="Medium">Medium</option>
-      <option value="Hard">Hard</option>
+    <label>Type</label>
+    <select id="f-qtype">
+      <option value="">All Types</option>
+      <option value="MCQ">MCQ</option>
+      <option value="subjective">Subjective</option>
+      <option value="numerical">Numerical</option>
     </select>
   </div>
   <div class="filter-group" style="flex:1;min-width:180px">
@@ -249,7 +249,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 <div class="canvas-overlay hidden" id="canvas-overlay">
   <div class="canvas-box">
     <div class="canvas-header">
-      <h3><i class="fas fa-chalkboard"></i> GATE Question — Canvas View</h3>
+      <h3><i class="fas fa-chalkboard"></i> PYQ — Canvas View</h3>
       <button class="btn-copy" id="btn-close-canvas" style="border-color:transparent">
         <i class="fas fa-times"></i> Close
       </button>
@@ -272,7 +272,7 @@ let activeQ = null;
 // ── Load data ──────────────────────────────────────────────────────────────────
 async function loadQuestions() {
   try {
-    const res = await fetch('/api/gate-questions');
+    const res = await fetch('/api/beu-pyq');
     if (!res.ok) throw new Error('API error ' + res.status);
     allQuestions = await res.json();
     buildFilterOptions();
@@ -285,7 +285,7 @@ async function loadQuestions() {
 
 // ── Build filter dropdowns ─────────────────────────────────────────────────────
 function buildFilterOptions() {
-  const years    = [...new Set(allQuestions.map(q=>q.year))].sort((a,b)=>b-a);
+  const years    = [...new Set(allQuestions.map(q=>q.year).filter(y=>y))].sort((a,b)=>b-a);
   const subjects = [...new Set(allQuestions.map(q=>q.subject))].sort();
 
   const yEl = document.getElementById('f-year');
@@ -316,15 +316,15 @@ function applyFilters() {
   const year   = document.getElementById('f-year').value;
   const subj   = document.getElementById('f-subject').value;
   const topic  = document.getElementById('f-topic').value;
-  const diff   = document.getElementById('f-difficulty').value;
+  const qtype  = document.getElementById('f-qtype').value;
   const search = document.getElementById('f-search').value.toLowerCase().trim();
 
   filtered = allQuestions.filter(q => {
-    if (year  && q.year    != year)  return false;
+    if (year  && String(q.year) !== year)  return false;
     if (subj  && q.subject !== subj) return false;
     if (topic && q.topic   !== topic)return false;
-    if (diff  && q.difficulty !== diff) return false;
-    if (search && !q.question.toLowerCase().includes(search)) return false;
+    if (qtype && q.question_type !== qtype) return false;
+    if (search && !q.question_text.toLowerCase().includes(search)) return false;
     return true;
   });
 
@@ -332,7 +332,7 @@ function applyFilters() {
 }
 
 function resetFilters() {
-  ['f-year','f-subject','f-topic','f-difficulty'].forEach(id => document.getElementById(id).value='');
+  ['f-year','f-subject','f-topic','f-qtype'].forEach(id => document.getElementById(id).value='');
   document.getElementById('f-search').value = '';
   rebuildTopics();
   applyFilters();
@@ -347,23 +347,23 @@ function renderList() {
     return;
   }
 
-  const diffBadge = d => `badge-${d.toLowerCase()}`;
+  const typeColor = (t) => t==='MCQ'?'#22c55e':(t==='subjective'?'#f59e0b':'#ef4444');
 
   const header = `<div class="results-header">
     <span class="results-count">${filtered.length} question${filtered.length!==1?'s':''} found</span>
   </div>`;
 
   const cards = filtered.map(q => `
-    <div class="q-card${q.id===activeId?' active':''}${selectedIds.has(q.id)?' selected':''}" data-id="${q.id}" id="qc-${q.id}">
-      ${selectedIds.has(q.id) ? '<div style="position:absolute;top:10px;right:10px;color:#22c55e"><i class="fas fa-check-circle"></i></div>' : ''}
+    <div class="q-card${q.question_id===activeId?' active':''}${selectedIds.has(q.question_id)?' selected':''}" data-id="${q.question_id}" id="qc-${q.question_id}">
+      ${selectedIds.has(q.question_id) ? '<div style="position:absolute;top:10px;right:10px;color:#22c55e"><i class="fas fa-check-circle"></i></div>' : ''}
       <div class="q-card-meta">
-        <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> ${q.year}</span>
+        <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> ${q.year || 'N/A'}</span>
         <span class="badge badge-subj">${q.subject}</span>
         <span class="badge badge-topic">${q.topic}</span>
-        <span class="badge ${diffBadge(q.difficulty)}">${q.difficulty}</span>
+        <span class="badge badge-qtype" style="color:${typeColor(q.question_type)};background:${typeColor(q.question_type)}20">${q.question_type || 'General'}</span>
       </div>
-      <div class="q-card-text">${escHtml(q.question)}</div>
-      <div class="q-num">#${q.id}</div>
+      <div class="q-card-text">${escHtml(q.question_text)}</div>
+      <div class="q-num">#${q.question_id} ${q.repeated ? '<span style="color:var(--medium);margin-left:5px" title="Repeated Question"><i class="fas fa-sync-alt"></i> '+q.repetition_count+'x</span>' : ''}</div>
     </div>`).join('');
 
   panel.innerHTML = header + cards;
@@ -372,7 +372,7 @@ function renderList() {
 // ── Preview panel ──────────────────────────────────────────────────────────────
 function showPreview(id) {
   activeId = id;
-  activeQ  = allQuestions.find(q=>q.id===id);
+  activeQ  = allQuestions.find(q=>q.question_id===id);
   if (!activeQ) return;
 
   // highlight active card
@@ -383,19 +383,27 @@ function showPreview(id) {
   const panel = document.getElementById('preview-panel');
   panel.classList.remove('empty');
 
-  const diffColor = {Easy:'var(--easy)',Medium:'var(--medium)',Hard:'var(--hard)'};
+  const typeColor = (t) => t==='MCQ'?'#22c55e':(t==='subjective'?'#f59e0b':'#ef4444');
+  
+  let optionsHtml = '';
+  if (activeQ.options && activeQ.options.length > 0) {
+      optionsHtml = `<div class="preview-options">
+        ${activeQ.options.map((opt, i) => `<div class="preview-option"><strong>${i+1}.</strong> ${escHtml(opt)}</div>`).join('')}
+      </div>`;
+  }
 
   panel.querySelector('.preview-body').innerHTML = `
     <div class="preview-meta-grid">
-      <div class="meta-item"><div class="meta-label">Year</div><div class="meta-value">${activeQ.year}</div></div>
-      <div class="meta-item"><div class="meta-label">Difficulty</div>
-        <div class="meta-value" style="color:${diffColor[activeQ.difficulty]}">${activeQ.difficulty}</div></div>
+      <div class="meta-item"><div class="meta-label">Year</div><div class="meta-value">${activeQ.year || 'Unknown'}</div></div>
+      <div class="meta-item"><div class="meta-label">Type</div>
+        <div class="meta-value" style="color:${typeColor(activeQ.question_type)}">${activeQ.question_type}</div></div>
       <div class="meta-item"><div class="meta-label">Subject</div><div class="meta-value">${activeQ.subject}</div></div>
       <div class="meta-item"><div class="meta-label">Topic</div><div class="meta-value">${activeQ.topic}</div></div>
     </div>
-    <div class="preview-q-text">${escHtml(activeQ.question)}</div>`;
+    <div class="preview-q-text">${escHtml(activeQ.question_text)}</div>
+    ${optionsHtml}`;
 
-  const isSel = selectedIds.has(activeQ.id);
+  const isSel = selectedIds.has(activeQ.question_id);
   const addBtn = document.getElementById('btn-add-session');
   addBtn.innerHTML = isSel ? '<i class="fas fa-minus-circle"></i> Remove' : '<i class="fas fa-plus-circle"></i> Add to Session';
   addBtn.style.background = isSel ? 'var(--hard)' : '#22c55e';
@@ -432,7 +440,15 @@ function updateSelectionUI() {
 
 function sendToBoard() {
   if (selectedIds.size === 0) return;
-  const selectedQuestions = Array.from(selectedIds).map(id => allQuestions.find(q => q.id === id));
+  const selectedQuestions = Array.from(selectedIds).map(id => {
+      const q = allQuestions.find(qq => qq.question_id === id);
+      // Format the question to look good on the canvas
+      let textToBoard = q.question_text;
+      if (q.options && q.options.length > 0) {
+          textToBoard += '\n\nOptions:\n' + q.options.map((opt, i) => `${i+1}. ${opt}`).join('\n');
+      }
+      return { ...q, question: textToBoard }; // Alias question_text to question for board.html
+  });
   localStorage.setItem('pendingQuestions', JSON.stringify(selectedQuestions));
   window.location.href = 'board.html';
 }
@@ -449,15 +465,21 @@ function closePreview() {
 // ── Canvas view ────────────────────────────────────────────────────────────────
 function openCanvasView() {
   if (!activeQ) return;
-  const diffColor = {Easy:'var(--easy)',Medium:'var(--medium)',Hard:'var(--hard)'};
+  const typeColor = (t) => t==='MCQ'?'#22c55e':(t==='subjective'?'#f59e0b':'#ef4444');
+  
+  let optionsHtml = '';
+  if (activeQ.options && activeQ.options.length > 0) {
+      optionsHtml = `\n\nOptions:\n${activeQ.options.map((opt, i) => `${i+1}. ${opt}`).join('\n')}`;
+  }
+
   document.getElementById('canvas-content').innerHTML = `
     <div class="c-meta">
-      <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> GATE ${activeQ.year}</span>
+      <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> BEU ${activeQ.year || ''}</span>
       <span class="badge badge-subj">${activeQ.subject}</span>
       <span class="badge badge-topic">${activeQ.topic}</span>
-      <span class="badge" style="background:rgba(0,0,0,.2);color:${diffColor[activeQ.difficulty]}">${activeQ.difficulty}</span>
+      <span class="badge" style="background:rgba(0,0,0,.2);color:${typeColor(activeQ.question_type)}">${activeQ.question_type}</span>
     </div>
-    <div class="c-question">${escHtml(activeQ.question)}</div>`;
+    <div class="c-question">${escHtml(activeQ.question_text) + escHtml(optionsHtml)}</div>`;
   document.getElementById('canvas-overlay').classList.remove('hidden');
   document.body.style.overflow='hidden';
 }
@@ -470,7 +492,13 @@ function closeCanvas() {
 // ── Helpers ────────────────────────────────────────────────────────────────────
 function copyQuestion() {
   if (!activeQ) return;
-  const text = `GATE ${activeQ.year} | ${activeQ.subject} | ${activeQ.topic} | ${activeQ.difficulty}\n\n${activeQ.question}`;
+  
+  let optionsText = '';
+  if (activeQ.options && activeQ.options.length > 0) {
+      optionsText = '\n\nOptions:\n' + activeQ.options.map((opt, i) => `${i+1}. ${opt}`).join('\n');
+  }
+  
+  const text = `BEU PYQ ${activeQ.year || ''} | ${activeQ.subject} | ${activeQ.topic} | ${activeQ.question_type}\n\n${activeQ.question_text}${optionsText}`;
   navigator.clipboard.writeText(text).then(()=>alert('Question copied!'));
 }
 
@@ -496,7 +524,7 @@ document.getElementById('btn-add-session').addEventListener('click', () => toggl
 document.getElementById('btn-send-board').addEventListener('click', sendToBoard);
 
 // Live filters
-['f-year', 'f-subject', 'f-topic', 'f-difficulty'].forEach(id => {
+['f-year', 'f-subject', 'f-topic', 'f-qtype'].forEach(id => {
   document.getElementById(id).addEventListener('change', applyFilters);
 });
 document.getElementById('f-search').addEventListener('input', applyFilters);
@@ -505,7 +533,7 @@ document.getElementById('f-search').addEventListener('input', applyFilters);
 document.getElementById('q-list-panel').addEventListener('click', e => {
   const card = e.target.closest('.q-card');
   if (card) {
-    const id = parseInt(card.dataset.id);
+    const id = card.dataset.id;
     showPreview(id);
   }
 });

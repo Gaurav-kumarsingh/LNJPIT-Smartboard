@@ -83,10 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const startIndex = pages.length;
             questions.forEach(q => {
+                const prefix = q.question_id ? 'BEU PYQ' : 'GATE'; // Simple way to distinguish
                 pages.push({ 
                     type: 'question', 
                     gridType: 0, 
-                    question: `GATE ${q.year} | ${q.subject}\n\n${q.question}` 
+                    question: `${prefix} ${q.year || ''} | ${q.subject}\n\n${q.question || q.question_text}` 
                 });
                 const newIdx = pages.length - 1;
                 pageStrokes[newIdx] = [];
@@ -162,6 +163,17 @@ async function loadPDFsForBoard() {
         window.location.href = 'gate.html'; 
     };
     list.appendChild(gateBtn);
+
+    const beuBtn = document.createElement('button');
+    beuBtn.className = 'pdfBtn';
+    beuBtn.innerHTML = 'BEU PYQ Explorer';
+    beuBtn.onclick = () => { 
+        saveCurrentPageState();
+        localStorage.setItem(`sb_pages_${currentBoardId}`, JSON.stringify(pages));
+        localStorage.setItem(`sb_strokes_${currentBoardId}`, JSON.stringify(pageStrokes));
+        window.location.href = 'beupyq.html'; 
+    };
+    list.appendChild(beuBtn);
 
     // Fetch file list with retry + timeout to handle Render cold starts
     let pdfs = [];

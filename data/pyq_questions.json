@@ -1,0 +1,5400 @@
+{
+  "metadata": {
+    "total_questions": 323,
+    "stats": {
+      "Screenshot_2026-05-06-22-18-02-68.jpg (11).jpeg": {
+        "pages": 1,
+        "raw": 93,
+        "unique": 76,
+        "repeated": 14
+      },
+      "Screenshot_2026-05-06-22-56-44-30.jpg.jpeg": {
+        "pages": 1,
+        "raw": 72,
+        "unique": 68,
+        "repeated": 3
+      },
+      "Screenshot_2026-05-06-22-59-48-03.jpg.jpeg": {
+        "pages": 1,
+        "raw": 75,
+        "unique": 63,
+        "repeated": 9
+      },
+      "Screenshot_2026-05-06-23-01-56-18.jpg.jpeg": {
+        "pages": 1,
+        "raw": 64,
+        "unique": 51,
+        "repeated": 11
+      },
+      "Screenshot_2026-05-06-23-04-46-14.jpg.jpeg": {
+        "pages": 1,
+        "raw": 81,
+        "unique": 63,
+        "repeated": 15
+      }
+    },
+    "generated_at": "2026-05-06"
+  },
+  "questions": [
+    {
+      "question_id": "AI0001",
+      "question_text": "In LISP, the Function returns the list that result after the first element is removed (the rest of the list), is",
+      "options": [
+        "car.",
+        "last",
+        "cons",
+        "cdr"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 4,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0002",
+      "question_text": "What is artificial intelligence?",
+      "options": [
+        "Putting your intelligence into computer",
+        "Programming with your own intelligence",
+        "Making a machine intelligent",
+        "Playing a game"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0003",
+      "question_text": "Which is the best way to go for game playing problem?",
+      "options": [
+        "Linear approach",
+        "Heuristic approach (some knowledge is stored)",
+        "Random approach",
+        "An optimal approach"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0004",
+      "question_text": "Face Recognition system is based on which type of approach?",
+      "options": [
+        "Weak Al approach",
+        "Applied Al approach",
+        "Cognitive Al approach ",
+        "Strong Al approach"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0005",
+      "question_text": "Which is not the commonly used programming language For Al?",
+      "options": [
+        "Prolog",
+        "Java",
+        "LISP",
+        "Perl"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0006",
+      "question_text": "What are not represented by using tk propositional logic?",
+      "options": [
+        "Objects",
+        "Relations",
+        "Both objects and relations",
+        "None of the above ."
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0007",
+      "question_text": "Inference algorithm is completed only if",
+      "options": [
+        "it can derive any sentence",
+        "it can derive any sentence that is an entailed version",
+        "it is truth preserving",
+        "it can derive any sentence that is an entailed version and it is truth preserving"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0008",
+      "question_text": "Which search strategy is also called as blind search?",
+      "options": [
+        "Uniformed search",
+        "Informed search",
+        "Simple reflex search",
+        "All of the mentioned"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Search Algorithms",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0009",
+      "question_text": "Which is used for utility Functions in game playing algorithm?",
+      "options": [
+        "Linear polynomial",
+        "Weighted polynomial",
+        "Polynomial",
+        "Linear weighted polynomial"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Agents",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0010",
+      "question_text": "Graph used to represent semantic network is ",
+      "options": [
+        "undirected graph",
+        "directed graph",
+        "directed acyclic graph (DAG)",
+        "directed complete graph"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0011",
+      "question_text": "Define Artificial Intelligence (Al). Discuss the applications area of Al.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0012",
+      "question_text": "Explain AO* algorithm with an example.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0013",
+      "question_text": "Explain with diagram the organization of a natural language understanding system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Natural Language Processing",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0014",
+      "question_text": "Describe all the levels of language understanding in natural language processing system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Natural Language Processing",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0015",
+      "question_text": "What do you mean by learning? Explain briefly the learning methods. Discuss the advantages and disadvantages of rule-based system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0016",
+      "question_text": "Explain the human preferences in encoding tak uncertainty during parsing.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Natural Language Processing",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0017",
+      "question_text": "Explain hill climbing algorithm. Explain plateau, ridge, and local maxima.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Search Algorithms",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0018",
+      "question_text": "Explain knowledge acquisition techniques.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0019",
+      "question_text": " What is Fuzzy set? What is the difference between fuzzy set and crisp set? Explain different Fuzzy set operations using examples.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Fuzzy Logic",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0020",
+      "question_text": "Write a Prolog program that verified whether an input list is a palindrome. Hint: Goal: Palindrome ([r, a, c, e, ¢, a, r]). Output: Yes Goal: Palindrome (a, b, c]) ° Output: No",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0021",
+      "question_text": "Consider the Water Jug problem as stated here. \"You are given two jugs, a 4-gallon one and a 3gallon one. Neither has any measuring marker on it. There is a pump that can be used to fill the jugs with water. How can you get exactly 2 gallons of water into the 4-gallon jug?\" Represent this as a problem in State Space Search and state its Production Rules. Show at least one solution to this problem.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Search Algorithms",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0022",
+      "question_text": "Explain the basic component of an expert system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Expert Systems",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0023",
+      "question_text": "Why is Natural Language Processing (NLP) used? Is NLP difficult to learn? Explain.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Natural Language Processing",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0024",
+      "question_text": "Write a Function in LISP that computes prime number between 1 and 25 (inclusive).",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0025",
+      "question_text": "Describe logistic regression with suitable \"Sd examples.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Machine Learning",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0026",
+      "question_text": "Define prior probability and conditional probability. State Bayes's theorem. How is it useful For decision making under uncertainty.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Probabilistic Reasoning",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0027",
+      "question_text": "Many words have more than one meaning; we have to select the meaning which makes the most sense in context. This can be resolved by",
+      "options": [
+        "Fuzzy logic",
+        "shallow semantic analysis",
+        "word sense disambiguation",
+        "All of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0028",
+      "question_text": "Decision support programs are designed to help managers make",
+      "options": [
+        "budget projections",
+        "visual presentations",
+        "business decisions",
+        "vacation schedules"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0029",
+      "question_text": "A knowledge-based agent can combine general knowledge with current percepts to infer hidden aspects of the current state prior to selecting actions. °",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Agents",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0030",
+      "question_text": "What are the two basic types of inference?",
+      "options": [
+        "Reduction to propositional logic, manipulate rules directly",
+        "Reduction to propositional logic, apply modus ponen -",
+        "Apply modus ponen, manipulate rules directly",
+        "Convert every rule of horn clause, reduction to propositional logic"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0031",
+      "question_text": "What are agents in Al? How do agents work to import intelligence to a system? Classify the different types of agents and briefly discuss their properties.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Agents",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0032",
+      "question_text": "Draw the semantic network of the following sentence: Kavita gives a book to her friend.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0033",
+      "question_text": "Explain the procedure of knowledge acquisition with the help of a diagram. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0034",
+      "question_text": "What is First Order Predicate Logic (FOPL)? Represent the Following facts in FOPL: \"Anyone passing his Al paper and getting an opportunity to work on live project is Happy. But anyone who studies sincerely or is Lucky can pass all his exams. Ramu did not study but he is Lucky. Anyone who is Lucky gets a live project to work.\"",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0035",
+      "question_text": ". Q.6 Write short notes on the following: a. Knowledge b. Intelligence c. Inheritance knowledge d. Knowledge management",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0036",
+      "question_text": "Describe the Following with suitable examples: a. Logistic regression b. Back propagation algorithm ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Machine Learning",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0037",
+      "question_text": "Differentiate between Forward chaining and backward chaining. On what factors does the decision to choose Forward or backward chaining depend?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Expert Systems",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0038",
+      "question_text": "Consider the following sentences:  John likes all kinds of Food.  Apples are food.  Chicken is Food.  Anything anyone eats and isn't killed by it, is Food.  Sue eats everything Bill eats.(i) Translate the sentences into formulae in predicate logic. Prove that John likes peanuts Using backward chaining.,(ii)Convert the Formulae of part, into clause form.,(iii) Prove that John likes peanuts using resolution. (iv) Use resolution to answer the question, \" what food does Sue eat?\"",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0039",
+      "question_text": "What is the Turing test? IF the machine passes the Turing test, does it mean that the system is intelligent? What are the associated problems with Turing test? What are required improvement/advances to overcome these problems?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0040",
+      "question_text": " What is the goal of the support vector machine (SVM)? How to compute the margin?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Machine Learning",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0041",
+      "question_text": "What is Turing test?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0042",
+      "question_text": "Define uniformed search.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Search Algorithms",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0043",
+      "question_text": "Write a short note on MYCIN. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0044",
+      "question_text": "List various schemes of knowledge representation.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0045",
+      "question_text": "What do you mean by agent program?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Agents",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0046",
+      "question_text": "Define Skolem constant.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0047",
+      "question_text": "What are the types of neural networks?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Machine Learning",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0048",
+      "question_text": "What are the factors that a rational agent should depend on at any given time?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Agents",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0049",
+      "question_text": "Prove that breadth-first search and depth-first search are special cases of best-first search.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Search Algorithms",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0050",
+      "question_text": "Explain the 4O* algorithm witha suitable example. State the limitations in the algorithm.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0051",
+      "question_text": "Explain alpha-beta cutoffs during minimax search.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Game Theory",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0052",
+      "question_text": "Show that the Following sentences are inconsistent using propositional logic:(i)IF Jack misses many classes through illness, then he Fails high school. a,(ii) IF Jack Fails high school, then he is uneducated.,(iii) IF Jack reads a lot of books, then he is not uneducated.,(iv) Jack misses many classes through illness and reads a lot of books.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0053",
+      "question_text": "Solve the Following crypt-arithmetic problem: SEND +MORE MONEY",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0054",
+      "question_text": "What is sentence level processing? Explain with example.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0055",
+      "question_text": "Define Hidden Markov Model (HMM). Illustrate how HMMs are used for speech recognition.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0056",
+      "question_text": "Prove that the following sentence is valid: \"IF prices Fall, then sell increases. IF sell increases, then John makes the whole money. But John doesn't make the whole money. Therefore, prices do not Fall.”",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0057",
+      "question_text": "Explain Bayesian network by taking an example. How is the Bayesian network powerful representation For uncertainty knowledge?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Probabilistic Reasoning",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0058",
+      "question_text": "Differentiate between forward and backward chaining of inference with the help of an example.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Expert Systems",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0059",
+      "question_text": "What do you mean by structured representation of the knowledge? Discuss different types of structured representations of knowledge.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0060",
+      "question_text": "Discuss STRIPS robot problem solving system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Planning",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0061",
+      "question_text": "Discuss Five application areas of medicine in which artificial intelligence is applied.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0062",
+      "question_text": "Mention the criteria For the evaluation of search strategy.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Search Algorithms",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0063",
+      "question_text": "What are the two types of memory bounded heuristic algorithms?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Search Algorithms",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0064",
+      "question_text": "Define satisfiability of a sentence.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0065",
+      "question_text": "Why does uncertainty arise?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Probabilistic Reasoning",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0066",
+      "question_text": "What is an atomic event?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0067",
+      "question_text": "Whatis the need For utility theory in uncertainty?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Probabilistic Reasoning",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0068",
+      "question_text": "Write any two differences between traditional computer system programs and expert systems.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Expert Systems",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0069",
+      "question_text": "What is meant by belief network?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Probabilistic Reasoning",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0070",
+      "question_text": "Define meta-knowledge in expert system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0071",
+      "question_text": "Discuss the applications area of Artificial Intelligence.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0072",
+      "question_text": "What are the steps to convert First order logic or predicate logic sentence to normal Form. Explain each step.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Knowledge Representation",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0073",
+      "question_text": "Describe constraint satisfaction problem in detail.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Planning",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0074",
+      "question_text": "Parts of speech tagging determines",
+      "options": [
+        "parts of speech for each word dynamically as per meaning of the sentence",
+        "parts of speech for each word dynamically as per sentence structure",
+        "all parts of sppech for a specific word given as input",
+        "All of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "AI0075",
+      "question_text": "Draw the complete AND-OR proof tree showing all the answers to the query.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0076",
+      "question_text": "Define prior probability and conditional",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "Probabilistic Reasoning",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "AI0078",
+      "question_text": "What are the goals of artificial intelligence (AI)?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Artificial Intelligence",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0001",
+      "question_text": "Four DML commands are:",
+      "options": [
+        "create, update, delete, select",
+        "insert, update, drop, select",
+        "insert, alter, delete, select",
+        "insert, modify, delete, select"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0002",
+      "question_text": "View is a:",
+      "options": [
+        "temporary table",
+        "virtual table",
+        "dynamic table .",
+        "permanent table"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Security",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0003",
+      "question_text": "The different levels of data abstraction are:",
+      "options": [
+        "Physical level",
+        "Logical level",
+        "View level",
+        "all of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0004",
+      "question_text": "Which of the following is true?",
+      "options": [
+        "a super-key is always a candidate key.",
+        "every 3NF schema is also a BCNF.",
+        "generalization is bottom-up approach.",
+        "none of these."
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0005",
+      "question_text": "What is the purpose of project operation: ",
+      "options": [
+        "It selects certain columns.",
+        "It selects certain rows.",
+        "It selects certain strings.",
+        "It selects certain integers."
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0006",
+      "question_text": "The weak entity set does not have sufficient attributes to Form.",
+      "options": [
+        "Primary key",
+        "Candidate key",
+        "Both (i) and (ii)",
+        "Super key"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "ER Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0007",
+      "question_text": "Which normal Form is considered adequate For normal relational database design?",
+      "options": [
+        "2 NF",
+        "5 NF",
+        "4 NF",
+        "3 NF"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0008",
+      "question_text": "Which of the Following is not a super key in R(V, W, X, Y, Z) with primary key VY?",
+      "options": [
+        "VXYZ",
+        "VWXZ",
+        "VWXY",
+        "VWXYZ"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0009",
+      "question_text": "Consider R (A, B, C, D, E) with Following FDs:- A->B, A->C, CD->E, B->D, E->A which of the following FDs is not implied by above set?",
+      "options": [
+        "CD -> AC",
+        "BD -> CD",
+        "BC -> CD",
+        "AC -> BC"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0010",
+      "question_text": "Which of the following is a concurrency control protocol.",
+      "options": [
+        "Strict 2-phase locking protocol",
+        "Timestamp based protocol",
+        "Graph based protocol",
+        "All of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Transaction Management",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0011",
+      "question_text": "What is attribute closure X^+ of a set of attributes X with respect to a set of FDs F? Give the algorithm for commuting X^+ for X.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0012",
+      "question_text": "Relation R (ABCDEFGH) contains only atomic values for all of its attributes. F={CH->G, A—>BC, B->CFH, E->A,F. is a set of Functional dependencies (FDs) so that F is exactly the set of FDs that hold for R. (i) Find all the candidate keys the relation R have?, (ii)Find the highest normal Form with justification in which R exist?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0013",
+      "question_text": "Briefly explain the ACID properties of the transactions to ensure integrity of the data.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Transaction Management",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0014",
+      "question_text": "Consider the transactions T1, T2 and T3 and schedules S1 and S2 given below: T1: r1 (X); r1(Z); w1 (X); w1 (Z), T2: r2 (Y); r2 (Z); w2 (Z) T3: r3 (Y); r3 (X); w3 (Y), S1: r1 (X); r3(Y); r3(X); r2 (Y); r2(Z); w3(Y); w2 (Z); r1 (Z); w1(X); w1 (Z), S2: r1 (X); r3 (Y); r2(Y); r3(X); r1(Z); r2(Z); w3 (Y); w1 (X); w2(Z); w1 (Z). Determine which of the above schedules are conflict - serializable.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Transaction Management",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0015",
+      "question_text": "Explain the reasons for the update, insertion and deletion anomalies.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0016",
+      "question_text": "With example discuss candidate key, super key, primary key and Foreign key.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0017",
+      "question_text": "What are the typical phases of query processing? With a sketch, discuss these phases in high level query processing.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "SQL",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0018",
+      "question_text": "When is the decomposition of relation schema R into two relation schemes X and Y, said to be a lossless-join decomposition? Why is this property so important? Explain with example.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0019",
+      "question_text": "Explain the terms partial functional dependency’ and ‘transitive dependency’. Define 2NF and 3 NF in relation with these terms.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Normalization",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0020",
+      "question_text": "Discuss the concept of generalization, specialization and aggregation.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0021",
+      "question_text": "Consider the Following employee database, primary keys are underlined. Employee (ename, street, city) Works (ename, cname, salary) Company (cname, city) Manages (cname, manager-name) Write SQL queries to: (i) Find the names of all the employees who work for XYZ., (ii) Find all employees who live in the same city as the company for which they work., (iii) Find all employees who live in the same cities and on the same streets as do their managers., (iv) Find all employees who earn more than the average Salary of all employees of their company.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0022",
+      "question_text": "Discuss the advantages and disadvantages of using DBMS as compared to a conventional File system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0023",
+      "question_text": "What is weak entity set? Explain with suitable example. How weak entities are represented as relational schemas.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0024",
+      "question_text": "Write short notes on any two of the following: a. SQL Injection b. Two-phase locking protocol c. Object Oriented DBMS d. Armstrong's Axioms",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "SQL",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0025",
+      "question_text": "A relational database developer refers to a record as",
+      "options": [
+        "a criterion",
+        "a relation",
+        "a tuple",
+        "an attribute"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0026",
+      "question_text": "Key to represent relationship between tables is called ",
+      "options": [
+        "primary key",
+        "secondary key",
+        "Foreign key",
+        "None of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0027",
+      "question_text": "It is better to use Files than a DBMS when there are",
+      "options": [
+        "stringent real-time requirements",
+        "multiple users wish to access the data",
+        "complex relationships among data",
+        "All of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0028",
+      "question_text": "Which of the Following are the Five built-in - Functions provided by SQL?",
+      "options": [
+        "COUNT, SUM, AVG, MAX, MIN",
+        "SUM, AVG, MIN, MAX, MULT",
+        "SUM, AVG, MULT, DIV, MIN",
+        "SUM, AVG, MIN, MAX, NAME"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "SQL",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0029",
+      "question_text": "Ff. A B-tree of order 4 and of height 3 will have a maximum of keys.",
+      "options": [
+        "255",
+        "63",
+        "127",
+        "188"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Indexing",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0030",
+      "question_text": "Consider the Following action: TRANSACTION... Commit; ROLLBACK; What does rollback do? __",
+      "options": [
+        "Undoes the transactions before commit",
+        "Clears all transactions",
+        "Redoes the transactions before commit",
+        "No action"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Transaction Management",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0031",
+      "question_text": "Which of the Following is used to get back all the transactions back after rollback?",
+      "options": [
+        "Commit",
+        "Rollback",
+        "Flashback",
+        "Redo"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Transaction Management",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0032",
+      "question_text": "___ is an attack which Forces an end user to execute unwanted actions on a Web application in which he/she is currently authenticated.",
+      "options": [
+        "Two-factor authentication .",
+        "Cross-site request forgery",
+        "Cross-site scripting",
+        "Cross-site scoring scripting"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0033",
+      "question_text": "allows a system administrator to associate a function with a relation; the Function returns a predicate that must be added to any query that uses the relation.",
+      "options": [
+        "OpenID",
+        "Single-site System",
+        "Security Assertion Markup Language (SAML)",
+        "Virtual Private Database (VPD)"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0034",
+      "question_text": "What are the Five main Functions of a database administrator?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0035",
+      "question_text": "What are four main differences between file-processing system and a DBMS?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0036",
+      "question_text": "Construct an E-R diagram For a university registrar's office. The office maintains data about each class. including the instructor, the enrollment, and the time and place of the class meetings. For each class pair, a grade is recorded. Document all assumptions that you make about the mapping constraints. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0037",
+      "question_text": "What is the use of relational query language in DBMS? Use the example to explain tuple and domain relational calculus.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0038",
+      "question_text": "Explain the Following operations with the help of examples:(i) Generalized projection, (ii) Outer join,(iii) Aggregate Function",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0039",
+      "question_text": "Construct the B+ tree For the Following set of key values: (2, 3, 5, 7, 11, 17, 19, 23, 29, 31). Assume that tree is initially empty and values are added in ascending order. Construct B+ tree for the cases where the number of pointers that will Fit in one node is as Follows: (a) Four (b) Six (c) Eight",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "SQL",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0040",
+      "question_text": "List the ACID properties. Explain the usefulness of each.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Transaction Management",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0041",
+      "question_text": "What benefit is provided by rigorous two-phase locking? How does it compare with other forms of two-phase locking? ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0042",
+      "question_text": "What is the purpose of having separate categories for index authorization and resource authorization?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "SQL",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0043",
+      "question_text": "Explain the data mining and data warehousing related to DBMS.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0044",
+      "question_text": "Compute the closure (F+) of the following set of functional dependencies for the relational schema (A, B, C, D, E) = R. List the candidate keys for R: A->BC, CD->E, B->D E->A",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0045",
+      "question_text": "Write short notes on the following: a. RBAC model b. Concurrency control",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Transaction Management",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0046",
+      "question_text": "The strong entity type and weak entity type participate in relationship. (Fill in the blank)",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "ER Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0047",
+      "question_text": "A level that describes how a record is stored is",
+      "options": [
+        "physical",
+        "logical",
+        "user",
+        "view"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0048",
+      "question_text": "Consider the relation scheme R= {E,F,G,H,|,J,K,L,M,N} and the set of Functional dependencies {E, F} -> {G}, {F} -> {I, J}, {E, H} -> {K, L}, {K} -> {M}, {L} -> {N} on R. What is the key for R?",
+      "options": [
+        "{E, F}",
+        "{E, F, H}",
+        "{E, F, H, K, L}",
+        "{E}"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0051",
+      "question_text": "Date base is generally",
+      "options": [
+        "system centered",
+        "user centered",
+        "company centered",
+        "data centered"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0052",
+      "question_text": "The restriction placed on data is said to be ",
+      "options": [
+        "relation",
+        "attribute",
+        "parameter",
+        "constraint"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0053",
+      "question_text": "An object in databases is equal to ___ + relationships.",
+      "options": [
+        "data",
+        "attribute",
+        "entity",
+        "constraint"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0054",
+      "question_text": "Draw and explain the three-level architecture of the database system.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0055",
+      "question_text": "Compare the traditional file-based systems and relational database management system approaches.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0056",
+      "question_text": " What is a view? Can we update a view? Justify your answer. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Security",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0057",
+      "question_text": "When we try to modify any table in database system, we encounter some side-effects if the tables are insufficiently normalized. Can you explain those side-effects with the respective examples? ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0058",
+      "question_text": "List out various constraints in relational model and explain in short.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0059",
+      "question_text": "Discuss the correspondence between E-R model construct and the relation model construct. Show how each E-R model construct can be append to the relational model using the following description of an organization: An organization uses number of items of an equipment to produce goods. Each item is at one LOCATION, of one TYPE and has a DETAILED_DISCRIPTION. Faults on the equipment are identified by a unique FAULT_ID and are reported at a TIME_REPORTED. Any number of persons may be assigned to a fault and work on the Fault until it is Fixed. The TIME_FIXED is recorded as the TIME_SPENT by each person on a fault. Any number of parts may be used to repair a Fault. The QTY_USED of each part is recorded against the fault. Each part is identified by a PART_ID and has a given weight and MAX_DIMENSION and can have any number of colors.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0060",
+      "question_text": "Write a short note on types of attributes and their representation in E-R model with neat Figures. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0061",
+      "question_text": "Considering the Following schema, create the appropriate tables and insert at least 5 records: AUTHOR (author-id, name, city, country) PUBLISHER (publisher-id, name, city, country) CATALOG (book-id, title, author-id, publisher-id, category-id, year, price) CATEGORY (category-id, description) ORDER-DETAILS (order-no, book-id, quantity) Write each of the Following queries in SQL and relational algebra :(a) Obtain the names of authors who have 2 or more books in the catalog. , (b) Find the author of the book which has maximum sales., (c) Obtain the names of author who have maximum number of publisher., (d) Obtain the name of the city, author, publisher where publisher and author belong to same city. (e) Obtain the title of books which has maximum sales. (F) Obtain the book-id, description For the author who have exactly 3 books in the catalog. (g) Obtain the author and publisher who have published books in more than or equal to 2 categories.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0062",
+      "question_text": "You are given the Following set F of Functional dependencies for a relation: R(A, B, C, D, E, F): F = {ABC -> D, AB -> DF, CDF —> B, BF -> D} (i) Find all keys of R based on these Functional dependencies., (ii) Is this relation in Boyce-Codd normal form? Is it 3NF? Explain your answer., (iii) Can the set F be simplified (by removing functional dependencies or by removing attributes from the left-hand side of functional dependencies) without changing the closure of F (i.e. F+)?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0063",
+      "question_text": "What is the need of normalization? How many types of normalization exist? Explain in detail with suitable examples. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Normalization",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0064",
+      "question_text": "What is trigger? When are they used and why? Explain.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0065",
+      "question_text": "For the Following set of key values construct a B+ tree with a degree 4: 5, 10, 15, 29, 35, 46, 58, 63, 67, 89. Initially tree is empty. Values must be added in ascending order. Show the step-by-step construction.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Indexing",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0066",
+      "question_text": "What is multilevel indexing? Explain in detail.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Indexing",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0067",
+      "question_text": "What is two-phase locking protocol? Explain its working in detail. How can it guarantee serializability?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0068",
+      "question_text": "Discuss the various approaches for handling the deadlocks in dbms.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "General",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "DMS0069",
+      "question_text": "The way a particular application views the data from the database that application uses is a ",
+      "options": [
+        "module",
+        "relational model",
+        "schemas",
+        "subschema"
+      ],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "Relational Model",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "DMS0070",
+      "question_text": "___ play an important role in defining and maintaining a database for an organization. (Fill in the blank)",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Database Management System",
+      "topic": "ER Model",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0001",
+      "question_text": "The language {a^m b^n c^(m+n) / m,n >= 1} is",
+      "options": [
+        "regular",
+        "context-free but not regular",
+        "context-sensitive but not context-free",
+        "type-0 but not context-sensitive"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0002",
+      "question_text": "Which of the Following pairs have DIFFERENT expressive powers?",
+      "options": [
+        "Deterministic Finite automata (DFA) and nondeterministic Finite automata (NDFA)",
+        "Deterministic push-down automata (DPDA) and non-deterministic push-down automata (NDPDA)",
+        "Deterministic single-tape Turing machine and non-deterministic single-tape Turing machine",
+        "Single-tape Turing machine and multi-tape Turing machine"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0003",
+      "question_text": "The logic of pumping lemma is a good example of",
+      "options": [
+        "pigeon-hole principle",
+        "divide-and-conquer technique",
+        "recursion",
+        "iteration"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0004",
+      "question_text": "If L1 and L2 are context free languages, L1 - L2 is",
+      "options": [
+        "always context-free. .",
+        "sometimes",
+        "never",
+        "None of these"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0005",
+      "question_text": "___ is the acyclic graphical representation of a grammer. ",
+      "options": [
+        "Binary tree",
+        "Octtree",
+        "Parse tree",
+        "None of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0006",
+      "question_text": "Which of the following pairs of regular expressions are equivalent?",
+      "options": [
+        "x* and x*x",
+        "1(01) and (10)*1",
+        "x(xx)* and (xx)*x",
+        "All of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0007",
+      "question_text": "The maximum number of states of a DFA tk converted From an NFA with n states is ",
+      "options": [
+        "n",
+        "n^2",
+        "2^n",
+        "None of these"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0008",
+      "question_text": "Definition of a language L with alphabet {a} is givenas L = {a^(nk) /k > 0}, and n is a positive integer constant. What is the minimum number of states needed in a DFA to recognize L?",
+      "options": [
+        "k+1",
+        "n+1",
+        "2n+1",
+        "2k+1"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0009",
+      "question_text": "A is context Free grammar with atmost one non-terminal in the right handside of the production.",
+      "options": [
+        "linear grammar",
+        "linear bounded grammar",
+        "regular grammar",
+        "None of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0010",
+      "question_text": "Let N be an NFA with n states and let M be the minimized DFA with m states recognizing the same language. Which of the following is necessarily true?",
+      "options": [
+        "m = 2^n",
+        "n <= m",
+        "M has one accept state",
+        "m = 2^n"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0011",
+      "question_text": "Tabulate Chomsky hierarchy of grammars with an example for each.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Chomsky Hierarchy",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0012",
+      "question_text": "Construct the regular grammar accepting the Following language: L = {w € {a, b}*/w is a string over {a, b} such that",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0013",
+      "question_text": "Which of the following statements is/are False? A. For every non-deterministic Turing machine, there exists an equivalent deterministic Turing machine. B. Turing recognizable languages are closed under union and complementation. C. Turing decidable languages are closed under intersection and complementation. D. Turing recognizable languages are closed under union and intersection.",
+      "options": [
+        "A and D only",
+        "A and C only",
+        "B only",
+        "C only"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Turing Machine",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0014",
+      "question_text": "Define recursively enumerable languages. Let L1, be recursive and Ly recursively enumerable. Show that L2 — L1 is necessarily recursively enumerable.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Decidability",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0015",
+      "question_text": "Begin with the grammar: S -> ASB/€, A -> aAS/a, B -> SbS/A/bb",
+      "options": [
+        "Eliminate €-productions.",
+        "Eliminate unit productions in the resulting grammar.",
+        "Eliminate any useless symbol in the resulting grammar.",
+        "Put the resulting grammar into CNF."
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0016",
+      "question_text": "Design a pushdown automata to accept the Following language by empty stack: {0^n 1^n /n >= 1}.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Pushdown Automata",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0017",
+      "question_text": "Define deterministic pushdown automata. Explain with an example.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0018",
+      "question_text": "Prove using pumping lemma for regular languages that the language {0^n /n is a perfect square is not regular.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0019",
+      "question_text": "Definition of a language L with alphabet {a} is givenas L = {a^(nk) /k > 0}, and n is a positive integer constant. What is the minimum number of states needed in a DFA to recognize L?",
+      "options": [
+        "k+1",
+        "n+1",
+        "2^(n+1)",
+        "2^(k+1)"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0021",
+      "question_text": "When a CFG is called ambiguous? Show that S —> aS/aSbS/€ is ambiguous.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0022",
+      "question_text": "Define Turing machine. Design a Turing machine M to recognize the language {1^n 2^n 3^n /n >= 1}.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Turing Machine",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0023",
+      "question_text": ". b. Construct DFA equivalent to the regular took expression: (0 + 1)*(00 + 11)(0 + 1)*",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0024",
+      "question_text": "Write short notes on any two of the following: i. Pumping lemma for CFL ii. GNF iii. Multistack Turing Machine iv. NP-hard problem",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0025",
+      "question_text": "Enumerator is a Turing machine with",
+      "options": [
+        "an output printer 2.5 input tapes",
+        "a stack",
+        "None of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Turing Machine",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0026",
+      "question_text": "The language {a^m b^n c^(m+n) | m,n >= 1} is ",
+      "options": [
+        "regular",
+        "context-free but not regular",
+        "context-sensitive but not context-free",
+        "type-0 but not context-sensitive"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0027",
+      "question_text": "Which of the following does not have left recursions?",
+      "options": [
+        "Chomsky normal Form",
+        "Greibach normal form",
+        "Backus-Naur form",
+        "All of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0028",
+      "question_text": "A minimum state deterministic FA accepting the language L = {w | w € {0, 1}*} where number of 0's and 1's in ware divisible by 3 and 5 respectively, has ",
+      "options": [
+        "15 states",
+        "11 states",
+        "10 states",
+        "9 states"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0029",
+      "question_text": "The construction time For DFA From an equivalent NFA (m number of node) is",
+      "options": [
+        "O(m^2)",
+        "O(2^m)",
+        "O(m)",
+        "O(log m)"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0030",
+      "question_text": "Design a Finite state machine abstract model for Parity checker.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0031",
+      "question_text": "Construct an NFA that will accept string of 0's, 1's and 2's beginning with a 0's Followed by odd number of 1's and ending with any number of 2's.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0032",
+      "question_text": "Construct a push-down automata that accepts the following language: L = {uawb : uand w € (a, b)* and |u| = |w|}",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0033",
+      "question_text": "Design a Turing machine (TM) to compute n mod 2.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Turing Machine",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0034",
+      "question_text": "Design a DFA corresponding to regular expression 1*(10)*",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0035",
+      "question_text": "Consider the grammar: S -> AB|BC, A —> BA|a, B—>CC|b, C -> AB|a. Use the CYK algorithm to determine whether the given string \"baaba\" is in L(G) or not.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0036",
+      "question_text": "Suppose L is context Free and R is regular, justify your answer with the help of example:  (i) Is LZ — R necessarily context free? (ii) Is R — L necessarily context free?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0037",
+      "question_text": "Show that the language L = {a^(n!) : n >= O} is not regular or not context-free language.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0038",
+      "question_text": "Let G be a context-free grammar in Chomsky normal form that contains b variable. Show that if G generates some string using a derivation with at least 2^b steps, then L(G) is infinite.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0039",
+      "question_text": "State and prove pumping lemma for regular sets.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0040",
+      "question_text": "Show given grammar over alphabet {a, b}, verify whether it is ambiguous or unambiguous : S → aSa | bSb | a | b | ∈",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0041",
+      "question_text": "Show that the sum function f(x, y) = x + y is primitive recursive.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Decidability",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0042",
+      "question_text": "Construct a PDA that accepts the language L = {a^(2n) bc | n >= 0} by Final state and empty stack.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Pushdown Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0043",
+      "question_text": "Write short notes on the following: a. Post-correspondence problem b. Chomsky normal Form c. Multistack Turing machine d. Pumping lemma for CFL",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0044",
+      "question_text": "Which of the following versions of Unix came up with YACC first? ",
+      "options": [
+        "V3",
+        "V5",
+        "CB UNIX",
+        "UNIX-RT ~"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0045",
+      "question_text": "A pushdown automata can be represented as PDA = €-NFA + [stack].",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Pushdown Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0046",
+      "question_text": "A language accepted by deterministic pushdown automata is closed under which of the Following?",
+      "options": [
+        "Complement",
+        "Union",
+        "Both (i) and (ii)",
+        "None of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0047",
+      "question_text": "The lexical analysis for a modern language such as Java needs the power of which one of the following machine models in a necessary and sufficient sense?",
+      "options": [
+        "Finite state automata",
+        "Deterministic pushdown automata",
+        "Non-deterministic pushdown automata",
+        "Turing machine"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0048",
+      "question_text": ". g. Let L = {w ∈ (0 + 1)* | w has even number of 1s}, i.e., Lis the set of all bit strings with even number of 1s. Which one of the regular expression below represents L?",
+      "options": [
+        "(0*10*1)*",
+        "0*(10*10*)*",
+        "0*(10*1*)*0*",
+        "0*1(10*1)*10*"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0049",
+      "question_text": "What is the minimum number of states in deterministic Finite automata (DFA) For string starting with ba^2 and ending with a over alphabet {a, b}?",
+      "options": [
+        "Ten",
+        "Nine -",
+        "Eight",
+        "None of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0050",
+      "question_text": "The decision problem is the Function from string to",
+      "options": [
+        "char",
+        "int",
+        "boolean",
+        "None of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0051",
+      "question_text": "A language L may not be accepted by a turing machine if",
+      "options": [
+        "it is recursively enumerable",
+        "it is recursive",
+        "L can be enumerated by some turing machine",
+        "None of the above -"
+      ],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Turing Machine",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "FLAAT0052",
+      "question_text": "Write the context-free grammar to create palindrome over {a, b}.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0053",
+      "question_text": "Construct a DFA which accepts the set of all binary strings that interpreted as binary representation of an unsigned decimal integer, is divisible by 5.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0054",
+      "question_text": "Design a NPDA for accepting the string L = set of all palindrome over {a, b} by the empty stack and by final state.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Pushdown Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0055",
+      "question_text": "Construct finite automaton corresponding to the regular expression: (a + b)*cd*e",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0056",
+      "question_text": "Explain the multi-tape version of turing machine and its significance.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Turing Machine",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0057",
+      "question_text": "Show that L = palindrome over {a, b} is not regular.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Regular Languages",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0058",
+      "question_text": "Prove that if L is generated by a CFG, then L is accepted by a non-deterministic PDA by empty stack.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Finite Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0059",
+      "question_text": "Design a pushdown automaton For the Following context-free grammar: S —> aB|bA, A—>aS|bAA|a, B—>bS|aBB|b",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0060",
+      "question_text": "Explain Myhill-Nerode theorem For minimization of automata with suitable example. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Minimization",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0061",
+      "question_text": "Prove that if L is the language generated by an unrestricted grammar G = (N,T, P, S), then Lis recognized by a turing machine.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0062",
+      "question_text": "Design a pushdown automata for accepting the string For the language L={WW^R | W € (a,b)*} by the empty stack as well as final state.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Pushdown Automata",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "FLAAT0063",
+      "question_text": "Write short notes on the following: a. Minimization of automata b. Type 2 grammar (Context free) c. NP-hard problem d. Pumping lemma for CFL",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Formal Language and Automata Theory",
+      "topic": "Context-Free Grammar",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0001",
+      "question_text": "Which of the Following best defines 'public speaking' ?",
+      "options": [
+        "Speaking in informal gatherings",
+        "Speaking to a large audience in a formal setting",
+        "Discussing ideas in small groups",
+        "Delivering speeches at social events"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Professional Ethics",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0002",
+      "question_text": "In communication, what aspect is most influenced by body language?",
+      "options": [
+        "Tone of voice",
+        "Written communication",
+        "Non-verbal communication",
+        "Email communication"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0003",
+      "question_text": "What skill is essential For successful negotiation in interpersonal communication?",
+      "options": [
+        "Multitasking",
+        "Emotional intelligence",
+        "Technical knowledge",
+        "Public speaking"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0004",
+      "question_text": "What is a key component required For effective time management?",
+      "options": [
+        "Emotional stability",
+        "Effective planning",
+        "Writing skills",
+        "Public speaking"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0005",
+      "question_text": "Which leadership style depends the most on team collaboration?",
+      "options": [
+        "Autocratic",
+        "Democratic",
+        "Laissez-Faire",
+        "Transformational"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Leadership",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0006",
+      "question_text": "Whatis a critical skill needed For managing stress in the corporate world?",
+      "options": [
+        "Leadership",
+        "Decision-making",
+        "Positive attitude",
+        "Public speaking"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0007",
+      "question_text": "Whatis the primary purpose of professional ethics in the workplace?",
+      "options": [
+        "To boost profits",
+        "Business ethics",
+        "To maintain moral conduct and standards",
+        "To create a formal communication channel"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Professional Ethics",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0008",
+      "question_text": "What is NOT a part of business writing skills?",
+      "options": [
+        "Resume writing",
+        "Email drafting",
+        "Body language",
+        "Report writing"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0009",
+      "question_text": "What describes a group discussion most accurately?",
+      "options": [
+        "A Formal debate between teams",
+        "An informal conversation among Friends",
+        "A structured discussion between group members on a specific topic",
+        "A speech delivered to a large audience"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Group Discussion",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0010",
+      "question_text": "What is a key factor in the development of leadership qualities?",
+      "options": [
+        "Time management",
+        "People skills",
+        "Public speaking",
+        "Group dynamics"
+      ],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Leadership",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "PSD0011",
+      "question_text": "Analyse how gestures and body language impact leadership perception in group discussions.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Interview Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0012",
+      "question_text": "What non-verbal cues are essential For establishing authority and trust within a team?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0013",
+      "question_text": "How do emotional intelligence and interpersonal skills influence negotiation outcomes in a business context?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0014",
+      "question_text": "What methods can be used to enhance emotional intelligence to improve workplace relationships?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0015",
+      "question_text": "What difficulties do professionals face when managing time and stress in the workplace?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Professional Ethics",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0016",
+      "question_text": "Suggest practical strategies to overcome these challenges and maintain a healthy work-life balance.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0017",
+      "question_text": "How do self-motivation and a positive attitude contribute to effective decision-making in highpressure environments?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Leadership",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0018",
+      "question_text": "What steps can individuals take to cultivate these traits for long-term career success?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0019",
+      "question_text": "How do technical presentation skills affect professional advancement in the workplace?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0020",
+      "question_text": "What are the key elements of a successful technical presentation that communicates complex ideas effectively?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0021",
+      "question_text": "What role does teamwork play in fostering innovation and productivity within organisations?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Leadership",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0022",
+      "question_text": "How can leaders create a collaborative work culture to promote collective success?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0023",
+      "question_text": "How do professional ethics impact organisational reputation and internal employee relations?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Professional Ethics",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0024",
+      "question_text": "What measures can businesses take to enhance ethical practices in their operations?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0025",
+      "question_text": "How can professionals tailor their resumes and interview strategies to Fit specific job roles and industry expectations?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Resume Writing",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0026",
+      "question_text": "Why are effective resume writing and interview skills critical For securing employment?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2024,
+      "years_appeared": [
+        2024
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0027",
+      "question_text": "What is a schedule?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0028",
+      "question_text": "Explain what is a resume?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Resume Writing",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0029",
+      "question_text": "What is walk-in-interview?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Interview Skills",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0030",
+      "question_text": "What do you understand by ethics?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Professional Ethics",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0031",
+      "question_text": "What is occullesics?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0032",
+      "question_text": "What is Jargon?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0033",
+      "question_text": "What does group discussion evaluates?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Group Discussion",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0034",
+      "question_text": "Which is the purpose of communication?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0035",
+      "question_text": " Why power point is used?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0036",
+      "question_text": "What is the role of body language in took communication?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Communication Skills",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0037",
+      "question_text": " What is the significance of group Formation?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0038",
+      "question_text": "Define stress. Explain any Four methods of stress management.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Leadership",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0039",
+      "question_text": "What is the importance of emotional intelligence in professional life?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Professional Ethics",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0040",
+      "question_text": "What business etiquettes should be observed by a salesman? Explain.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Professional Ethics",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0041",
+      "question_text": "Discuss irrational intelligence in detail.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0042",
+      "question_text": "What are the types of interview? Explain them.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Interview Skills",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0043",
+      "question_text": "Write an essay on \"Impacts of Digitalization in India\".",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0044",
+      "question_text": "List four skills which are important for group discussion",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0045",
+      "question_text": "List any Four qualities of a leader.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0046",
+      "question_text": "What are the outcomes of a positive attitude?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0047",
+      "question_text": "What, according to you, is the role of independent directors in the board?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0048",
+      "question_text": "Define kinesics.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0049",
+      "question_text": "Explain project life cycle using a Flow chart. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0050",
+      "question_text": "What preparations should be done by a candidate For a job interview?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Interview Skills",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0051",
+      "question_text": "Give the techniques of effective time management.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "Leadership",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "PSD0052",
+      "question_text": "Define group.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Professional Skill Development",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0001",
+      "question_text": " The spiral model was originally proposed by ",
+      "options": [
+        "IBM",
+        "Barry Boehm",
+        "Pressman",
+        "Royce"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 4,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0002",
+      "question_text": "Measure of reliability is given by",
+      "options": [
+        "mean time between success",
+        "MTBF",
+        "mean reliable",
+        "MTTR"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0003",
+      "question_text": "Which of the Following is not a use of a CASE tool?",
+      "options": [
+        "It supports structured analysis and design (SA/SD)",
+        "It maintains the data dictionary",
+        "It checks whether DFDs are balanced or not",
+        "It compiles with the available system"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0004",
+      "question_text": "Name of an evaluation technique to assess the quality of test cases is",
+      "options": [
+        "mutation analysis",
+        "validation",
+        "verification .",
+        "performance analysis"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Testing",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0005",
+      "question_text": "What is the most popular model for student program?",
+      "options": [
+        "Waterfall model",
+        "Built-and-Fix model",
+        "Spiral model",
+        "Rational unified model"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0006",
+      "question_text": "Which of the following is not a part of bug report?",
+      "options": [
+        "Test case",
+        "Output",
+        "Software version",
+        "LOC"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0007",
+      "question_text": "Independent modules are easier to maintain & and test because of",
+      "options": [
+        "code modification is limited",
+        "reusable modules are possible",
+        "error propagation is reduced",
+        "All of the above"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0008",
+      "question_text": "In size-oriented metrics, metrics are tk developed based on the",
+      "options": [
+        "number of Functions",
+        "number of user inputs",
+        "number of lines of code",
+        "amount of memory usage"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Metrics",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0009",
+      "question_text": "Classes communicate with one another via",
+      "options": [
+        "processed information",
+        "interfaces",
+        "messages",
+        "coupling"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0010",
+      "question_text": "Software is not considered to be collection of executable programming code, associated libraries and documentations. ",
+      "options": [
+        "Statement is true",
+        "Software is only data structures with algorithms",
+        "Statement is False",
+        "Statement underestimates software"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0011",
+      "question_text": "Explain in detail the classical waterfall model with help of a neat and labelled diagram. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "SDLC",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0012",
+      "question_text": "What is prototyping model? Explain the problems and advantages of prototyping in detail.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0013",
+      "question_text": "Develop a test case for any testing technique for 'student admission system’.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Testing",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0014",
+      "question_text": " Define cohesion and coupling. Explain various types of each of them.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0015",
+      "question_text": "What are CASE tools? With a suitable diagram, explain the categories of CASE tools. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0016",
+      "question_text": "What are the different COCOMO models? Explain the phases involved in the detailed COCOMO model.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0017",
+      "question_text": " What are the types of user-interface design?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0018",
+      "question_text": "Explain the stages of object-oriented design process.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0019",
+      "question_text": "Write short notes on the following: Unified modelling language b. Object-oriented analysis modelling c. Object-oriented design concepts and methods",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0020",
+      "question_text": "- Q.8 Explain coding standards, coding guidelines and code review techniques in detail.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0021",
+      "question_text": " What is software quality? Discuss software quality attributes.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Quality",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": true,
+      "repetition_count": 4,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0022",
+      "question_text": "Discuss the differences between object oriented and Function oriented designs.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2022,
+      "years_appeared": [
+        2022
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0023",
+      "question_text": "The CMM model is a technique to",
+      "options": [
+        "automatically maintain software reliability",
+        "improve the software process",
+        "test the software",
+        "All of the mentioned"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Quality",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0024",
+      "question_text": "Maintenance testing is performed using which methodology? .",
+      "options": [
+        "Retesting",
+        "Sanity testing",
+        "Breadth test and depth test",
+        "Confirmation testing"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Testing",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0025",
+      "question_text": "Boundary value analysis belongs to",
+      "options": [
+        "white box testing",
+        "black box testing",
+        "white box and black box testing",
+        "None of the mentioned"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0026",
+      "question_text": "\"An ordering system may be adapted to cope witha centralized ordering process in one company and a distributed process in another.\" Which category the example belongs to?",
+      "options": [
+        "Process specialization .",
+        "Platform specialization",
+        "Environment specialization",
+        "Functional specialization"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0027",
+      "question_text": "... is a measure of the degree of took interdependence between modules.",
+      "options": [
+        "Cohesion",
+        "Coupling",
+        "None of the mentioned",
+        "All of the mentioned"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0028",
+      "question_text": "...and... are the two issues of requirement analysis.",
+      "options": [
+        "Performance, design",
+        "Stakeholder, developer",
+        "Functional, non-Functional °",
+        "None of the mentioned"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Requirements Engineering",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0029",
+      "question_text": "Which granularity level of testing checks the behavior of module cooperation?",
+      "options": [
+        "Unit testing",
+        "Integration testing",
+        "Acceptance testing",
+        "Regression testing"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0030",
+      "question_text": "Which of the Following states that work expands to Fill the time available?",
+      "options": [
+        "CASE tool",
+        "Pricing to win",
+        "Parkinson's law",
+        "Expert judgment -"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0031",
+      "question_text": "Acompany needs to develop digital signal processing software For one of its newest inventions. The software is expected to have 40000 lines of code. The company needs to determine the effort in person-months needed to develop this software using the basic COCOMO model. The multiplicative Factor For this model is given as 2.8 for the software development on embedded systems, while the exponentiation factor is given as 1.20. What is the estimated effort in person-months?",
+      "options": [
+        "234.25",
+        "932.50",
+        "287.80",
+        "122.40"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "SDLC",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0032",
+      "question_text": "Give the full form of CASE. Draw CASE diagram showing all components. Describe each component briefly. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0033",
+      "question_text": "Draw the First two levels of DFDs for an ‘Online Examination System’. Make necessary assumptions.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0034",
+      "question_text": " Prepare SRS for an ‘Inventory Management System’ for a retail medical store. Also explain the risk  assessment and management in brief. Make necessary assumptions.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0035",
+      "question_text": "Explain cohesion and coupling. How are the concepts of coupling and cohesion useful in arriving at good software design?",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0036",
+      "question_text": "What is cyclomatic complexity? How is it computed? Calculate cyclomatic complexity For the program to find the smallest of three numbers.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Metrics",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0037",
+      "question_text": " What are project metrices? Explain different types of project metrics with an example for each.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0038",
+      "question_text": "What are the main objectives of software verification and validation? Explain different verification and validation techniques.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Testing",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0039",
+      "question_text": " Explain any two of the risk management techniques with suitable examples. With a neat diagram, explain the different levels of CMM in detail. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0040",
+      "question_text": "List and explain different categories of tools that can be used For testing.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0041",
+      "question_text": " Explain Agile process with its advantage. Explain any one Agile process model.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0042",
+      "question_text": "Write the structure of SRS as per IEEE standards.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Requirements Engineering",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0043",
+      "question_text": "What are the different methods used For estimating cost and effort required For completing a project successfully? Explain any one method in detail.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0044",
+      "question_text": "What is software quality? What are three dimensions of software quality? Explain briefly.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": true,
+      "repetition_count": 3,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0045",
+      "question_text": " Explain Function point based matrices with suitable example. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0046",
+      "question_text": "Write short notes on the following:  \n 1. Project management  \n 2. Test case design  \n 3. Software reliability",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0047",
+      "question_text": "Which of the Following is a complementary approach to Function-oriented approach?",
+      "options": [
+        "Object-oriented analysis",
+        "Object-oriented design",
+        "Structured approach",
+        "Both object-oriented analysis and design"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0048",
+      "question_text": " Cyclomatic complexity method comes under which testing method?",
+      "options": [
+        "Yellow box",
+        "White box",
+        "Grey box .",
+        "Black box"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Metrics",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0049",
+      "question_text": "Which one of the following is not desiredina good Software Requirement Specifications (SRS) document?",
+      "options": [
+        "Functional requirements",
+        "Non-Functional requirements",
+        "Goals of implementation",
+        "Algorithms For software implementation ~"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Requirements Engineering",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": true,
+      "repetition_count": 2,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0050",
+      "question_text": "A software organization has been assessed at SEI CMM Level 4. Which of the Following does the organization need to practice beside Process Change Management and Technology Change Management in order to achieve Level 5?",
+      "options": [
+        "Defect detection",
+        "Defect prevention",
+        "Defect isolation",
+        "Defect propagation"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Quality",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0051",
+      "question_text": " What is waterfall model For software development? Explain the situation, in which the spiral model for software development should be preferred over waterfall model.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "SDLC",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0052",
+      "question_text": "A program is to be developed to simulate the operations of a scientific calculator. List the Facilities to be provided by this calculator. Analyze this using a DFD 0-level and 1-level diagram. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0053",
+      "question_text": " Explain the roles and responsibilities of the Following personnels in the S/W development process: (i) Project Manager, (ii) Project Leader, (iii) System Analyst, (iv) Developer.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0054",
+      "question_text": "Design the following for an E-commerce solution for an electronic products company that gives choice to the users to select a/Few product(s) from the available range, order them and allow to make the payments online:  (i) Design the DFDs (level-0, 1 and 2). (ii) Prepare SRS document. List assumptions, if any. (iii) Design an ER-diagram. List all the entities, attributes, key constraints and cordiality. (iv) Draw a Gantt chart. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0055",
+      "question_text": " Discuss the software metric that can be applied to the qualitative assessment of software quality and side effects that occur during maintenance phase.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Metrics",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0056",
+      "question_text": "How are boundary conditions tested in black box testing? Explain with example.",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Testing",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0057",
+      "question_text": " Consider a large scale project For which the requirement manpower is K = 600 PY and the development time is 3 years 6 months.  (i) Calculate the peak manning and peak time. (ii) What is the manpower cost after 1 year and 2 months? ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Requirements Engineering",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0058",
+      "question_text": "What are the risk management activities? Is it possible to prioritize the risks? Explain with suitable example. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0059",
+      "question_text": " What are the different architectural styles applied for software development? Explain with diagrams. ",
+      "options": [],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "SDLC",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "subjective"
+    },
+    {
+      "question_id": "SE0061",
+      "question_text": "In what type of coupling, the complete data structure is passed from one module to another?",
+      "options": [
+        "Control coupling",
+        "External coupling",
+        "Stamp coupling",
+        "Content coupling"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0062",
+      "question_text": "IF all tasks must be executed in the same time-span, what type of cohesion is being exhibited?",
+      "options": [
+        "Functional",
+        "Spatial",
+        "Temporal",
+        "Sequential"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Software Design",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0064",
+      "question_text": "The incremental model is a result of combination of elements of which two models?",
+      "options": [
+        "Build and FIX model and waterfall model",
+        "Linear model and RAD model",
+        "Waterfall model and RAD model",
+        "Linear model and prototyping model"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2021,
+      "years_appeared": [
+        2021
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0065",
+      "question_text": "A characterstic of a software system that can lead to a system error is known as",
+      "options": [
+        "human error of mistake",
+        "system fault",
+        "system error",
+        "system failure"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "General",
+      "year": 2020,
+      "years_appeared": [
+        2020
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    },
+    {
+      "question_id": "SE0066",
+      "question_text": "The spiral model was originally proposed by ",
+      "options": [
+        "IBM",
+        "Barry Boehm",
+        "Pressman",
+        "Royce"
+      ],
+      "correct_answer": null,
+      "subject": "Software Engineering",
+      "topic": "Agile",
+      "year": 2019,
+      "years_appeared": [
+        2019
+      ],
+      "repeated": false,
+      "repetition_count": 1,
+      "question_type": "MCQ"
+    }
+  ]
+}

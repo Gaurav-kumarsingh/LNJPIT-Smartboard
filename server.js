@@ -441,6 +441,21 @@ app.get('/api/gate-questions', (_req, res) => {
   }
 });
 
+/** GET /api/beu-pyq — Load BEU PYQ dataset */
+app.get('/api/beu-pyq', (_req, res) => {
+  try {
+    const dataPath = path.join(__dirname, 'data', 'pyq_questions.json');
+    if (fs.existsSync(dataPath)) {
+      const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+      res.json(data.questions || []); // Return the array of questions
+    } else {
+      res.status(404).json({ error: 'BEU PYQ dataset not found' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Error loading BEU PYQ: ' + err.message });
+  }
+});
+
 /**
  * POST /api/upload — authenticated file upload (disk only, no MongoDB)
  * Accepts: user JWT or admin JWT.

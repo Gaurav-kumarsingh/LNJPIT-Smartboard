@@ -12,3 +12,7 @@ database.sqlite-wal
 
 # User uploads (stored on server disk, not in repo)
 uploads/
+
+# Temporary scratch files and cleanup scripts
+*.py
+scratch/
